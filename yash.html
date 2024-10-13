@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parvaah - Elderly Care Services</title>
+    <style>
+        /* Reset some basic styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+        }
+
+        /* Navigation Bar */
+        header {
+            background-color: #333;
+            padding: 1rem 0;
+            color: white;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            color: #f39c12;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+        }
+
+        .nav-links li {
+            margin-left: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            padding: 0.5rem;
+        }
+
+        .nav-links a:hover {
+            background-color: #f39c12;
+            transition: 0.3s;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: url('ducati.jpg') no-repeat center center/cover;
+            height: 80vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 0.75rem 1.5rem;
+        }
+
+        .hero h2 {
+            font-size: 3rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin: 20px 0;
+        }
+
+        .btn-primary {
+            background-color: #f39c12;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #d35400;
+            transition: 0.3s;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 2rem;
+            background-color: white;
+            text-align: center;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 1.5rem;
+        }
+
+        .service {
+            background-color: #f4f4f4;
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+
+        .service h3 {
+            color: #f39c12;
+        }
+
+        /* About Section */
+        .about {
+            padding: 2rem;
+            background-color: #f39c12;
+            color: white;
+            text-align: center;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #333;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>Parvaah</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h2>Caring for Your Well-being</h2>
+            <p>Parvaah is dedicated to providing elderly care with compassion. Request home care, medical assistance, appointment reminders, and emergency help at the click of a button.</p>
+            <a href="#services" class="btn-primary">Learn More</a>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <h2>Our Services</h2>
+        <div class="service-grid">
+            <div class="service">
+                <h3>Home Care</h3>
+                <p>Professional caregivers for daily activities.</p>
+            </div>
+            <div class="service">
+                <h3>Medical Care</h3>
+                <p>Access to trained doctors and nurses at home.</p>
+            </div>
+            <div class="service">
+                <h3>Medicine & Appointments</h3>
+                <p>Stay on track with medication through timely reminders and manage doctor appointments effortlessly.</p>
+            </div>
+            <div class="service">
+                <h3>Emergency Services</h3>
+                <p>Get emergency assistance with just one click.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Parvaah Section -->
+    <section id="about" class="about">
+        <h2>About Parvaah</h2>
+        <p>Parvaah is an elderly care platform based on a geriatric care model that aims to provide comprehensive and accessible services for the elderly population. We believe in personalized care, ensuring that each individual gets the assistance they need in a compassionate and timely manner. Whether it's home care, medical assistance, or emergency help, Parvaah is here to make life easier for seniors and their families.</p>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Parvaah. All rights reserved.</p>
+    </footer>
+
+    <!-- Optional JavaScript -->
+    <script>
+        // You can add interactive JavaScript here if needed later
+    </script>
+</body>
+</html>

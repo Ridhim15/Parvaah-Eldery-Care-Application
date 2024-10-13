@@ -1,0 +1,258 @@
+/* Reset basic styles */
+body,
+ul,
+h1 {
+	margin: 0;
+	padding: 0;
+	font-family: "Arial", sans-serif;
+}
+
+/* Navbar Styles */
+.navbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 20px;
+	background-color: #f5e9e7; /* Light pink background */
+}
+
+/* Left Section (Icons) */
+.navbar-left {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+}
+
+.menu-icon,
+.user-icon {
+	font-size: 24px;
+	cursor: pointer;
+}
+
+/* Center Section (Navigation Links) */
+.navbar-center {
+	display: flex;
+	gap: 30px;
+	list-style: none;
+}
+
+.navbar-center a {
+	text-decoration: none;
+	color: #000;
+	font-size: 18px;
+	font-weight: 500;
+}
+
+/* Right Section (Title) */
+.navbar-right h1 {
+	font-size: 24px;
+	font-weight: bold;
+	letter-spacing: 1px;
+}
+
+.emergency-section {
+	background-color: #fff;
+	font-family: Inter, sans-serif;
+	color: #4c2a11;
+	text-align: center;
+	max-width: 360px;
+	padding: 0 22px 0 10px;
+}
+
+.header-image {
+	aspect-ratio: 8.55;
+	object-fit: contain;
+	width: 100%;
+}
+
+.greeting-container {
+	display: flex;
+	gap: 5px;
+	font-size: 20px;
+	font-weight: 700;
+	line-height: 0.7;
+	align-self: flex-start;
+}
+
+.greeting-icon {
+	aspect-ratio: 1;
+	object-fit: contain;
+	width: 28px;
+}
+
+.emergency-message {
+	color: #dd4c39;
+	font-size: 15px;
+	font-weight: 700;
+	line-height: 20px;
+	margin-top: 20px;
+}
+
+.emergency-button {
+	border-radius: 10px;
+	background-color: #ff0000;
+	display: flex;
+	gap: 40px 55px;
+	font-size: 14px;
+	color: #fff;
+	font-weight: 500;
+	line-height: 1;
+	margin: 7px 0 0 18px;
+	padding: 7px 39px;
+	border: 1px solid #dfdfdf;
+}
+
+.emergency-icon {
+	aspect-ratio: 1.03;
+	object-fit: contain;
+	width: 32px;
+}
+
+.sos-button {
+	border-radius: 10px;
+	background-color: #ffb190;
+	display: flex;
+	gap: 38px;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 20px;
+	margin: 11px 0 0 18px;
+	padding: 4px 41px 10px;
+	border: 1px solid #dfdfdf;
+}
+
+.sos-icon {
+	aspect-ratio: 1;
+	object-fit: contain;
+	width: 27px;
+	align-self: flex-start;
+	margin-top: 4px;
+}
+
+.guidance-title {
+	color: #4167b2;
+	font-size: 20px;
+	font-weight: 600;
+	line-height: 0.7;
+	margin-top: 29px;
+}
+
+.guidance-subtitle {
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1;
+	margin-top: 8px;
+}
+
+.service-card {
+	border-radius: 10px;
+	background-color: #fff;
+	display: flex;
+	margin-top: 20px;
+	width: 100%;
+	max-width: 298px;
+	gap: 20px;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 20px;
+	justify-content: space-between;
+	padding: 3px;
+	border: 1px solid #dfdfdf;
+}
+
+.service-image {
+	aspect-ratio: 1.05;
+	object-fit: contain;
+	width: 132px;
+	border-radius: 10px;
+	max-width: 100%;
+}
+
+.interaction-section {
+	border-radius: 10px;
+	background-color: #fff;
+	display: flex;
+	margin-top: 19px;
+	width: 100%;
+	max-width: 298px;
+	padding-top: 45px;
+	flex-direction: column;
+	border: 1px solid #dfdfdf;
+}
+
+.interaction-title {
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 20px;
+}
+
+.navigation-bar {
+	background-color: #fff;
+	border-top: 1px solid #dfdfdf;
+	z-index: 10;
+	display: flex;
+	width: 100%;
+	font-size: 6px;
+	font-weight: 600;
+	white-space: nowrap;
+	justify-content: center;
+	margin: 0 -32px -15px 0;
+	padding: 5px 41px;
+}
+
+.nav-items {
+	display: flex;
+	gap: 20px;
+	justify-content: space-between;
+}
+
+.nav-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.nav-icon {
+	aspect-ratio: 1;
+	object-fit: contain;
+	width: 20px;
+}
+
+.footer {
+	background-color: #000;
+	margin-top: 15px;
+	width: 100%;
+}
+
+.footer-content {
+	background-color: #edeceb;
+	display: flex;
+	width: 100%;
+	justify-content: center;
+	padding: 7px 72px;
+}
+
+.progress-bar {
+	border-radius: 5px;
+	background-color: #d9d9d9;
+	width: 139px;
+	max-width: 100%;
+}
+
+.progress {
+	border-radius: 5px;
+	background-color: #999;
+	height: 3px;
+}
+
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
