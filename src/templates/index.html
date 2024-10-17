@@ -1,34 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="""en">
+
+</html>
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="""UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parvaah</title>
-    <link rel="stylesheet" href="../Styles/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
+    <link rel="apple-touch-icon" sizes="180x180"
+        href="{{ url_for('static', filename='assets/favcions/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32"
+        href="{{ url_for('static', filename='assets/favcions/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16"
+        href="{{ url_for('static', filename='assets/favcions/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='assets/favcions/site.webmanifest') }}">
 </head>
 
 <body>
     <header class="header">
         <nav class="navbar container">
             <a href="/" class="logo">
-                <img src="./Assets/images/Parvaah-logo.png" alt="Parvah Logo" width="40" height="40">
+                <img src="{{ url_for('static', filename='assets/images/Parvaah-logo.png') }}" alt="Parvah Logo"
+                    width="40" height="40">
                 <span>Parvaah</span>
             </a>
             <ul class="nav-links">
                 <li><a href="#about">About</a></li>
                 <li><a href="#services">Services</a></li>
-                <li><a href="./pages/community.html">Community</a></li>
+                <li><a href="/community">Community</a></li>
                 <li><a href="#testimonials">Testimonials</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
-            <a href="./pages/login.html" class="btn btn-primary">Sign Up</a>
+            <a href="/login" class="btn btn-primary">Sign Up</a>
         </nav>
     </header>
 

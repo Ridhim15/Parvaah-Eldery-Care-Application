@@ -4,6 +4,7 @@ const main = document.querySelector("main")
 const bullets = document.querySelectorAll(".bullets span")
 const images = document.querySelectorAll(".image")
 
+console.log("Login works")
 inputs.forEach(inp => {
 	inp.addEventListener("focus", () => {
 		inp.classList.add("active")
@@ -37,3 +38,4 @@ function moveSlider() {
 bullets.forEach(bullet => {
 	bullet.addEventListener("click", moveSlider)
 })
+
