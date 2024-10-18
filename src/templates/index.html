@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block style %}
+    
+{% endblock %}
+{% block content %}
+
+<main>
+    <section class="hero">
+        <div class="container container-hero">
+            <div class="hero-content">
+                <h1>India's #1 App for Senior Citizens</h1>
+                <p>Live sessions, on-demand assistance, secure payments, great offers, jobs and more</p>
+                <div class="cta-buttons">
+                    <a href="signup.html" class="btn btn-large btn-primary">Get Started</a>
+                    <a href="#services" class="btn btn-large btn-secondary">Learn More</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://static.wixstatic.com/media/6158ef_d44a5d46040c4784bcf00813ff6a0cb2~mv2.png/v1/fill/w_606,h_548,al_c,lg_1,q_85,enc_auto/6158ef_d44a5d46040c4784bcf00813ff6a0cb2~mv2.png"
+                    alt="Senior citizen using Parvah app" width="500" height="300">
+            </div>
+        </div>
+    </section>
+
+    <section id="" class="about">
+        <div class="container">
+            <h2>About Parvah</h2>
+            <p>Parvah is dedicated to enhancing the lives of senior citizens in India through technology and
+                community support. Our app provides a comprehensive suite of services designed to meet the unique
+                needs of our elders.</p>
+        </div>
+    </section>
+
+    <section id="services" class="services">
+        <div class="container">
+            <h2>Our Services</h2>
+            <div class="service-grid">
+                <div class="service-card">
+                    <img src="../static/assets/images/healthhhh.png"
+                        alt="Healthcare Icon" width="64" height="64">
+                    <h3>Healthcare Management</h3>
+                    <p>Medication reminders, doctor appointments, and health tracking</p>
+                </div>
+                <div class="service-card">
+                    <img src="../static/assets/images/services.png"
+                        alt="Emergency Icon" width="64" height="64">
+                    <h3>Emergency Assistance</h3>
+                    <p>24/7 support and quick access to emergency services</p>
+                </div>
+                <div class="service-card">
+                    <img src="../static/assets/images/socialengagement.png"
+                        alt="Social Icon" width="64" height="64">
+                    <h3>Social Engagement</h3>
+                    <p>Connect with peers, join interest groups, and participate in events</p>
+                </div>
+                <div class="service-card">
+                    <img src="../static/assets/images/dailyasistance.jpg"
+                        alt="Daily Tasks Icon" width="64" height="64">
+                    <h3>Daily Assistance</h3>
+                    <p>Help with errands, housekeeping, and transportation</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <h2>What Our Users Say</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <p>"Parvah has made my daily life so much easier. I feel more independent and connected!"</p>
+                    <cite>- Rajesh Sharma, 68</cite>
+                </div>
+                <div class="testimonial-card">
+                    <p>"The emergency assistance feature gives me peace of mind, knowing help is just a tap away."
+                    </p>
+                    <cite>- Sunita Patel, 72</cite>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2>Get in Touch</h2>
+            <form class="contact-form">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <textarea placeholder="Your Message" required></textarea>
+                <button type="submit" class="btn btn-primary">Send Message</button>
+            </form>
+        </div>
+    </section>
+</main>
+{% endblock content %}

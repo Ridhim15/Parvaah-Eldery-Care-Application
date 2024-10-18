@@ -1,0 +1,224 @@
+:root {
+    --primary-color: #f4a261;
+    --secondary-color: #2a9d8f;
+    --text-color: #333333;
+    --background-color: #ffffff;
+    --light-bg-color: #f9f9f9;
+    --highlight-color: #e63946;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    line-height: 1.6;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Navigation Bar */
+.header {
+    background-color: var(--background-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 0rem 0;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.logo img {
+    margin-right: 0.5rem;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+}
+
+.nav-links li {
+    margin-left: 2rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--primary-color);
+}
+
+/* Community Section */
+.community-section {
+    padding: 4rem 0;
+}
+
+.community-title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+}
+
+/* WhatsApp Button */
+.whatsapp-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.whatsapp-button a {
+    display: flex;
+    align-items: center;
+    background-color: #25D366;
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.whatsapp-button a:hover {
+    background-color: #20b351;
+}
+
+.whatsapp-button img {
+    width: 24px;
+    height: 24px;
+    margin-right: 0.5rem;
+}
+
+/* Socials Section */
+.socials-section {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.socials-title {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.social-media-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.social-media-buttons a {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.instagram-button a {
+    background-color: #E1306C;
+    color: white;
+}
+
+.twitter-button a {
+    background-color: #1DA1F2;
+    color: white;
+}
+
+.facebook-button a {
+    background-color: #4267B2;
+    color: white;
+}
+
+.social-media-buttons a:hover {
+    opacity: 0.8;
+}
+
+.social-media-buttons img {
+    width: 24px;
+    height: 24px;
+    margin-right: 0.5rem;
+}
+
+/* Upcoming Events Section */
+.events-section {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.events-title {
+    font-size: 2rem;
+    color: var(--primary-color);
+    text-align: center;
+    margin: 2rem 0 1.5rem;
+}
+
+.event-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+}
+
+.event-card h4 {
+    font-size: 1.6rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.event-card p {
+    font-size: 1rem;
+    color: #555;
+}
+
+.event-date {
+    font-weight: 600;
+    color: var(--highlight-color);
+}
+
+/* Footer */
+.footer {
+    background-color: var(--secondary-color);
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.footer p {
+    margin: 0;
+}

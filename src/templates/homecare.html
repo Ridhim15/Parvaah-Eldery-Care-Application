@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block style %}
+<link rel="stylesheet" href="{{url_for('static',filename='homecare.css')}}">
+{% endblock style %}
+
+{% block content %}
+
+
+ 
+
+    <!-- Header with Navbar 
+    <header class="header">
+        <nav class="navbar container">
+            <a href="/" class="logo">
+                <img src="./static/Assets/images/Parvaah-logo.png" alt="Parvaah Logo" width="40" height="40">
+                <span>Parvaah</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="./community.html">Community</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <a href="/dashboard.html" class="home-btn">Home</a>
+            <a href="/logout" class="logout-btn">Logout</a>
+        </nav>
+    </header>
+    -->
+
+    <!-- Homecare Section -->
+    <main class="container homecare-section">
+        <h1 class="homecare-title">Request Our Homecare Services</h1>
+
+        <div class="services-section">
+            <!-- Housekeeping Service (As Button) -->
+            <a href="/request-housekeeping" class="service-card">
+                <img src="../static/assets/images/cleaner.png" alt="Housekeeping Logo" class="service-logo">
+                <h2 class="service-name">Housekeeping</h2>
+                <div class="service-description">
+                    Our housekeeping service ensures your home remains clean, organized, and hygienic. Available on a daily or weekly basis.
+                </div>
+            </a>
+
+            <!-- Cooking Service (As Button) -->
+            <a href="/request-cooking" class="service-card">
+                <img src="../static/assets/images/cooking.png" alt="Cooking Logo" class="service-logo">
+                <h2 class="service-name">Cooking</h2>
+                <div class="service-description">
+                    Our skilled cooks prepare fresh, nutritious meals tailored to your dietary preferences, ensuring healthy, balanced meals daily.
+                </div>
+            </a>
+
+            <!-- Daily/Weekly Check-ins (As Button) -->
+            <a href="/request-checkins" class="service-card">
+                <img src="../static/assets/images/calendar.png" alt="Check-ins Logo" class="service-logo">
+                <h2 class="service-name">Daily/Weekly Check-ins</h2>
+                <div class="service-description">
+                    Regular check-ins to ensure the well-being and health of our elderly users. Choose between daily or weekly options.
+                </div>
+            </a>
+        </div>
+    </main>
+
+    
+ 
+
+
+{% endblock content %}
+
