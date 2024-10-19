@@ -1,0 +1,74 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.team-member {
+    background-color: #19682c;
+    border-radius: 15px;
+    width: 200px;
+    padding: 20px;
+    text-align: center;
+    color: white;
+}
+
+.team-section {
+    text-align: center;
+    padding: 50px;
+}
+.team-member img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    border: 5px solid white;
+}
+.team-section h1 {
+    font-size: 36px;
+    margin-bottom: 40px;
+    color: #333;
+}
+
+.team-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.team-card {
+    background-color: #4d7f65;
+    color: white;
+    width: 200px;
+    height: 250px;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.team-card:hover {
+    transform: scale(1.1);
+}
+
+.profile-picture {
+    background-color: #dcdcdc;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+}
+
+.team-card h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.team-card p {
+    font-size: 14px;
+}

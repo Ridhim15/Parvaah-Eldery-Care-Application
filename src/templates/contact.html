@@ -1,0 +1,37 @@
+{% extends 'base.html' %} {% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='contact.css') }}" />
+{% endblock %} {% block content %}
+
+<body>
+  <div style="padding: 30px"></div>
+  <div class="team-section">
+    <h1>MEET THE TEAM</h1>
+    <div class="team-container">
+      <div class="team-member">
+        <img src="../static/assets/images/yashu.jpg" alt="Yash" />
+        <h2>YASH</h2>
+        <p>08614902022</p>
+        <p>Full Stack Developer</p>
+      </div>
+      <div class="team-member">
+        <img src="../static/assets/images/aditya.png" alt="Aditya Jain" />
+        <h2>ADITYA</h2>
+        <p>36014902022</p>
+        <p>Full Stack Developer</p>
+      </div>
+      <div class="team-member">
+        <img src="../static/assets/images/ridim.png" alt="Ridhim Gupta" />
+        <h2>RIDHIM</h2>
+        <p>07314902022</p>
+        <p>Full Stack Developer</p>
+      </div>
+      <div class="team-member">
+        <img src="../static/assets/images/adnaan.png" alt="Adnaan Nanda" />
+        <h2>ADNAAN</h2>
+        <p>36114902022</p>
+        <p>Full Stack Developer</p>
+      </div>
+    </div>
+  </div>
+</body>
+{% endblock content %}

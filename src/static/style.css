@@ -20,6 +20,14 @@ body {
 	background-color: var(--background-color);
 }
 
+/* Main container grid layout */
+.main-container {
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+	min-height: 100vh;
+	
+}
+
 .container {
 	max-width: 1200px;
 	margin: 0 auto;
@@ -37,6 +45,7 @@ body {
 	position: fixed;
 	width: 100%;
 	z-index: 1000;
+	
 }
 
 .navbar {
@@ -303,4 +312,3 @@ section h2 {
 		margin-top: 1rem;
 	}
 }
-
