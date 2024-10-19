@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='about.css') }}">
+{% endblock %}
+{% block content %}
+<!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <h1>About Parvaah</h1>
+            <p>Parvaah is an all-in-one platform designed to empower senior citizens by providing essential services at their fingertips. We are dedicated to improving the lives of the elderly by offering health management, emergency assistance, social engagement, and daily care support—all through a single, easy-to-use application.</p>
+            <img src="https://static.wixstatic.com/media/6158ef_d44a5d46040c4784bcf00813ff6a0cb2~mv2.png/v1/fill/w_606,h_548,al_c,lg_1,q_85,enc_auto/6158ef_d44a5d46040c4784bcf00813ff6a0cb2~mv2.png" alt="Parvaah App Demo">
+        </div>
+    </section>
+
+    <!-- Our Mission Section -->
+    <section class="mission">
+        <div class="container">
+            <h2>Our Mission</h2>
+            <p>Our mission is to provide a reliable, accessible, and holistic platform for senior citizens, ensuring they receive the support they need to live a dignified and fulfilling life. Parvaah is not just an app—it's a community-driven solution for elder care.</p>
+
+            <ul class="mission-list">
+                <li><strong>Healthcare:</strong> Manage medical appointments, medication reminders, and access to doctors from the comfort of your home.</li>
+                <li><strong>Emergency Services:</strong> With just one tap, connect to emergency services available 24/7.</li>
+                <li><strong>Daily Assistance:</strong> Access support for daily tasks like housekeeping, transportation, and more.</li>
+                <li><strong>Community & Social Engagement:</strong> Join a community of like-minded individuals through online activities and events tailored to seniors.</li>
+
+            </ul>
+        </div>
+    </section>
+{% endblock content %}
