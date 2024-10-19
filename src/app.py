@@ -8,29 +8,29 @@ from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
 from requests.models import Response
 
 
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 from os import environ
 from datetime import datetime
 import json
 
-load_dotenv()
+# load_dotenv()
 app = Flask(__name__)
 api = Api(app)
 
 # app.secret_key = environ['SECRET_KEY']
 # app.config['SESSION_TYPE'] = ''
 
-environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
-environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' # ONLY ON LOCAL ENV
-blueprint = make_google_blueprint(
-    client_id     = environ['GOOGLE_CLIENT_ID'],
-    client_secret = environ['GOOGLE_CLIENT_SECRET'],
-    scope         = ['email','profile'],
-    offline       = True,
-    redirect_to   = 'google_auth'
-)
-app.register_blueprint(blueprint, url_prefix='/login')
+# environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
+# environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' # ONLY ON LOCAL ENV
+# blueprint = make_google_blueprint(
+#     client_id     = environ['GOOGLE_CLIENT_ID'],
+#     client_secret = environ['GOOGLE_CLIENT_SECRET'],
+#     scope         = ['email','profile'],
+#     offline       = True,
+#     redirect_to   = 'google_auth'
+# )
+# app.register_blueprint(blueprint, url_prefix='/login')
 
 
 
