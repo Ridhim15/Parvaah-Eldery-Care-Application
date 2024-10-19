@@ -1,8 +1,0 @@
-Flask
-Flask-RESTful
-Flask-CORS
-Flask-SQLAlchemy
-Flask-Session
-Flask-Dance
-oauthlib
-requests
