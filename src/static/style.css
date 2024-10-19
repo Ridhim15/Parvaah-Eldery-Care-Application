@@ -28,6 +28,16 @@ body {
 	
 }
 
+.home-link {
+	color: inherit;
+	cursor: pointer;
+	background: none;
+	border: none;
+	font: inherit;
+	text-decoration: none;
+}
+
+
 .container {
 	max-width: 1200px;
 	margin: 0 auto;
