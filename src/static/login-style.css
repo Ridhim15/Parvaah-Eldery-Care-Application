@@ -23,6 +23,7 @@ main {
 	align-items: center;
 	justify-content: center;
 }
+
 .home-link {
 	color: inherit;
 	cursor: pointer;
@@ -31,6 +32,7 @@ main {
 	font: inherit;
 	text-decoration: none;
 }
+
 
 .box {
 	position: relative;
@@ -276,6 +278,7 @@ main.sign-up-mode .carousel {
 	transform: none;
 }
 
+
 .text-slider .text {
 	display: flex;
 	align-items: center;
@@ -284,6 +287,7 @@ main.sign-up-mode .carousel {
 }
 
 .text-wrap {
+	max-height: 2.2rem;
 	overflow: hidden;
 	margin-bottom: 2.5rem;
 }
@@ -297,6 +301,7 @@ main.sign-up-mode .carousel {
 }
 
 .text-group h2 {
+	line-height: 2.2rem;
 	font-weight: 600;
 	font-size: 1.6rem;
 }

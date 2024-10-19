@@ -5,6 +5,7 @@ const bullets = document.querySelectorAll(".bullets span")
 const images = document.querySelectorAll(".image")
 const texts = document.querySelectorAll(".text") // Add this line to select text elements
 
+
 console.log("Login works")
 inputs.forEach(inp => {
 	inp.addEventListener("focus", () => {
@@ -40,6 +41,7 @@ function moveSlider() {
 bullets.forEach(bullet => {
 	bullet.addEventListener("click", moveSlider)
 })
+
 
 let currentIndex = 1
 setInterval(() => {
