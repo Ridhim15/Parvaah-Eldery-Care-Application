@@ -19,6 +19,14 @@ body {
 	color: var(--text-color);
 	background-color: var(--background-color);
 }
+.home-link {
+	color: inherit;
+	cursor: pointer;
+	background: none;
+	border: none;
+	font: inherit;
+	text-decoration: none;
+}
 
 .container {
 	max-width: 1200px;
