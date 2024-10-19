@@ -24,6 +24,16 @@ main {
 	justify-content: center;
 }
 
+.home-link {
+	color: inherit;
+	cursor: pointer;
+	background: none;
+	border: none;
+	font: inherit;
+	text-decoration: none;
+}
+
+
 .box {
 	position: relative;
 	width: 100%;
@@ -268,7 +278,8 @@ main.sign-up-mode .carousel {
 	transform: none;
 }
 
-.text-slider {
+
+.text-slider .text {
 	display: flex;
 	align-items: center;
 	justify-content: center;
