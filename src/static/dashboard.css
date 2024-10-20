@@ -120,7 +120,7 @@ body {
 
 /* Dashboard Section */
 .dashboard {
-    padding: 6rem 0 4rem; /* Increased top padding */
+    padding: 1rem 0 4rem; /* Increased top padding */
     background-color: var(--light-bg-color);
     text-align: center;
     margin-top: 0; /* Removed margin-top */
