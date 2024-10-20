@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Layout with Sticky Navbar and Footer</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Main grid container */
+        .container {
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            /* Navbar, Main Content, Footer */
+            min-height: 100vh;
+        }
+
+        /* Sticky Navbar */
+        .navbar {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid black;
+        }
+
+        .navbar h1 {
+            margin: 0;
+        }
+
+        /* Main content area */
+        .main-content {
+            padding: 20px;
+            background-color: #f4f4f4;
+            border: 2px solid black;
+            overflow-y: auto;
+        }
+
+        .main-content p {
+            margin-bottom: 20px;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            border-top: 2px solid black;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+
+            .navbar,
+            .footer {
+                padding: 10px;
+            }
+
+            .main-content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sticky Navbar -->
+        <div class="navbar">
+            <h1>My Sticky Navbar</h1>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <h2>Welcome to the Main Content</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur non justo eu odio lacinia volutpat.
+            </p>
+            <p>Suspendisse potenti. Pellentesque nec tempor mauris, vel vestibulum purus.</p>
+            <p>Proin venenatis sapien a odio cursus, ut convallis elit luctus. Vivamus ac tincidunt elit.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur non justo eu odio lacinia volutpat.
+            </p>
+            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Iste voluptate incidunt sequi? Tenetur, quam!
+                Velit rerum maxime porro odit, aliquam et similique accusantium perferendis magnam laboriosam incidunt
+                autem deserunt adipisci!
+                Maxime, molestias quod? Voluptatem, ratione nesciunt officia ipsa id, non molestiae earum quidem dolores
+                placeat ullam veritatis velit ex repellat, odit assumenda inventore unde dolor tempora officiis quasi
+                voluptate voluptatum?
+                Tempora maiores debitis ipsum! Hic expedita repellendus placeat. Voluptate ab placeat, omnis accusamus
+                expedita facilis itaque adipisci mollitia voluptates nesciunt veritatis dolores incidunt ullam, quae qui
+                excepturi minima voluptas perspiciatis.
+                A provident, quam magni doloribus exercitationem impedit perferendis non veritatis voluptatibus.
+                Repellat aspernatur rerum autem quod quaerat numquam sed laboriosam, saepe sit magnam. Optio, illo? Et
+                autem animi commodi omnis.
+                Quo praesentium est rem quis porro in deserunt ducimus corporis deleniti laboriosam natus ut mt
+                reiciendis commodi tempora eum placeat, officia dicta
+                consequatur dolores eius rerum unde aspernatur!
+                Deleniti quidem neque facere ipsa? Accusantium, iusto cumque explicabo repellendus voluptate nihil!
+                Atque sed odio eligendi quis inventore tenetur ipsum, expedita, repudiandae cum quia debitis assumenda
+                excepturi asperiores dicta veritatis?</p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Footer Content - Always at the bottom</p>
+        </div>
+    </div>
+</body>
+
+</html>

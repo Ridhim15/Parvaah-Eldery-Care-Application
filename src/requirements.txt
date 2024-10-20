@@ -6,3 +6,4 @@ Flask-Session
 Flask-Dance
 oauthlib
 requests
+mysql-connector-python
