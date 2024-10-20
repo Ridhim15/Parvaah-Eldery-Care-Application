@@ -7,26 +7,12 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
-
-    <title>Parvaah Dashboard</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link
-      rel="stylesheet"
-      href="{{url_for('static',filename='dashboard.css')}}"
-    />
-    <style>
-      a.service-item {
-        text-decoration: none;
-        color: black;
-      }
-
-      a.service-item:hover {
-        color: black;
-      }
-    </style>
+    <link rel="stylesheet" href="../static/dashservices.css" />
+    <title>Parvaah Dashboard</title>
   </head>
 
   <body>
@@ -41,19 +27,17 @@
           />
           <span>Parvaah</span>
         </a>
-
         <a href="./pages/profile.html" class="profile-icon">
-          <i class="fas fa-user-circle"></i
-          ><span>Naresh Gupts's Guardian Aditya Jain</span>
+          <i class="fas fa-user-circle"></i><span>Naresh Gupta</span>
         </a>
       </nav>
     </header>
+    <div style="padding: 100px 0 0 0"></div>
 
     <!-- Dashboard Section -->
     <main>
       <section class="dashboard">
         <div class="container dashboard-container">
-          <!-- Services Buttons -->
           <div class="dashboard-services">
             <a href="/medicalcare" class="service-item">
               <img src="../static/Assets/images/medicalcare.avif" width="64" />
@@ -63,35 +47,19 @@
               <img src="../static/Assets/images/homecare.avif" width="64" />
               <h3>HomeCare</h3>
             </a>
-            <a href="/reminder" class="service-item">
-              <img src="../static/assets/images/medrem.png" width="64" />
-              <h3>Medicine Reminder</h3>
-            </a>
-            <a href="/appointreminder" class="service-item">
-              <img src="../static/Assets/images/appoint.png" width="64" />
-              <h3>Appointment Reminder</h3>
-            </a>
-
-            <a href="/community" class="service-item">
-              <img src="../static/Assets/images/community.png" width="64" />
-              <h3>Community</h3>
-            </a>
-            <a href="/insights" class="service-item">
-              <img src="../static/Assets/images/insights.avif" width="64" />
-              <h3>Insights</h3>
-            </a>
           </div>
         </div>
       </section>
     </main>
+    <div style="padding: 50px 0 0 0"></div>
+
     <!-- Footer -->
     <footer class="footer">
       <div class="container">
         <div class="footer-content">
           <div class="footer-logo">
             <img
-              src="../static/assets/images/Parvaah-logo.png"
-              alt="Parvaah Logo"
+              src="../static/Assets/images/Parvaah-logo.png"
               width="40"
               height="40"
             />
@@ -103,31 +71,30 @@
             <a href="#contact">Contact Us</a>
           </div>
           <div class="social-links">
-            <a
-              href="https://www.facebook.com/profile.php?id=61567122158733"
-              aria-label="Facebook"
-              ><img
-                src="../static/assets/images/facebook.png"
+            <a href="#" aria-label="Facebook">
+              <img
+                src="../static/Assets/images/facebook.png"
                 width="24"
                 height="24"
-            /></a>
-            <a href="#" aria-label="Twitter"
-              ><img
-                src="../static/assets/images/twiter.png"
+              />
+            </a>
+            <a href="#" aria-label="Twitter">
+              <img
+                src="../static/Assets/images/twiter.png"
                 width="24"
                 height="24"
-            /></a>
-            <a
-              href="https://www.instagram.com/parvaahcare/"
-              aria-label="Instagram"
-              ><img
-                src="../static/assets/images/insta.jpg"
+              />
+            </a>
+            <a href="#" aria-label="Instagram">
+              <img
+                src="../static/Assets/images/insta.jpg"
                 width="24"
                 height="24"
-            /></a>
+              />
+            </a>
           </div>
         </div>
-        <p class="copyright">&copy; 2023 Parvaah. All rights reserved.</p>
+        <p class="copyright">&copy; 2023 Parvah. All rights reserved.</p>
       </div>
     </footer>
   </body>
