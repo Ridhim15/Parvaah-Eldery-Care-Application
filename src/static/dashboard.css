@@ -120,7 +120,7 @@ body {
 
 /* Dashboard Section */
 .dashboard {
-    padding: 6rem 0 4rem; /* Increased top padding */
+    padding: 1rem 0 4rem; /* Increased top padding */
     background-color: var(--light-bg-color);
     text-align: center;
     margin-top: 0; /* Removed margin-top */
@@ -180,6 +180,14 @@ body {
     justify-items: center; /* Center items horizontally */
 }
 
+a.service-item {
+    text-decoration: none;
+    color: black;
+  }
+
+  a.service-item:hover {
+    color: black;
+  }
 .service-item {
     width: 100%; /* Make all service items take up the full column width */
     max-width: 500px; /* Set a maximum width for consistency */

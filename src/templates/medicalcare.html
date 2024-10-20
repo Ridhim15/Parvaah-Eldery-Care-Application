@@ -1,104 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Medical Care Services - Parvaah</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{url_for('static',filename='medicalcare.css')}}">
-</head>
-<body>
-
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='medicalcare.css')}}"
+    />
+  </head>
+  <body>
     <!-- Header with Dashboard-Like Navbar -->
     <header class="header">
-        <nav class="navbar container">
-            <a href="/" class="logo">
-                <img src="./static/Assets/images/Parvaah-logo.png" alt="Parvaah Logo" width="40" height="40">
-                <span>Parvaah</span>
-            </a>
-            <ul class="nav-links">
-                <li><a href="#about">About</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="./community.html">Community</a></li>
-                <li><a href="#testimonials">Testimonials</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-            <a href="/dashboard.html" class="home-btn">Home</a>
-            <a href="/logout" class="logout-btn">Logout</a>
-        </nav>
+      <nav class="navbar container">
+        <a href="/" class="logo">
+          <img
+            src="./static/Assets/images/Parvaah-logo.png"
+            alt="Parvaah Logo"
+            width="40"
+            height="40"
+          />
+          <span>Parvaah</span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="./community.html">Community</a></li>
+          <li><a href="#testimonials">Testimonials</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <a href="/dashboard.html" class="home-btn">Home</a>
+        <a href="/logout" class="logout-btn">Logout</a>
+      </nav>
     </header>
 
     <!-- Medical Care Section -->
     <main class="container medicalcare-section">
-        <h1 class="medicalcare-title">Request Our Medical Care Services</h1>
+      <h1 class="medicalcare-title">Request Our Medical Care Services</h1>
 
-        <div class="services-section">
-            <!-- Blood Test Service (As Button) -->
-            <a href="/request-bloodtest" class="service-card">
-                <img src="../static/assets/images/bloodtest.jpeg" alt="Blood Test Logo" class="service-logo">
-                <h2 class="service-name">Blood Test</h2>
-                <div class="service-description">
-                    Schedule blood tests at home. Our medical team will assist with all necessary tests and ensure timely reports.
-                </div>
-            </a>
+      <div class="services-section">
+        <!-- Blood Test Service (As Button) -->
+        <a href="/booking" class="service-card">
+          <img
+            src="../static/assets/images/bloodtest.jpeg"
+            alt="Blood Test Logo"
+            class="service-logo"
+          />
+          <h2 class="service-name">Blood Test</h2>
+          <div class="service-description">
+            Schedule blood tests at home. Our medical team will assist with all
+            necessary tests and ensure timely reports.
+          </div>
+        </a>
 
-            <!-- Bathing/Dressing Service (As Button) -->
-            <a href="/request-bathingdressing" class="service-card">
-                <img src="../static/assets/images/bathandbody.png" alt="Bathing Logo" class="service-logo">
-                <h2 class="service-name">Bathing/Dressing</h2>
-                <div class="service-description">
-                    We assist with personal care, including bathing, grooming, and dressing, ensuring comfort and dignity.
-                </div>
-            </a>
+        <!-- Bathing/Dressing Service (As Button) -->
+        <a href="/booking" class="service-card">
+          <img
+            src="../static/assets/images/bathandbody.png"
+            alt="Bathing Logo"
+            class="service-logo"
+          />
+          <h2 class="service-name">Bathing/Dressing</h2>
+          <div class="service-description">
+            We assist with personal care, including bathing, grooming, and
+            dressing, ensuring comfort and dignity.
+          </div>
+        </a>
 
-            <!-- Nursing Service (As Button) -->
-            <a href="/request-nursing" class="service-card">
-                <img src="../static/assets/images/nursing.png" alt="Nursing Logo" class="service-logo">
-                <h2 class="service-name">Nursing</h2>
-                <div class="service-description">
-                    Our certified nurses provide in-home care, from medication management to post-hospital care and recovery.
-                </div>
-            </a>
+        <!-- Nursing Service (As Button) -->
+        <a href="/booking" class="service-card">
+          <img
+            src="../static/assets/images/nursing.png"
+            alt="Nursing Logo"
+            class="service-logo"
+          />
+          <h2 class="service-name">Nursing</h2>
+          <div class="service-description">
+            Our certified nurses provide in-home care, from medication
+            management to post-hospital care and recovery.
+          </div>
+        </a>
 
-            <!-- Physiotherapy Service (As Button) -->
-            <a href="/request-physiotherapy" class="service-card">
-                <img src="../static/assets/images/langda.jpeg" alt="Physiotherapy Logo" class="service-logo">
-                <h2 class="service-name">Physiotherapy</h2>
-                <div class="service-description">
-                    We offer physiotherapy services to help improve mobility, strength, and overall well-being at home.
-                </div>
-            </a>
-        </div>
+        <!-- Physiotherapy Service (As Button) -->
+        <a href="/booking" class="service-card">
+          <img
+            src="../static/assets/images/langda.jpeg"
+            alt="Physiotherapy Logo"
+            class="service-logo"
+          />
+          <h2 class="service-name">Physiotherapy</h2>
+          <div class="service-description">
+            We offer physiotherapy services to help improve mobility, strength,
+            and overall well-being at home.
+          </div>
+        </a>
+      </div>
     </main>
 
     <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <img src="../static/assets/images/Parvaah-logo.png"
-                        alt="Parvah Logo" width="40" height="40">
-                    <span>Parvah</span>
-                </div>
-                <div class="footer-links">
-                    <a href="privacy.html">Privacy Policy</a>
-                    <a href="terms.html">Terms of Service</a>
-                    <a href="#contact">Contact Us</a>
-                </div>
-                <div class="social-links">
-                    <a href="#" aria-label="Facebook"><img
-                            src="../static/assets/images/facebook.png"
-                            width="24" height="24"></a>
-                    <a href="#" aria-label="Twitter"><img
-                            src="../static/assets/images/twiter.png"
-                            width="24" height="24"></a>
-                    <a href="#" aria-label="Instagram"><img
-                            src="../static/assets/images/insta.jpg"
-                            width="24" height="24"></a>
-                </div>
-            </div>
-            <p class="copyright">&copy; 2023 Parvah. All rights reserved.</p>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-logo">
+            <img
+              src="../static/assets/images/Parvaah-logo.png"
+              alt="Parvah Logo"
+              width="40"
+              height="40"
+            />
+            <span>Parvah</span>
+          </div>
+          <div class="footer-links">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="#contact">Contact Us</a>
+          </div>
+          <div class="social-links">
+            <a href="#" aria-label="Facebook"
+              ><img
+                src="../static/assets/images/facebook.png"
+                width="24"
+                height="24"
+            /></a>
+            <a href="#" aria-label="Twitter"
+              ><img
+                src="../static/assets/images/twiter.png"
+                width="24"
+                height="24"
+            /></a>
+            <a href="#" aria-label="Instagram"
+              ><img
+                src="../static/assets/images/insta.jpg"
+                width="24"
+                height="24"
+            /></a>
+          </div>
         </div>
+        <p class="copyright">&copy; 2023 Parvah. All rights reserved.</p>
+      </div>
     </footer>
-
-</body>
+  </body>
 </html>

@@ -1,0 +1,73 @@
+{% extends 'base.html' %} {% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='testis.css') }}" />
+{% endblock %} {% block content %}
+
+<!-- Testimonial Section -->
+<div class="testimonial-container">
+  <div style="padding: 20px"></div>
+  <h1>What Our Users Say</h1>
+  <div class="testimonial-grid">
+    <div class="testimonial-card">
+      <div class="profile-img"></div>
+      <p class="testimonial-quote">
+        "Parvaah has been an incredible service for my family, providing all the
+        care and support we need."
+      </p>
+      <p class="testimonial-name">Jondis Chaudary</p>
+      <p class="testimonial-details">Age: 78 | Service: Home Care</p>
+    </div>
+
+    <div class="testimonial-card">
+      <div class="profile-img"></div>
+      <p class="testimonial-quote">
+        "The medical care we receive through Parvaah is fantastic. They truly
+        care about their clients."
+      </p>
+      <p class="testimonial-name">RonaldoLal Smith</p>
+      <p class="testimonial-details">Age: 72 | Service: Medical Care</p>
+    </div>
+
+    <div class="testimonial-card">
+      <div class="profile-img"></div>
+      <p class="testimonial-quote">
+        "Parvaah has provided me with peace of mind. Knowing my health is being
+        looked after makes a huge difference."
+      </p>
+      <p class="testimonial-name">Yash Kumar Pandit</p>
+      <p class="testimonial-details">Age: 85 | Service: Emergency Care</p>
+    </div>
+
+    <div class="testimonial-card">
+      <div class="profile-img"></div>
+      <p class="testimonial-quote">
+        "With Parvaah's appointment reminders, I never miss an important health
+        check-up!"
+      </p>
+      <p class="testimonial-name">Aditya jain</p>
+      <p class="testimonial-details">
+        Age: 67 | Service: Appointment Reminders
+      </p>
+    </div>
+
+    <div class="testimonial-card">
+      <div class="profile-img"></div>
+      <p class="testimonial-quote">
+        "Parvaah's home care services have been a great support to my aging
+        parents. Truly a remarkable service."
+      </p>
+      <p class="testimonial-name">Naresh Nanda</p>
+      <p class="testimonial-details">Age: 80 | Service: Home Care</p>
+    </div>
+
+    <div class="testimonial-card">
+      <div class="profile-img"></div>
+      <p class="testimonial-quote">
+        "The care and attention from the Parvaah team has been exceptional. We
+        couldn't be more grateful."
+      </p>
+      <p class="testimonial-name">Sophia Pandit</p>
+      <p class="testimonial-details">Age: 73 | Service: Nursing</p>
+    </div>
+  </div>
+</div>
+{% endblock content %}

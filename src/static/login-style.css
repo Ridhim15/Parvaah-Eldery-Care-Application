@@ -23,8 +23,14 @@ main {
 	align-items: center;
 	justify-content: center;
 }
-
-.home-link {
+.or-text {
+	text-align: center;
+	margin: 10px 0; /* Adjust the spacing as needed */
+	font-weight: bold; /* Make it bold */
+	font-size: 1em; /* Adjust the font size as needed */
+}
+.home-link,
+.clear_link {
 	color: inherit;
 	cursor: pointer;
 	background: none;
@@ -32,7 +38,6 @@ main {
 	font: inherit;
 	text-decoration: none;
 }
-
 
 .box {
 	position: relative;
@@ -192,7 +197,8 @@ label {
 	cursor: pointer;
 	border-radius: 0.8rem;
 	font-size: 0.8rem;
-	margin-bottom: 2rem;
+	text-align: center;
+	margin-bottom: 1rem;
 	transition: 0.3s;
 }
 
@@ -277,7 +283,6 @@ main.sign-up-mode .carousel {
 	opacity: 1;
 	transform: none;
 }
-
 
 .text-slider .text {
 	display: flex;

@@ -2,80 +2,124 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parvaah</title>
-    <link rel="stylesheet" href="{{ url_for('static',filename='style.css' )}}">
-    <!-- <link rel="stylesheet" href="../static/style.css"> -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    {% block style %}{% endblock %}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parvaah</title>
+  <link rel="stylesheet" href="{{ url_for('static',filename='style.css' )}}" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  {% block style %}{% endblock %}
+
+  <script defer>
+    fetch( '/api/login_status' )
+      .then( response => response.json() )
+      .then( data => {
+        console.log( data );
+        if ( data.status == "logged_in" ) {
+          // Hide the login button
+          document.getElementById( "landing_nav").style.display = 'none';
+          // Show the profile-info div
+          document.getElementById( "login_nav" ).style.display = 'flex';
+          // Fill in the user data (given to us by the API :3)
+          document.getElementById( "username" ).innerText = data.username;
+          document.getElementById( "profile-pic" ).src = data.profile_image;
+        }
+      } )
+  </script>
 </head>
 
 <body>
-    <div class="main-container">
-        <header class="header">
-            <nav class="navbar container">
-                <a href="/" class="logo">
-                    <img src="../static/assets/images/Parvaah-logo.png" width="40" height="40">
-                    <span>Parvaah</span>
-                </a>
-                <ul class="nav-links">
-                    <li><a href="/about">About</a></li>
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="/community">Community</a></li>
-                    <li><a href="#testimonials">Testimonials</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-                {% if logged_in %}
-                <div class="profile">
-                    {% if current_user.profile_pic %}
-                    <img src="{{ current_user.profile_pic }}" alt="Profile Pic" width="40" height="40">
-                    {% else %}
-                    <img src="../static/assets/images/profile-pic.png" alt="Profile Pic" width="40" height="40">
-                    {% endif %}
-                    <span>{{ current_user.name }}</span>
-                    {% else %}
-                    <a href="/login" class="btn btn-primary">Sign Up</a>
-                    {% endif %}
-                </div>
-            </nav>
-        </header>
-        <div class="main-content">
-            {% block content %}
-            {% endblock %}
+  <div class="main-container">
+    <!-- Header / Navbar -->
+    <header class="header">
+          <!-------------------------------------------------------------------------------------------------
+          --------------------------------------------- Landing Nav  ----------------------------------------
+          ------------------------------------------------------------------------------------------------- -->
+      <nav id="landing_nav" class="navbar container">
+        <a href="/" class="logo">
+          <img src="../static/assets/images/Parvaah-logo.png" width="40" height="40" />
+          <span>Parvaah</span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="/about">About</a></li>
+          <li><a href="/services">Services</a></li>
+          <li><a href="/community">Community</a></li>
+          <li><a href="/testimonials">Testimonials</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+          <div id="login-button">
+            <a href="/user" class="btn btn-primary">Login / Sign Up</a>
+          </div>
         </div>
-        <footer class="footer">
-            <div class="container">
-                <div class="footer-content">
-                    <div class="footer-logo">
-                        <img src="../static/assets/images/Parvaah-logo.png" alt="Parvah Logo" width="40" height="40">
-                        <span>Parvah</span>
-                    </div>
-                    <div class="footer-links">
-                        <a href="privacy.html">Privacy Policy</a>
-                        <a href="terms.html">Terms of Service</a>
-                        <a href="#contact">Contact Us</a>
-                    </div>
-                    <div class="social-links">
-                        <a href="#" aria-label="Facebook"><img src="../static/assets/images/facebook.png" width="24"
-                                height="24"></a>
-                        <a href="#" aria-label="Twitter"><img src="../static/assets/images/twiter.png" width="24"
-                                height="24"></a>
-                        <a href="#" aria-label="Instagram"><img src="../static/assets/images/insta.jpg" width="24"
-                                height="24"></a>
-                    </div>
-                </div>
-                <p class="copyright">&copy; 2023 Parvah. All rights reserved.</p>
-            </div>
-        </footer>
-        {% block scripts %}
-        {% endblock %}
-    </div>
+      </nav>
+          <!-------------------------------------------------------------------------------------------------
+          --------------------------------------------- Logged in nav ----------------------------------------
+          ------------------------------------------------------------------------------------------------- -->
+      <nav id="login_nav" class="navbar container" style="display: none;">
+        <a href="/" class="logo">
+          <img src="../static/assets/images/Parvaah-logo.png" width="40" height="40" />
+          <span>Parvaah</span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="/dashboard">Dashboard</a></li>
+        </ul>
+        <div class="profile">
+          <div id="profile-info" class="profile-info">
+            <a href="/profile" class="clear_link">
+              <span id="username"></span>
+              <img id="profile-pic" alt="Profile Pic" width="40" height="40">
+            </a>
+          </div>
+          <div id="logout-btn">
+            <a href="/logout" class="clear_link">Logout</a>
+          </div>
+        </div>
+        
+      </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main>
+      {% block content %}
+      <!-- Place your content here -->
+      {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-logo">
+            <img src="../static/assets/images/Parvaah-logo.png" alt="Parvaah Logo" width="40" height="40" />
+            <span>Parvaah</span>
+          </div>
+          <div class="footer-links">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="#contact">Contact Us</a>
+          </div>
+          <div class="social-links">
+            <a href="https://www.facebook.com/profile.php?id=61567122158733" aria-label="Facebook"><img
+                src="../static/assets/images/facebook.png" width="24" height="24" /></a>
+            <a href="#" aria-label="Twitter"><img src="../static/assets/images/twiter.png" width="24" height="24" /></a>
+            <a href="https://www.instagram.com/parvaahcare/" aria-label="Instagram"><img
+                src="../static/assets/images/insta.jpg" width="24" height="24" /></a>
+          </div>
+        </div>
+        <p class="copyright">&copy; 2023 Parvaah. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  {% block scripts %}
+
+  {% endblock %}
+
+  Chippichippi chaapa chaapa
 </body>
 
 </html>

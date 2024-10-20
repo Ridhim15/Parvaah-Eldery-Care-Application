@@ -1,0 +1,92 @@
+/* CSS for styling the Appointment Reminder page */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4; /* Light background */
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: relative; /* To position images behind the form */
+}
+
+/* Background images */
+.bg-left, .bg-right {
+    position: absolute;
+    top: 0;
+    height: 600px; /* Adjust height as per the design */
+    z-index: -1; /* Place behind the content */
+}
+
+.bg-left {
+    left: 0;
+    top: 50px;
+}
+
+.bg-right {
+    right: 0;
+    top: 50px;
+}
+
+/* Form box styling */
+.box {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 300px; /* Fixed width for consistency */
+    padding-top: 40px;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 50px;
+    z-index: 1; /* Bring the container above the background images */
+    position: relative;
+}
+
+.heading {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.input-wrap {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.input-field {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    border: none;
+    border-radius: 5px;
+    text-decoration: none; /* Remove underline */
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px; /* Space between elements */
+}
+
+.btn:hover {
+    background-color: #45a049; /* Darker shade on hover */
+}
+
+.text {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.9em;
+}
