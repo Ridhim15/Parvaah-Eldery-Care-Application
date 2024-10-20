@@ -31,7 +31,18 @@
                     <li><a href="#testimonials">Testimonials</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
-                <a href="/login" class="btn btn-primary">Sign Up</a>
+                {% if logged_in %}
+                <div class="profile">
+                    {% if current_user.profile_pic %}
+                    <img src="{{ current_user.profile_pic }}" alt="Profile Pic" width="40" height="40">
+                    {% else %}
+                    <img src="../static/assets/images/profile-pic.png" alt="Profile Pic" width="40" height="40">
+                    {% endif %}
+                    <span>{{ current_user.name }}</span>
+                    {% else %}
+                    <a href="/login" class="btn btn-primary">Sign Up</a>
+                    {% endif %}
+                </div>
             </nav>
         </header>
         <div class="main-content">
