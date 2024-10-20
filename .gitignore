@@ -1,3 +1,4 @@
 .env
 instance
 flask
+src/__pycache__

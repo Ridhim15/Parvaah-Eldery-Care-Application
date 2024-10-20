@@ -1,89 +1,69 @@
-:root {
-    --primary-color: #f4a261;
-    --secondary-color: #2a9d8f;
-    --text-color: #333333;
-    --background-color: #ffffff;
-    --light-bg-color: #f9f9f9;
-    --highlight-color: #e63946;
-}
-
-* {
+/* Styles for the Emergency Activated Page */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4; /* Light background */
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
-body {
-    font-family: "Poppins", sans-serif;
-    line-height: 1.6;
-    background-color: var(--background-color);
-    color: var(--text-color);
+main {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+}
+
+.box {
+    background: white;
     padding: 20px;
-}
-
-.container {
-    max-width: 600px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 500px; /* Slightly wider to fit more text */
     text-align: center;
-    padding: 2rem;
-    background-color: var(--light-bg-color);
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.container h1 {
-    color: var(--highlight-color);
-    font-size: 3rem;
-    margin-bottom: 1rem;
+.heading {
+    margin-bottom: 20px;
 }
 
-.container p {
-    font-size: 1.5rem;
-    color: var(--text-color);
-    margin-bottom: 1.5rem;
+.heading h2 {
+    color: #e74c3c; /* Red for emergency */
+    font-size: 1.5em;
 }
 
-.calm-message {
-    font-size: 1.2rem;
-    color: var(--secondary-color);
-    margin-bottom: 2rem;
+.heading h6 {
+    color: #333;
+    font-size: 1.1em;
 }
 
-.calm-message strong {
-    color: var(--highlight-color);
+.confirmation-icon {
+    font-size: 50px;
+    color: #e74c3c; /* Red exclamation mark for urgency */
+    margin-bottom: 15px;
 }
 
-.info-box {
-    background-color: var(--background-color);
-    padding: 1.5rem;
-    border-radius: 10px;
-    border-left: 5px solid var(--primary-color);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    font-size: 1.1rem;
-    line-height: 1.8;
+.text {
+    font-size: 1em;
+    margin-bottom: 20px;
+    color: #555;
 }
 
-.footer {
-    margin-top: 2rem;
-    color: var(--text-color);
-    font-size: 0.9rem;
-    opacity: 0.7;
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    background-color: #4CAF50; /* Green background for safety message */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .container h1 {
-        font-size: 2.5rem;
-    }
-
-    .container p {
-        font-size: 1.2rem;
-    }
-
-    .info-box {
-        font-size: 1rem;
-    }
+.btn:hover {
+    background-color: #45a049;
 }

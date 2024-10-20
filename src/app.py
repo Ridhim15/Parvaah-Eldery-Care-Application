@@ -7,62 +7,91 @@ from flask_dance.contrib.google import make_google_blueprint, google
 from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
 from requests.models import Response
 from dotenv import load_dotenv
+
 from os import environ
 from datetime import datetime
 import json
 import mysql.connector
+from sqlalchemy import text
+
 
 load_dotenv()
-
 
 app = Flask(__name__)
 api = Api(app)
 app.secret_key = environ['SECRET_KEY']
-# Configure the app for MySQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:admin@localhost/parvaah'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///databases.db'
-
-db = SQLAlchemy(app)
 # -------------------- Session config --------------------
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///databases.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 app.config['SESSION_TYPE']             = 'sqlalchemy'
 app.config['SESSION_SQLALCHEMY']       = db
 app.config['SESSION_SQLALCHEMY_TABLE'] = 'sessions'
 Session(app)
-# connection=mysql.connector.connect(host='localhost, user='root', password='', database='Parvaah')
 
+
+# -------------------------------------------------------------------------------------------------
+# --------------------------------------------- Database Classes ----------------------------------
+# -------------------------------------------------------------------------------------------------
 
 class Elderly(db.Model):
-    id       = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(50), nullable=False)
-    email    = db.Column(db.String(50), unique=True, nullable=False)
-    image_url= db.Column(db.String(200))
-    name     = db.Column(db.String(100))
-    age      = db.Column(db.Integer)
+    eid           = db.Column(db.Integer, primary_key=True)
+    name          = db.Column(db.String(100))
+    username      = db.Column(db.String(50), unique=True, nullable=False)
+    email         = db.Column(db.String(50), unique=True, nullable=False)
+    password      = db.Column(db.String(50), nullable=False)
+    dob           = db.Column(db.Date)
+    phone         = db.Column(db.String(15))
+    profile_image = db.Column(db.String(200))
     # gid      = db.Column(db.Integer)
     # guardian = db.relationship(Guardian, backref=db.backref('elderly', lazy=True))
-
-    def __repr__(self):
-        return f'<Elderly {self.username}>'
     
     def __init__(self, username, password, email):
         self.username = username
         self.password = password
         self.email = email
+
+
 class Guardian(db.Model):
-    id       = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(50), nullable=False)
-    image_url= db.Column(db.String(200), nullable=False)
-    name     = db.Column(db.String(100), nullable=False)
-    age      = db.Column(db.Integer, nullable=False)
-    eid      = db.Column(db.Integer , nullable=False)
-    # elderly = db.relationship(Elderly, backref=db.backref('guardian', lazy=True))
+    gid           = db.Column(db.Integer, primary_key=True)
+    name          = db.Column(db.String(100))
+    username      = db.Column(db.String(50), unique=True, nullable=False)
+    email         = db.Column(db.String(50), unique=True, nullable=False)
+    password      = db.Column(db.String(50), nullable=False)
+    dob           = db.Column(db.Date)
+    phone         = db.Column(db.String(15))
+    profile_image = db.Column(db.String(200))
+    # elderly= db.relationship(Elderly, backref=db.backref('guardian', lazy=True))
+
+    def __init__(self, username, password, email):
+        self.username = username
+        self.password = password
+        self.email = email
+
+class Caretaker(db.Model):
+    cid           = db.Column(db.Integer, primary_key=True)
+    name          = db.Column(db.String(100))
+    username      = db.Column(db.String(50), unique=True, nullable=False)
+    email         = db.Column(db.String(50), unique=True, nullable=False)
+    password      = db.Column(db.String(50), nullable=False)
+    dob           = db.Column(db.Date)
+    phone         = db.Column(db.String(15))
+    profile_image = db.Column(db.String(200))
+    # elderly= db.relationship(Elderly, backref=db.backref('guardian', lazy=True))
+
+    def __init__(self, username, password, email):
+        self.username = username
+        self.password = password
+        self.email    = email
+
+
+# -------------------------------------------------------------------------------------------------
+# --------------------------------------------- Google Auth ---------------------------------------
+# -------------------------------------------------------------------------------------------------
 
 environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
-environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' # ONLY ON LOCAL ENV
+environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 blueprint = make_google_blueprint(
     client_id     = environ['GOOGLE_CLIENT_ID'],
     client_secret = environ['GOOGLE_CLIENT_SECRET'],
@@ -72,6 +101,25 @@ blueprint = make_google_blueprint(
 )
 app.register_blueprint(blueprint, url_prefix='/login')
 
+@app.route('/google_auth')
+def google_auth():
+    # get email and name from google
+    if not google.authorized:
+        return redirect(url_for('google.login'))
+    try:
+        resp = google.get('/oauth2/v2/userinfo')
+        assert resp.ok, resp.text
+        email = resp.json()['email']
+        name = resp.json()['name']
+        session['email'] = email
+        session['name']  = name
+        return redirect(url_for('dashboard'))
+    except TokenExpiredError:
+        return redirect(url_for('google.login'))
+    
+# -------------------------------------------------------------------------------------------------
+# --------------------------------------------- Login/Logout --------------------------------------
+# -------------------------------------------------------------------------------------------------
 
 @app.route('/')
 def index():
@@ -82,33 +130,6 @@ def index():
         return render_template('index.html', logged_in=logged_in, current_user=current_user)
     else:
         return render_template('index.html', logged_in=logged_in)
-@app.route('/<user>')
-def user(user):
-    return render_template('login.html', user=user)
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-
-        elderly = Elderly.query.filter_by(username=username, password=password).first()
-
-        if elderly:
-            session['username'] = elderly.username
-            session['user_id'] = elderly.id
-            return redirect(url_for('index'))
-        else:
-            return 'Invalid username or password'
-    return render_template('login.html')
-
-# @app.route('/logout', methods=['POST'])
-# def logout():
-#     session.pop('username', None)
-#     session.pop('user_id', None)
-#     flash("You have been logged out.", "info")
-#     return redirect(url_for('login'))
-
 
 
 @app.route('/register', methods=['POST'])
@@ -129,50 +150,36 @@ def register():
             db.session.commit()
             return redirect(url_for('index'))
     return make_response('Invalid request method', 405)
-        
-@app.route('/google_auth')
-def google_auth():
-    # get email and name from google
-    if not google.authorized:
-        return redirect(url_for('google.login'))
-    try:
-        resp = google.get('/oauth2/v2/userinfo')
-        assert resp.ok, resp.text
-        email = resp.json()['email']
-        name = resp.json()['name']
-        session['email'] = email
-        session['name'] = name
-        return redirect(url_for('dashboard'))
-    except TokenExpiredError:
-        return redirect(url_for('google.login'))
-    
-@app.route('/test_db')
-def test_db():
-    try:
-        # Use text() to perform a raw SQL query to check connection
-        db.session.execute(text('SELECT 1'))
-        return "Database is connected!"
-    except Exception as e:
-        return f"Error connecting to the database: {str(e)}"
 
-# Route to add a test record to the database
-@app.route('/add_test_data')
-def add_test_data():
-    try:
-        # Create a new elderly record with image_url
-        new_elderly = Elderly(
-            username='testuser', 
-            password='password123', 
-            name='Test User', 
-            email='test@gmail.com',
-            age=70,
-            image_url='https://example.com/testuser.jpg'  # Add a sample image URL
-        )
-        db.session.add(new_elderly)
-        db.session.commit()
-        return "Test data added successfully!"
-    except Exception as e:
-        return f"Error adding test data: {str(e)}"
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        elderly = Elderly.query.filter_by(username=username, password=password).first()
+
+        if elderly:
+            session['username'] = elderly.username
+            session['user_id'] = elderly.eid
+            return redirect(url_for('index'))
+        else:
+            return 'Invalid username or password'
+    return render_template('login.html')
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.pop('username', None)
+    session.pop('user_id', None)
+    flash("You have been logged out.", "info")
+    return redirect(url_for('index'))
+
+
+
+
+# -------------------------------------------------------------------------------------------------
+# --------------------------------------------- Routes and Views ----------------------------------
+# -------------------------------------------------------------------------------------------------
 
 @app.route('/about')
 def about():
@@ -198,7 +205,6 @@ def homecare():
 def medicalcare():
     return render_template('medicalcare.html')
 
-
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
@@ -207,8 +213,116 @@ def contact():
 def community():
     return render_template('community.html')
 
+@app.route('/booking')
+def booking():
+    return render_template('booking.html')
+
+@app.route('/fitness')
+def fitness():
+    return render_template('fitness.html')
+
+@app.route('/health')
+def health():
+    return render_template('health.html')
+
+@app.route('/services')
+def services():
+    return render_template('services.html')
+
+@app.route('/testimonials')
+def testimonials():
+    return render_template('testimonials.html')
+
+@app.route('/user')
+def user():
+    return render_template('user.html')
+
+@app.route('/form')
+def form():
+    return render_template('form.html')
+
+@app.route('/guardian')
+def guardian():
+    return render_template('guardian.html')
+
+@app.route('/caretakerlogin')
+def caretakerlogin():
+    return render_template('caretakerlogin.html')
+
+@app.route('/guardiandashboard')
+def guardiandashboard():
+    return render_template('guardiandashboard.html')
+
+@app.route('/reminder')
+def reminder():
+    return render_template('reminder.html')
+
+@app.route('/appointreminder')
+def appointreminder():
+    return render_template('appointreminder.html')
+
+@app.route('/newservice')
+def newservice():
+    return render_template('newservice.html')
+
+@app.route('/thanks')
+def thanks():
+    return render_template('thanks.html')
+
+@app.route('/caretakerprofile')
+def caretakerprofile():
+    return render_template('caretakerprofile.html')
+
+@app.route('/dashservices')
+def dashservices():
+    return render_template('dashservices.html')
+
+@app.route('/sos')
+def sos():
+    return render_template('sos.html')
+
 
 if __name__ == '__main__':
     with app.app_context(): db.create_all()
     app.run(debug=True)
     
+
+
+# -------------------------------------------------------------------------------------------------
+# --------------------------------------------- Testing stuff -------------------------------------
+# -------------------------------------------------------------------------------------------------
+
+
+
+
+# # Configure the app for MySQL
+# # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:admin@1234/parvaah'
+# # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# @app.route('/test_db')
+# def test_db():
+#     try:
+#         # Use text() to perform a raw SQL query to check connection
+#         db.session.execute(text('SELECT 1'))
+#         return "Database is connected!"
+#     except Exception as e:
+#         return f"Error connecting to the database: {str(e)}"
+
+# # Route to add a test record to the database
+# @app.route('/add_test_data')
+# def add_test_data():
+#     try:
+#         # Create a new elderly record with image_url
+#         new_elderly = Elderly(
+#             username='testuser', 
+#             password='password123', 
+#             name='Test User', 
+#             email='test@gmail.com',
+#             age=70,
+#             image_url='https://example.com/testuser.jpg'  # Add a sample image URL
+#         )
+#         db.session.add(new_elderly)
+#         db.session.commit()
+#         return "Test data added successfully!"
+#     except Exception as e:
+#         return f"Error adding test data: {str(e)}"
