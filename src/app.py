@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, session, request, jsonify, make_response, send_from_directory
+from flask import Flask, flash, render_template, redirect, url_for, session, request, jsonify, make_response, send_from_directory
 from flask_restful import Api, Resource
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -8,7 +8,7 @@ from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
 from requests.models import Response
 
 
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from functools import partial
 from os import environ
 from datetime import datetime
@@ -23,11 +23,7 @@ app = Flask(__name__)
 api = Api(app)
 # app.secret_key = environ['SECRET_KEY']
 # load_dotenv()
-app = Flask(__name__)
-api = Api(app)
-
-
-# -------------------- Session config --------------------
+# -------------------- Session and SQL config --------------------
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///databases.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -129,6 +125,9 @@ class Caretaker(db.Model):
 #     except TokenExpiredError:
 #         return redirect(url_for('google.login'))
 
+# -------------------------------------------------------------------------------------------------
+# --------------------------------------------- Login -------------------------------------------
+# -------------------------------------------------------------------------------------------------
 
 @app.route('/')
 def index():
@@ -239,10 +238,6 @@ def contact():
 def community():
     return render_template('community.html')
 
-@app.route('/login')
-def login():
-    return render_template('login.html')
-
 @app.route('/booking')
 def booking():
     return render_template('booking.html')
@@ -313,5 +308,7 @@ def sos():
 
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
 
