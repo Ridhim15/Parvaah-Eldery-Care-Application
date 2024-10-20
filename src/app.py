@@ -13,10 +13,17 @@ import json
 import mysql.connector
 
 load_dotenv()
+
+
 app = Flask(__name__)
 api = Api(app)
 app.secret_key = environ['SECRET_KEY']
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///databases.db'
+# Configure the app for MySQL
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:admin@localhost/parvaah'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///databases.db'
+
 db = SQLAlchemy(app)
 # -------------------- Session config --------------------
 app.config['SESSION_TYPE']             = 'sqlalchemy'
@@ -24,8 +31,6 @@ app.config['SESSION_SQLALCHEMY']       = db
 app.config['SESSION_SQLALCHEMY_TABLE'] = 'sessions'
 Session(app)
 # connection=mysql.connector.connect(host='localhost, user='root', password='', database='Parvaah')
-
-
 
 
 class Elderly(db.Model):
@@ -36,9 +41,12 @@ class Elderly(db.Model):
     image_url= db.Column(db.String(200))
     name     = db.Column(db.String(100))
     age      = db.Column(db.Integer)
-    gid      = db.Column(db.Integer)
+    # gid      = db.Column(db.Integer)
     # guardian = db.relationship(Guardian, backref=db.backref('elderly', lazy=True))
 
+    def __repr__(self):
+        return f'<Elderly {self.username}>'
+    
     def __init__(self, username, password, email):
         self.username = username
         self.password = password
@@ -71,7 +79,7 @@ def index():
     if logged_in:
         username = session['username']
         current_user = Elderly.query.filter_by(username=username).first()
-        return render_template('index.html', logged_in=logged_in, current_user=current_user.username)
+        return render_template('index.html', logged_in=logged_in, current_user=current_user)
     else:
         return render_template('index.html', logged_in=logged_in)
 @app.route('/<user>')
@@ -138,7 +146,33 @@ def google_auth():
     except TokenExpiredError:
         return redirect(url_for('google.login'))
     
+@app.route('/test_db')
+def test_db():
+    try:
+        # Use text() to perform a raw SQL query to check connection
+        db.session.execute(text('SELECT 1'))
+        return "Database is connected!"
+    except Exception as e:
+        return f"Error connecting to the database: {str(e)}"
 
+# Route to add a test record to the database
+@app.route('/add_test_data')
+def add_test_data():
+    try:
+        # Create a new elderly record with image_url
+        new_elderly = Elderly(
+            username='testuser', 
+            password='password123', 
+            name='Test User', 
+            email='test@gmail.com',
+            age=70,
+            image_url='https://example.com/testuser.jpg'  # Add a sample image URL
+        )
+        db.session.add(new_elderly)
+        db.session.commit()
+        return "Test data added successfully!"
+    except Exception as e:
+        return f"Error adding test data: {str(e)}"
 
 @app.route('/about')
 def about():
