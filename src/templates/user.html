@@ -1,0 +1,21 @@
+{% extends 'base.html' %} {% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='user.css') }}" />
+{% endblock %} {% block content %}
+<div class="randi">
+  <div style="padding: 100px 0 0 0"></div>
+  <!-- Adjust this padding if navbar height is larger -->
+  <div class="parvah">
+    <img src="../static/assets/images/Parvaah-logo.png" alt="Aditya Jain" />
+  </div>
+  <h1>Welcome to Parvaah!</h1>
+  <div>
+    <p>Tell us who you are:</p>
+  </div>
+  <div class="button-container">
+    <button onclick="location.href='/login'">Elderly</button>
+    <button onclick="location.href='/guardian'">Guardian</button>
+    <button onclick="location.href='/caretakerlogin'">Caretaker</button>
+  </div>
+  <div style="padding: 20px"></div>
+</div>
+{% endblock %}

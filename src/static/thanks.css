@@ -1,0 +1,49 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5dc; /* Beige background color */
+    color: #333;
+  
+    /* Background images */
+    background-image: url('../static/assets/images/bg.png');
+    background-size: cover, cover; /* Cover to ensure they fill the area */
+    background-position: left center, right center; /* Position them appropriately */
+    background-repeat: no-repeat; /* Prevent repeating the images */
+  }
+  
+  .thankyou-container {
+    text-align: center;
+    padding: 50px;
+    background-color: white;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .thankyou-container h1 {
+    font-size: 2.5rem;
+    color: #007bff; /* Adjust color to match your theme */
+  }
+  
+  .thankyou-container p {
+    font-size: 1.2rem;
+    margin-top: 20px;align-items: center;
+    color: #555;
+  }
+  
+  .logo {
+    margin-bottom: 30px;align-items: center;
+  }
+  
+  .logo img {
+    width: 80px;
+    height: 80px;
+    align-items: center;
+    
+  }
+  

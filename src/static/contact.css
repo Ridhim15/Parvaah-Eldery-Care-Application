@@ -1,86 +1,74 @@
-body {
-	margin: 0;
-	padding: 0;
-	font-family: Arial, sans-serif;
-	background-color: #f9e0c5;
-}
-
-.container {
-	position: relative;
-	min-height: 100vh;
-	padding: 2rem;
-	overflow: hidden;
-}
-
-.background-shape {
-	position: absolute;
-	z-index: 0;
-}
-
-.top-left {
-	top: 0;
-	left: 0;
-	width: 33%;
-	height: 33%;
-	background-color: #3b5998;
-	border-bottom-right-radius: 100%;
-}
-
-.bottom-right {
-	bottom: 0;
-	right: 0;
-	width: 25%;
-	height: 25%;
-	background-color: #a8d5ba;
-	border-top-left-radius: 100%;
-}
-
-h1 {
-	position: relative;
-	z-index: 1;
-	text-align: center;
-	font-size: 2.5rem;
-	margin-bottom: 2rem;
-}
-
-.team-grid {
-	position: relative;
-	z-index: 1;
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-	gap: 1.5rem;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 .team-member {
-	background-color: #3f7d6e;
-	border-radius: 0.5rem;
-	padding: 1rem;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	color: white;
+    background-color: #19682c;
+    border-radius: 15px;
+    width: 200px;
+    padding: 20px;
+    text-align: center;
+    color: white;
 }
 
+.team-section {
+    text-align: center;
+    padding: 50px;
+}
 .team-member img {
-	width: 128px;
-	height: 128px;
-	border-radius: 50%;
-	object-fit: cover;
-	margin-bottom: 1rem;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    border: 5px solid white;
+}
+.team-section h1 {
+    font-size: 36px;
+    margin-bottom: 40px;
+    color: #333;
 }
 
-.team-member h2 {
-	margin: 0;
-	font-size: 1.2rem;
+.team-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
 }
 
-.team-member p {
-	margin: 0.5rem 0 0;
-	font-size: 0.9rem;
+.team-card {
+    background-color: #4d7f65;
+    color: white;
+    width: 200px;
+    height: 250px;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-@media (min-width: 768px) {
-	h1 {
-		font-size: 3.5rem;
-	}
+.team-card:hover {
+    transform: scale(1.1);
+}
+
+.profile-picture {
+    background-color: #dcdcdc;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+}
+
+.team-card h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.team-card p {
+    font-size: 14px;
 }

@@ -7,13 +7,15 @@ from flask_dance.contrib.google import make_google_blueprint, google
 from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
 from requests.models import Response
 from dotenv import load_dotenv
+
 from os import environ
 from datetime import datetime
 import json
 import mysql.connector
 from sqlalchemy import text
-load_dotenv()
 
+
+load_dotenv()
 
 app = Flask(__name__)
 api = Api(app)
@@ -85,8 +87,9 @@ class Caretaker(db.Model):
 
 
 # -------------------------------------------------------------------------------------------------
-# --------------------------------------------- Google Auth ----------------------------------
+# --------------------------------------------- Google Auth ---------------------------------------
 # -------------------------------------------------------------------------------------------------
+
 environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
 environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 blueprint = make_google_blueprint(
@@ -117,6 +120,7 @@ def google_auth():
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Login/Logout --------------------------------------
 # -------------------------------------------------------------------------------------------------
+
 @app.route('/')
 def index():
     logged_in = 'username' in session
@@ -146,7 +150,6 @@ def register():
             db.session.commit()
             return redirect(url_for('index'))
     return make_response('Invalid request method', 405)
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -209,6 +212,74 @@ def contact():
 @app.route('/community')
 def community():
     return render_template('community.html')
+
+@app.route('/booking')
+def booking():
+    return render_template('booking.html')
+
+@app.route('/fitness')
+def fitness():
+    return render_template('fitness.html')
+
+@app.route('/health')
+def health():
+    return render_template('health.html')
+
+@app.route('/services')
+def services():
+    return render_template('services.html')
+
+@app.route('/testimonials')
+def testimonials():
+    return render_template('testimonials.html')
+
+@app.route('/user')
+def user():
+    return render_template('user.html')
+
+@app.route('/form')
+def form():
+    return render_template('form.html')
+
+@app.route('/guardian')
+def guardian():
+    return render_template('guardian.html')
+
+@app.route('/caretakerlogin')
+def caretakerlogin():
+    return render_template('caretakerlogin.html')
+
+@app.route('/guardiandashboard')
+def guardiandashboard():
+    return render_template('guardiandashboard.html')
+
+@app.route('/reminder')
+def reminder():
+    return render_template('reminder.html')
+
+@app.route('/appointreminder')
+def appointreminder():
+    return render_template('appointreminder.html')
+
+@app.route('/newservice')
+def newservice():
+    return render_template('newservice.html')
+
+@app.route('/thanks')
+def thanks():
+    return render_template('thanks.html')
+
+@app.route('/caretakerprofile')
+def caretakerprofile():
+    return render_template('caretakerprofile.html')
+
+@app.route('/dashservices')
+def dashservices():
+    return render_template('dashservices.html')
+
+@app.route('/sos')
+def sos():
+    return render_template('sos.html')
 
 
 if __name__ == '__main__':
