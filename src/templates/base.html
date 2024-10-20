@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parvaah</title>
     <link rel="stylesheet" href="{{ url_for('static',filename='style.css' )}}">
-    <!-- <link rel="stylesheet" href="../static/style.css"> -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -36,11 +35,11 @@
                     {% if current_user.profile_pic %}
                     <img src="{{ current_user.profile_pic }}" alt="Profile Pic" width="40" height="40">
                     {% else %}
-                    <img src="../static/assets/images/profile-pic.png" alt="Profile Pic" width="40" height="40">
+                    <img src="../static/assets/images/profile_def_m.png" alt="Profile Pic" width="40" height="40">
+                    <span>{{ current_user.username }} Ji</span>
                     {% endif %}
-                    <span>{{ current_user.name }}</span>
                     {% else %}
-                    <a href="/login" class="btn btn-primary">Sign Up</a>
+                    <a href="/login" class="btn btn-primary">Login / Sign Up</a>
                     {% endif %}
                 </div>
             </nav>
@@ -73,9 +72,9 @@
                 <p class="copyright">&copy; 2023 Parvah. All rights reserved.</p>
             </div>
         </footer>
-        {% block scripts %}
-        {% endblock %}
     </div>
+    {% block scripts %}
+    {% endblock %}
 </body>
 
 </html>

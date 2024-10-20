@@ -66,6 +66,11 @@ body {
 	margin-right: 0.5rem;
 }
 
+.profile {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
 .nav-links {
 	display: flex;
 	list-style: none;
@@ -310,3 +315,4 @@ section h2 {
 		margin-top: 1rem;
 	}
 }
+
