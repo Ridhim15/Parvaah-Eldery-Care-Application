@@ -148,6 +148,24 @@ def appointreminder():
 def newservice():
     return render_template('newservice.html')
 
+@app.route('/thanks')
+def thanks():
+    return render_template('thanks.html')
+
+@app.route('/caretakerprofile')
+def caretakerprofile():
+    return render_template('caretakerprofile.html')
+
+
+@app.route('/dashservices')
+def dashservices():
+    return render_template('dashservices.html')
+
+@app.route('/sos')
+def sos():
+    return render_template('sos.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True)
 

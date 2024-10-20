@@ -56,7 +56,10 @@
   <!-- Buttons -->
   <div class="button-container">
     <button class="cancel-btn" onclick="cancelBooking()">Cancel</button>
-    <button class="book-btn" onclick="calculateFare()">Book Service</button>
+    <button class="book-btn" onclick="calculateFare()">Estimate</button>
+    <button class="book-btn" onclick="window.location.href='/thanks'">
+      Book Service
+    </button>
   </div>
 </div>
 <div style="padding: 20px"></div>
@@ -113,7 +116,7 @@
 
   // Function to handle cancel button click
   function cancelBooking() {
-    window.location.href = "dashboard.html"; // Redirect to the homepage
+    window.location.href = "#"; // Redirect to the homepage
   }
 </script>
 {% endblock content %}
