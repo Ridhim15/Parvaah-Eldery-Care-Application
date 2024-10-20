@@ -1,0 +1,291 @@
+:root {
+    --primary-color: #f4a261;
+    --secondary-color: #2a9d8f;
+    --text-color: #333333;
+    --background-color: #ffffff;
+    --light-bg-color: #f9f9f9;
+    --hero-bg-color: #ffd4bc;
+}
+/* Dashboard Button Icons */
+.btn-dashboard img, .btn-dashboard i {
+    margin-right: 10px; /* Space between icon and text */
+}
+
+.btn-dashboard i {
+    font-size: 1.5rem; /* Adjust icon size */
+}
+
+/* Profile Icon in Navbar */
+.profile-icon img, .profile-icon i {
+    width: 40px; /* Icon size */
+    height: 40px;
+}
+
+.profile-icon i {
+    font-size: 1.5rem;
+    color: var(--text-color);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header Styles */
+.header {
+    background-color: var(--background-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.logo img {
+    margin-right: 0.5rem;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+}
+
+.nav-links li {
+    margin-left: 2rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--primary-color);
+}
+
+/* Button Styles */
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #e76f51;
+}
+
+.btn-large {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+}
+
+/* Dashboard Section */
+.dashboard {
+    padding: 6rem 0 4rem; /* Increased top padding */
+    background-color: var(--light-bg-color);
+    text-align: center;
+    margin-top: 0; /* Removed margin-top */
+}
+
+.dashboard-container {
+    display: grid;
+    gap: 2rem;
+}
+
+.dashboard-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem; /* Added top margin */
+    margin-bottom: 2rem; /* Added to create space between buttons and services */
+}
+
+.btn-dashboard {
+    width: 560px;
+    height: 180px;
+    padding: 1rem;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.emergency-btn {
+    background-color: #e63946;
+    color: white;
+}
+
+.sos-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.emergency-btn:hover {
+    background-color: #d62828;
+}
+
+.sos-btn:hover {
+    background-color: #e76f51;
+}
+
+/* Service Section */
+.dashboard-services {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    gap: 2rem; /* Space between grid items */
+    
+    justify-items: center; /* Center items horizontally */
+}
+ 
+a.service-item {
+    text-decoration: none;
+    color: black;
+  }
+
+  a.service-item:hover {
+    color: black;
+  }
+.service-item {
+    width: 100%; /* Make all service items take up the full column width */
+    max-width: 500px; /* Set a maximum width for consistency */
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.service-item img {
+    margin-bottom: 1rem;
+    width: 64px; /* Set icon size */
+}
+
+.service-item h3 {
+    font-size: 1.5rem;
+    margin-top: 1rem;
+}
+
+.service-item:hover {
+    transform: translateY(-5px); /* Slight lift effect on hover */
+}
+
+/* Footer Styles */
+.footer {
+    background-color: var(--light-bg-color);
+    padding: 3rem 0;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+}
+
+.footer-logo span {
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-left: 0.5rem;
+}
+
+.footer-links a {
+    margin-right: 1rem;
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.social-links a {
+    margin-left: 1rem;
+}
+
+.copyright {
+    text-align: center;
+    color: #666;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .nav-links {
+        margin-top: 1rem;
+    }
+
+    .nav-links li {
+        margin-left: 0;
+        margin-right: 1rem;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-links,
+    .social-links {
+        margin-top: 1rem;
+    }
+
+    .dashboard-services {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .dashboard-buttons {
+        flex-direction: column;
+    }
+}
+
+ 
