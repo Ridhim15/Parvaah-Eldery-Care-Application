@@ -24,7 +24,8 @@ body {
 .main-container {
 	display: grid;
 	grid-template-rows: auto 1fr auto;
-	min-height: 100vh;
+	/* min-height: 100vh; */
+}
 
 .container {
 	max-width: 1200px;
@@ -43,7 +44,6 @@ body {
 	position: fixed;
 	width: 100%;
 	z-index: 1000;
-	
 }
 
 .navbar {
@@ -70,6 +70,14 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	gap: 2rem;
+	text-decoration: none;
+	color: var(--text-color);
+	font-weight: 700;
+	font-size: 1.5rem;
+}
+.profile img {
+	border-radius: 50%;
 }
 .nav-links {
 	display: flex;
@@ -315,3 +323,4 @@ section h2 {
 		margin-top: 1rem;
 	}
 }
+

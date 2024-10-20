@@ -1,104 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Parvaah</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static',filename='style.css' )}}"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="manifest" href="/site.webmanifest" />
-    {% block style %}{% endblock %}
-  </head>
-  <body>
-    <div class="main-container">
-      <!-- Header / Navbar -->
-      <header class="header">
-        <nav class="navbar container">
-          <a href="/" class="logo">
-            <img
-              src="../static/assets/images/Parvaah-logo.png"
-              width="40"
-              height="40"
-            />
-            <span>Parvaah</span>
-          </a>
-          <ul class="nav-links">
-            <li><a href="/about">About</a></li>
-            <li><a href="/services">Services</a></li>
-            <li><a href="/community">Community</a></li>
-            <li><a href="/testimonials">Testimonials</a></li>
-            <li><a href="/contact">Contact</a></li>
-          </ul>
-          <a href="/user" class="btn btn-primary">Sign Up</a>
-        </nav>
-      </header>
 
-      <!-- Main Content Area -->
-      <main>
-        {% block content %}
-        <!-- Place your content here -->
-        {% endblock %}
-      </main>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parvaah</title>
+  <link rel="stylesheet" href="{{ url_for('static',filename='style.css' )}}" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  {% block style %}{% endblock %}
 
-      <!-- Footer -->
-      <footer class="footer">
-        <div class="container">
-          <div class="footer-content">
-            <div class="footer-logo">
-              <img
-                src="../static/assets/images/Parvaah-logo.png"
-                alt="Parvaah Logo"
-                width="40"
-                height="40"
-              />
-              <span>Parvaah</span>
-            </div>
-            <div class="footer-links">
-              <a href="privacy.html">Privacy Policy</a>
-              <a href="terms.html">Terms of Service</a>
-              <a href="#contact">Contact Us</a>
-            </div>
-            <div class="social-links">
-              <a
-                href="https://www.facebook.com/profile.php?id=61567122158733"
-                aria-label="Facebook"
-                ><img
-                  src="../static/assets/images/facebook.png"
-                  width="24"
-                  height="24"
-              /></a>
-              <a href="#" aria-label="Twitter"
-                ><img
-                  src="../static/assets/images/twiter.png"
-                  width="24"
-                  height="24"
-              /></a>
-              <a
-                href="https://www.instagram.com/parvaahcare/"
-                aria-label="Instagram"
-                ><img
-                  src="../static/assets/images/insta.jpg"
-                  width="24"
-                  height="24"
-              /></a>
-            </div>
+  <script defer>
+    fetch( '/api/login_status' )
+      .then( response => response.json() )
+      .then( data => {
+        console.log( data );
+        if ( data.status == "logged_in" ) {
+          // Hide the login button
+          document.getElementById( "login-button" ).style.display = 'none';
+          // Show the profile-info div
+          document.getElementById( "profile-info" ).style.display = 'flex';
+          // Fill in the user data (given to us by the API :3)
+          document.getElementById( "username" ).innerText = data.username;
+          document.getElementById( "profile-pic" ).src = data.profile_image;
+        }
+      } )
+  </script>
+</head>
+
+<body>
+  <div class="main-container">
+    <!-- Header / Navbar -->
+    <header class="header">
+      <nav class="navbar container">
+        <a href="/" class="logo">
+          <img src="../static/assets/images/Parvaah-logo.png" width="40" height="40" />
+          <span>Parvaah</span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="/about">About</a></li>
+          <li><a href="/services">Services</a></li>
+          <li><a href="/community">Community</a></li>
+          <li><a href="/testimonials">Testimonials</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+        <div class="profile">
+          <div id="profile-info" class="profile" style="display:none;">
+            <a href="/dashboard" class="profile">
+              <span id="username"></span>
+              <img id="profile-pic" alt="Profile Pic" width="40" height="40">
+            </a>
           </div>
-          <p class="copyright">&copy; 2023 Parvaah. All rights reserved.</p>
-        </div>
-      </footer>
-    </div>
 
-    {% block scripts %}
-    <!-- Add your custom scripts here -->
-    {% endblock %}
-  </body>
+          <div id="login-button">
+            <a href="/user" class="btn btn-primary">Login / Sign Up</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main>
+      {% block content %}
+      <!-- Place your content here -->
+      {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-logo">
+            <img src="../static/assets/images/Parvaah-logo.png" alt="Parvaah Logo" width="40" height="40" />
+            <span>Parvaah</span>
+          </div>
+          <div class="footer-links">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="#contact">Contact Us</a>
+          </div>
+          <div class="social-links">
+            <a href="https://www.facebook.com/profile.php?id=61567122158733" aria-label="Facebook"><img
+                src="../static/assets/images/facebook.png" width="24" height="24" /></a>
+            <a href="#" aria-label="Twitter"><img src="../static/assets/images/twiter.png" width="24" height="24" /></a>
+            <a href="https://www.instagram.com/parvaahcare/" aria-label="Instagram"><img
+                src="../static/assets/images/insta.jpg" width="24" height="24" /></a>
+          </div>
+        </div>
+        <p class="copyright">&copy; 2023 Parvaah. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  {% block scripts %}
+
+  {% endblock %}
+
+  Chippichippi chaapa chaapa
+</body>
+
 </html>

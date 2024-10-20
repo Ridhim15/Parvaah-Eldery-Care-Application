@@ -7,13 +7,13 @@ from flask_dance.contrib.google import make_google_blueprint, google
 from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
 from requests.models import Response
 from dotenv import load_dotenv
-
+from functools import partial
 from os import environ
 from datetime import datetime
 import json
 import mysql.connector
 from sqlalchemy import text
-
+from werkzeug.security import generate_password_hash, check_password_hash
 
 load_dotenv()
 
@@ -51,6 +51,9 @@ class Elderly(db.Model):
         self.username = username
         self.password = password
         self.email = email
+    
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
 
 class Guardian(db.Model):
@@ -69,6 +72,8 @@ class Guardian(db.Model):
         self.password = password
         self.email = email
 
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 class Caretaker(db.Model):
     cid           = db.Column(db.Integer, primary_key=True)
     name          = db.Column(db.String(100))
@@ -85,6 +90,8 @@ class Caretaker(db.Model):
         self.password = password
         self.email    = email
 
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Google Auth ---------------------------------------
@@ -148,6 +155,9 @@ def register():
             new_user = Elderly(username=username, password=password, email=email)
             db.session.add(new_user)
             db.session.commit()
+            session['username'] = new_user.username
+            session['email'] = new_user.email
+            session['profile_image'] = new_user.profile_image if new_user.profile_image else url_for('static', filename='assets/images/profile_def_m.png')
             return redirect(url_for('index'))
     return make_response('Invalid request method', 405)
 
@@ -157,11 +167,14 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
+
         elderly = Elderly.query.filter_by(username=username, password=password).first()
 
         if elderly:
             session['username'] = elderly.username
             session['user_id'] = elderly.eid
+            session['profile_image'] = elderly.profile_image if elderly.profile_image else url_for('static', filename='assets/images/profile_def_m.png')
+
             return redirect(url_for('index'))
         else:
             return 'Invalid username or password'
@@ -175,6 +188,19 @@ def logout():
     return redirect(url_for('index'))
 
 
+
+# -------------------------------------------------------------------------------------------------
+# --------------------------------------------- APIs ----------------------------------------------
+# -------------------------------------------------------------------------------------------------
+
+class login_status(Resource):
+    def get(self):
+        if 'username' in session:
+            return {'status': 'logged_in', 'username': session['username'],'profile_image':session['profile_image']}
+        else:
+            return {'status': 'logged_out'}
+
+api.add_resource(login_status, '/api/login_status')
 
 
 # -------------------------------------------------------------------------------------------------
@@ -213,7 +239,7 @@ def contact():
 def community():
     return render_template('community.html')
 
-@app.route('/booking')
+@app.route('/booking/')
 def booking():
     return render_template('booking.html')
 
