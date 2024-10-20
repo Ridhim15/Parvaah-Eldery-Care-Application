@@ -25,6 +25,8 @@ body {
 	display: grid;
 	grid-template-rows: auto 1fr auto;
 	min-height: 100vh;
+	
+}
 
 .container {
 	max-width: 1200px;
@@ -66,11 +68,6 @@ body {
 	margin-right: 0.5rem;
 }
 
-.profile {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
 .nav-links {
 	display: flex;
 	list-style: none;
