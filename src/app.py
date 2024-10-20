@@ -8,29 +8,29 @@ from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
 from requests.models import Response
 
 
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 
 from os import environ
 from datetime import datetime
 import json
 
-# load_dotenv()
+load_dotenv()
 app = Flask(__name__)
 api = Api(app)
 
 # app.secret_key = environ['SECRET_KEY']
 # app.config['SESSION_TYPE'] = ''
 
-# environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
-# environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' # ONLY ON LOCAL ENV
-# blueprint = make_google_blueprint(
-#     client_id     = environ['GOOGLE_CLIENT_ID'],
-#     client_secret = environ['GOOGLE_CLIENT_SECRET'],
-#     scope         = ['email','profile'],
-#     offline       = True,
-#     redirect_to   = 'google_auth'
-# )
-# app.register_blueprint(blueprint, url_prefix='/login')
+environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
+environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' # ONLY ON LOCAL ENV
+blueprint = make_google_blueprint(
+    client_id     = environ['GOOGLE_CLIENT_ID'],
+    client_secret = environ['GOOGLE_CLIENT_SECRET'],
+    scope         = ['email','profile'],
+    offline       = True,
+    redirect_to   = 'google_auth'
+)
+app.register_blueprint(blueprint, url_prefix='/login')
 
 
 
@@ -79,9 +79,13 @@ def homecare():
 def medicalcare():
     return render_template('medicalcare.html')
 
+
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
+
+
+
 
 @app.route('/community')
 def community():
@@ -114,6 +118,35 @@ def testimonials():
 @app.route('/user')
 def user():
     return render_template('user.html')
+
+@app.route('/form')
+def form():
+    return render_template('form.html')
+
+@app.route('/guardian')
+def guardian():
+    return render_template('guardian.html')
+
+@app.route('/caretakerlogin')
+def caretakerlogin():
+    return render_template('caretakerlogin.html')
+
+@app.route('/guardiandashboard')
+def guardiandashboard():
+    return render_template('guardiandashboard.html')
+
+@app.route('/reminder')
+def reminder():
+    return render_template('reminder.html')
+
+@app.route('/appointreminder')
+def appointreminder():
+    return render_template('appointreminder.html')
+
+
+@app.route('/newservice')
+def newservice():
+    return render_template('newservice.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

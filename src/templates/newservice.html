@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Service Request - Parvaah</title>
+    <link rel="stylesheet" href="../static/newservice.css" />
+    <!-- Link to external CSS file -->
+  </head>
+
+  <body>
+    <!-- Background Images -->
+    <img
+      src="../static/assets/images/PARVAH (6).png"
+      class="bg-left"
+      alt="Background Left"
+    />
+    <img
+      src="../static/assets/images/PARVAH (5).png"
+      class="bg-right"
+      alt="Background Right"
+    />
+
+    <main>
+      <div class="box">
+        <div class="heading">
+          <h2>Service Request</h2>
+          <h6>Request a Service Today</h6>
+        </div>
+
+        <div class="actual-form">
+          <!-- Service Type Dropdown -->
+          <div class="input-wrap">
+            <select class="input-field" required>
+              <option value="" disabled selected>Select Service Type</option>
+              <option value="homecare">Homecare</option>
+              <option value="medicalcare">Medicalcare</option>
+            </select>
+          </div>
+
+          <!-- Job Description -->
+          <div class="input-wrap">
+            <textarea
+              class="input-field"
+              placeholder="Job Description"
+              rows="4"
+              required
+            ></textarea>
+          </div>
+
+          <!-- Service Duration -->
+          <div class="input-wrap">
+            <input
+              type="number"
+              class="input-field"
+              placeholder="Duration (in hours)"
+              required
+            />
+          </div>
+
+          <!-- Preferred Date -->
+          <div class="input-wrap">
+            <input type="date" class="input-field" required />
+          </div>
+
+          <!-- Preferred Time -->
+          <div class="input-wrap">
+            <input type="time" class="input-field" required />
+          </div>
+
+          <!-- Submit Button -->
+          <a href="#" class="btn">Submit Request</a>
+
+          <p class="text">Our team will get in touch with you shortly.</p>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

@@ -6,7 +6,7 @@
     <title>Login - Parvaah</title>
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='login-style.css') }}"
+      href="{{ url_for('static', filename='guardian.css') }}"
     />
   </head>
 
@@ -35,7 +35,7 @@
               </a>
 
               <div class="heading">
-                <h2>Welcome Back</h2>
+                <h2>Guardian</h2>
                 <h6>Not registred yet?</h6>
                 <a href="#" class="toggle">Sign up</a>
               </div>
@@ -49,7 +49,7 @@
                     autocomplete="off"
                     required
                   />
-                  <label>UserName</label>
+                  <label>Guardian Email ID</label>
                 </div>
 
                 <div class="input-wrap">
@@ -68,14 +68,12 @@
                 <button type="button" class="btn google-login">
                   Signup with Google
                 </button>
-                <button type="button" class="btn otp-login">
-                  Login with OTP
-                </button>
+
                 <p class="or-text">OR</p>
                 <!-- Added OR text here -->
 
-                <a href="/guardian" class="btn guardian-login"
-                  >Are you a Guardian ?</a
+                <a href="/login" class="btn guardian-login"
+                  >Are you an Elderly Person?</a
                 >
                 <!-- Anchor tag for button -->
 
@@ -108,6 +106,7 @@
               </a>
 
               <div class="heading">
+                <h1>Guardian</h1>
                 <h2>Get Started</h2>
                 <h6>Already have an account?</h6>
                 <a href="#" class="toggle">Sign in</a>
@@ -122,7 +121,7 @@
                     autocomplete="off"
                     required
                   />
-                  <label>Name</label>
+                  <label>Guardian Name</label>
                 </div>
 
                 <div class="input-wrap">
@@ -132,7 +131,7 @@
                     autocomplete="off"
                     required
                   />
-                  <label>Email</label>
+                  <label>Email-ID</label>
                 </div>
 
                 <div class="input-wrap">
