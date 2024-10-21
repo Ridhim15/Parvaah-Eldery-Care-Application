@@ -15,23 +15,23 @@ main {
 }
 
 /* Background images */
-.bg-left, .bg-right {
-    position: absolute;
-    top: 0;
-    height: 600px; /* Adjust height as per the design */
-    z-index: -1; /* Place behind the content */
-}
+
 
 .bg-left {
+    position: absolute;
+    top: 120px; /* Padding from the top */
     left: 0;
-    top: 50px;
-}
+    height: calc(80% - 20px); /* Adjust height according to the padding */
+    z-index: -1; /* Keep the background image behind content */
+  }
 
-.bg-right {
+  .bg-right {
+    position: absolute;
+    top: 120px; /* Padding from the top */
     right: 0;
-    top: 50px;
-}
-
+    height: calc(80% - 20px); /* Adjust height according to the padding */
+    z-index: -1; /* Keep the background image behind content */
+  }
 /* Form box styling */
 .box {
     background: white;
