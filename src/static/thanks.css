@@ -1,11 +1,10 @@
-body {
+.lol {
     font-family: 'Poppins', sans-serif;
-    margin: 0;
-    padding: 0;
+   
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 120vh;
     background-color: #f5f5dc; /* Beige background color */
     color: #333;
   
@@ -15,6 +14,14 @@ body {
     background-position: left center, right center; /* Position them appropriately */
     background-repeat: no-repeat; /* Prevent repeating the images */
   }
+
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0rem 0;
+}
+
   .back-button {
     display: inline-block; /* Allows padding and margins to work */
     padding: 10px 20px; /* Adjust padding as needed */
@@ -50,9 +57,7 @@ body {
     color: #555;
   }
   
-  .logo {
-    margin-bottom: 30px;align-items: center;
-  }
+
   
   .logo img {
     width: 80px;

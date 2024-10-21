@@ -242,44 +242,6 @@ a.service-item {
     transform: translateY(-5px); /* Slight lift effect on hover */
 }
 
-/* Footer Styles */
-.footer {
-    background-color: var(--light-bg-color);
-    padding: 3rem 0;
-}
-
-.footer-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-}
-
-.footer-logo {
-    display: flex;
-    align-items: center;
-}
-
-.footer-logo span {
-    font-weight: 700;
-    font-size: 1.2rem;
-    margin-left: 0.5rem;
-}
-
-.footer-links a {
-    margin-right: 1rem;
-    text-decoration: none;
-    color: var(--text-color);
-}
-
-.social-links a {
-    margin-left: 1rem;
-}
-
-.copyright {
-    text-align: center;
-    color: #666;
-}
 
 /* Responsive Design */
 @media (max-width: 768px) {
