@@ -1,6 +1,41 @@
 {% extends 'base.html' %} {% block style %}
 <link rel="stylesheet" href="{{ url_for('static', filename='form.css') }}" />
 {% endblock %} {% block content %}
+<style>
+  /* Highlighted box styling for selected diseases */
+  #selectedDiseasesContainer {
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+
+  /* Display selected diseases in a single line */
+  #selectedDiseases {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping to next line if space runs out */
+    gap: 10px; /* Adds spacing between disease items */
+  }
+
+  #selectedDiseases li {
+    background-color: #007bff; /* Blue background for selected items */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer; /* Add pointer to indicate clickability */
+    display: inline-block; /* Ensure each disease is displayed inline */
+  }
+
+  #selectedDiseases li:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }
+
+  .form-section {
+    margin-bottom: 15px;
+  }
+</style>
+
 <div class="content">
   <div class="container">
     <div class="form-container">

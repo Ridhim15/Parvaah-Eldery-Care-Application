@@ -1,66 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Medicine Reminder - Parvaah</title>
-    <link rel="stylesheet" href="../static/reminder.css" />
-    <!-- Link to external CSS file -->
-  </head>
+{% extends 'base.html' %} {% block style %}
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+/>
+<link
+  href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+  rel="stylesheet"
+/>
+<link rel="stylesheet" href="{{url_for('static',filename='reminder.css')}}" />
+{% endblock %} {% block content %}
+<img
+  src="../static/assets/images/PARVAH (6).png"
+  class="bg-left"
+  alt="Background Left"
+/>
+<img
+  src="../static/assets/images/PARVAH (5).png"
+  class="bg-right"
+  alt="Background Right"
+/>
+<main>
+  <!-- Left and Right Background Images -->
 
-  <body>
-    <!-- Left and Right Background Images -->
-    <img
-      src="../static/assets/images/PARVAH (6).png"
-      class="bg-left"
-      alt="Background Left"
-    />
-    <img
-      src="../static/assets/images/PARVAH (5).png"
-      class="bg-right"
-      alt="Background Right"
-    />
+  <div class="box">
+    <div class="heading">
+      <h2>Medicine Reminder</h2>
+      <h4>Keep Track of Your Medications</h4>
+    </div>
 
-    <main>
-      <div class="box">
-        <div class="heading">
-          <h2>Medicine Reminder</h2>
-          <h6>Keep Track of Your Medications</h6>
-        </div>
-
-        <div class="actual-form">
-          <div class="input-wrap">
-            <input
-              type="text"
-              class="input-field"
-              placeholder="Medicine Name"
-              required
-            />
-          </div>
-
-          <div class="input-wrap">
-            <input
-              type="text"
-              class="input-field"
-              placeholder="Dosage"
-              required
-            />
-          </div>
-
-          <div class="input-wrap">
-            <input type="time" class="input-field" required />
-          </div>
-
-          <div class="input-wrap">
-            <input type="date" class="input-field" required />
-          </div>
-
-          <a href="#" class="btn">Set Reminder</a>
-          <!-- Button to set reminder -->
-
-          <p class="text">You will receive reminders for your medications.</p>
-        </div>
+    <div class="actual-form">
+      <div class="input-wrap">
+        <input
+          type="text"
+          class="input-field"
+          placeholder="Medicine Name"
+          required
+        />
       </div>
-    </main>
-  </body>
-</html>
+
+      <div class="input-wrap">
+        <input type="text" class="input-field" placeholder="Dosage" required />
+      </div>
+
+      <div class="input-wrap">
+        <input type="time" class="input-field" required />
+      </div>
+
+      <div class="input-wrap">
+        <input type="date" class="input-field" required />
+      </div>
+
+      <a href="#" class="btn">Set Reminder</a>
+      <!-- Button to set reminder -->
+
+      <p class="text">You will receive reminders for your medications.</p>
+    </div>
+  </div>
+</main>
+{% endblock content %}

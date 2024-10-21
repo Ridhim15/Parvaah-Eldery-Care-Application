@@ -15,6 +15,20 @@ body {
     background-position: left center, right center; /* Position them appropriately */
     background-repeat: no-repeat; /* Prevent repeating the images */
   }
+  .back-button {
+    display: inline-block; /* Allows padding and margins to work */
+    padding: 10px 20px; /* Adjust padding as needed */
+    background-color: green; /* Green background */
+    color: white; /* White text color */
+    text-align: center; /* Center text */
+    text-decoration: none; /* Remove underline from link */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+  }
+  
+  .back-button:hover {
+    background-color: darkgreen; /* Darker green on hover */
+  }
   
   .thankyou-container {
     text-align: center;

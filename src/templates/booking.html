@@ -114,9 +114,9 @@
     }
   }
 
-  // Function to handle cancel button click
+  // Function to handle cancel button click and redirect to the previous page
   function cancelBooking() {
-    window.location.href = "#"; // Redirect to the homepage
+    window.history.back(); // Redirects to the previous page
   }
 </script>
 {% endblock content %}
