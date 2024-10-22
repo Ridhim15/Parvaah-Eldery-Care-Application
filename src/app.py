@@ -6,6 +6,10 @@ from flask_session import Session
 from flask_dance.contrib.google import make_google_blueprint, google
 from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
 from requests.models import Response
+import matplotlib.pyplot as plt
+import pandas as pd
+import io
+import base64
 
 
 # from dotenv import load_dotenv
@@ -38,14 +42,19 @@ Session(app)
 # -------------------------------------------------------------------------------------------------
 
 class Elderly(db.Model):
-    eid           = db.Column(db.Integer, primary_key=True)
-    name          = db.Column(db.String(100))
-    username      = db.Column(db.String(50), unique=True, nullable=False)
-    email         = db.Column(db.String(50), unique=True, nullable=False)
-    password      = db.Column(db.String(50), nullable=False)
-    dob           = db.Column(db.Date)
-    phone         = db.Column(db.String(15))
-    profile_image = db.Column(db.String(200))
+    eid               = db.Column(db.Integer, primary_key=True)
+    name              = db.Column(db.String(100))
+    username          = db.Column(db.String(50), unique=True, nullable=False)
+    email             = db.Column(db.String(50), unique=True, nullable=False)
+    password          = db.Column(db.String(50), nullable=False)
+    dob               = db.Column(db.Date)
+    phone             = db.Column(db.Integer)
+    profile_image     = db.Column(db.String(200))
+    address           = db.Column(db.String(500))
+    emergency_contact = db.Column(db.Integer)
+    bloodgroup        = db.Column(db.String(5))
+    disease           = db.Column(db.String(200))
+    allergy           = db.Column(db.String(200))
     # gid      = db.Column(db.Integer)
     # guardian = db.relationship(Guardian, backref=db.backref('elderly', lazy=True))
     
@@ -67,6 +76,7 @@ class Guardian(db.Model):
     dob           = db.Column(db.Date)
     phone         = db.Column(db.String(15))
     profile_image = db.Column(db.String(200))
+    address       = db.Column(db.String(500))
     # elderly= db.relationship(Elderly, backref=db.backref('guardian', lazy=True))
     def __init__(self, username, password, email):
         self.username = username
@@ -84,6 +94,9 @@ class Caretaker(db.Model):
     dob           = db.Column(db.Date)
     phone         = db.Column(db.String(15))
     profile_image = db.Column(db.String(200))
+    address       = db.Column(db.String(500))
+    specializatin = db.Column(db.String(200))
+    job_title     = db.Column(db.String(200))
     # elderly= db.relationship(Elderly, backref=db.backref('guardian', lazy=True))
 
     def __init__(self, username, password, email):
@@ -93,7 +106,17 @@ class Caretaker(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
+    
+# this is only for reference purposes do not delete it
+# class Medical_record(db.Model):
+#     mid = db.Column(db.Integer, nullable=False)
+#     date = db.Column(db.Date)
+#     sugar = db.Column(db.Integer)
+#     bp_sys = db.Column(db.Integer)
+#     bp_dia = db.Column(db.Integer)
 
+
+    
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Google Auth ---------------------------------------
 # -------------------------------------------------------------------------------------------------
@@ -147,20 +170,37 @@ def register():
         password = request.form['password']
         email    = request.form['email']
 
-        user = Elderly.query.filter_by(username=username).first()
-        if user:
+        existing_user = Elderly.query.filter_by(username=username).first()
+        if existing_user:
             return make_response('User already exists', 400)
         else:
             session['username'] = username
             session['email'] = email
-            new_user = Elderly(username=username, password=password, email=email)
+            hashed_password = generate_password_hash(password)
+            new_user = Elderly(username=username, password=hashed_password, email=email)
             db.session.add(new_user)
             db.session.commit()
+            create_user_health_table(username)
             session['username'] = new_user.username
             session['email'] = new_user.email
             session['profile_image'] = new_user.profile_image if new_user.profile_image else url_for('static', filename='assets/images/profile_def_m.png')
             return redirect(url_for('dashboard'))
     return make_response('Invalid request method', 405)
+
+def create_user_health_table(username):
+    """Dynamically create a table for each user to store their health records."""
+    table_name = f"health_{username}"  # Dynamic table name
+    query = f"""
+    CREATE TABLE IF NOT EXISTS {table_name} (
+        mid INTEGER PRIMARY KEY AUTOINCREMENT,
+        date DATE DEFAULT (datetime('now')),
+        sugar INTEGER NOT NULL,
+        bp_sys INTEGER NOT NULL,
+        bp_dia INTEGER NOT NULL
+    );
+    """
+    db.session.execute(query)
+    db.session.commit()
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -201,6 +241,51 @@ class login_status(Resource):
 
 api.add_resource(login_status, '/api/login_status')
 
+
+# -------------------------------------------------------------------------------------------------
+# ------------------------------------------- Sugar and BP Graph ----------------------------------
+# -------------------------------------------------------------------------------------------------
+
+@app.route('/insights')
+def insights():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    username = session['username']
+    table_name = f"health_{username}"
+    
+    # Fetch the health data for the last month
+    query = f"SELECT * FROM {table_name} WHERE date >= datetime('now', '-30 days')"
+    results = db.session.execute(query).fetchall()
+
+    dates = [row['date'] for row in results]
+    sugar_levels = [row['sugar'] for row in results]
+    bp_sys = [row['bp_sys'] for row in results]
+    bp_dia = [row['bp_dia'] for row in results]
+
+    # Create the graphs
+    sugar_graph = create_line_graph(dates, sugar_levels, "Sugar Levels")
+    bp_graph = create_line_graph(dates, bp_sys, "BP Systolic", bp_dia, "BP Diastolic")
+
+    return render_template('insights.html', sugar_graph=sugar_graph, bp_graph=bp_graph)
+
+def create_line_graph(dates, data1, label1, data2=None, label2=None):
+    """Helper function to create a base64-encoded image for a line graph."""
+    plt.figure()
+    plt.plot(dates, data1, label=label1, color='blue')
+    if data2:
+        plt.plot(dates, data2, label=label2, color='red')
+    plt.xticks(rotation=45)
+    plt.legend()
+    plt.tight_layout()
+
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    graph_url = base64.b64encode(img.getvalue()).decode('utf8')
+    plt.close()  # Close the figure after saving it
+
+    return 'data:image/png;base64,{}'.format(graph_url)
 
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Routes and Views ----------------------------------
