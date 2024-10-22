@@ -40,6 +40,28 @@ Session(app)
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Database Classes ----------------------------------
 # -------------------------------------------------------------------------------------------------
+class Booking(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    service_type = db.Column(db.String(100), nullable=False)
+    service_name = db.Column(db.String(100), nullable=False)
+    start_date = db.Column(db.Date, nullable=False)
+    start_time = db.Column(db.Time, nullable=False)
+    end_date = db.Column(db.Date, nullable=False)
+    end_time = db.Column(db.Time, nullable=False)
+    fare = db.Column(db.Float, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('elderly.eid'), nullable=False)
+
+    def __init__(self, service_type, service_name, start_date, start_time, end_date, end_time, fare, user_id):
+        self.service_type = service_type
+        self.service_name = service_name
+        self.start_date = start_date
+        self.start_time = start_time
+        self.end_date = end_date
+        self.end_time = end_time
+        self.fare = fare
+        self.user_id = user_id
+
+
 
 class Elderly(db.Model):
     eid               = db.Column(db.Integer, primary_key=True)
@@ -66,6 +88,74 @@ class Elderly(db.Model):
     
     def check_password(self, password):
         return check_password_hash(self.password, password)
+
+
+class AppointmentReminder(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    location = db.Column(db.String(200), nullable=False)
+    time = db.Column(db.Time, nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('elderly.eid'), nullable=False)
+
+    def __init__(self, title, location, time, date, user_id):
+        self.title = title
+        self.location = location
+        self.time = time
+        self.date = date
+        self.user_id = user_id
+        
+@app.route('/appointreminder', methods=['GET', 'POST'])
+def appointreminder():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    username = session['username']
+    user = Elderly.query.filter_by(username=username).first()
+
+    if request.method == 'POST':
+        title = request.form['title']
+        location = request.form['location']
+        time = request.form['time']
+        date = request.form['date']
+
+        # Save the appointment reminder in the database
+        new_appointment = AppointmentReminder(
+            title=title,
+            location=location,
+            time=datetime.strptime(time, "%H:%M").time(),
+            date=datetime.strptime(date, "%Y-%m-%d").date(),
+            user_id=user.eid
+        )
+
+        db.session.add(new_appointment)
+        db.session.commit()
+
+        flash('Appointment reminder added successfully!', 'success')
+        return redirect(url_for('appointreminder'))
+
+    # Fetch the appointments for the current user
+    appointments = AppointmentReminder.query.filter_by(user_id=user.eid).all()
+    return render_template('appointreminder.html', appointments=appointments)
+
+class MedicineReminder(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    medicine_name = db.Column(db.String(200), nullable=False)
+    dosage = db.Column(db.Integer, nullable=False)  # Number of times to take the medicine
+    times = db.Column(db.String(500), nullable=False)  # Store multiple times as a comma-separated string
+    start_date = db.Column(db.Date, nullable=False)
+    end_date = db.Column(db.Date, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('elderly.eid'), nullable=False)
+
+    def __init__(self, medicine_name, dosage, times, start_date, end_date, user_id):
+        self.medicine_name = medicine_name
+        self.dosage = dosage
+        self.times = times
+        self.start_date = start_date
+        self.end_date = end_date
+        self.user_id = user_id
+
+
 
 
 class Guardian(db.Model):
@@ -332,15 +422,22 @@ def create_line_graph(dates, data1, label1, data2=None, label2=None):
 def about():
     return render_template('about.html')
 
+
+
 @app.route('/dashboard')
 def dashboard():
     if 'username' not in session:
         return redirect(url_for('login'))
 
     username = session['username']
-    current_user = Elderly.query.filter_by(username=username).first()
+    user = Elderly.query.filter_by(username=username).first()
 
-    return render_template('dashboard.html', user=current_user)
+    # Fetch upcoming appointments and medicine reminders for the logged-in user
+    upcoming_appointments = AppointmentReminder.query.filter_by(user_id=user.eid).all()
+    upcoming_reminders = MedicineReminder.query.filter_by(user_id=user.eid).all()
+
+    return render_template('dashboard.html', user=user, upcoming_appointments=upcoming_appointments, upcoming_reminders=upcoming_reminders)
+
  
 @app.route('/profile')
 def profile():
@@ -366,9 +463,54 @@ def contact():
 def community():
     return render_template('community.html')
 
-@app.route('/booking')
+@app.route('/booking', methods=['GET', 'POST'])
 def booking():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    username = session['username']
+    user = Elderly.query.filter_by(username=username).first()
+
+    if request.method == 'POST':
+        service_type = request.form['type']
+        service_name = request.form['service']
+        start_date = request.form['start_date']
+        start_time = request.form['start_time']
+        end_date = request.form['end_date']
+        end_time = request.form['end_time']
+
+        # Convert time and date into datetime objects to calculate the fare
+        start_datetime = datetime.strptime(f"{start_date} {start_time}", "%Y-%m-%d %H:%M")
+        end_datetime = datetime.strptime(f"{end_date} {end_time}", "%Y-%m-%d %H:%M")
+
+        if end_datetime <= start_datetime:
+            flash('End time must be later than start time.', 'danger')
+            return redirect(url_for('booking'))
+
+        # Calculate the difference in hours and the fare (₹200 per hour as an example)
+        time_difference = (end_datetime - start_datetime).total_seconds() / 3600
+        fare = time_difference * 200
+
+        # Save the booking in the database
+        new_booking = Booking(
+            service_type=service_type,
+            service_name=service_name,
+            start_date=start_datetime.date(),
+            start_time=start_datetime.time(),
+            end_date=end_datetime.date(),
+            end_time=end_datetime.time(),
+            fare=fare,
+            user_id=user.eid
+        )
+
+        db.session.add(new_booking)
+        db.session.commit()
+
+        flash('Service booked successfully!', 'success')
+        return redirect(url_for('thanks'))
+
     return render_template('booking.html')
+
 
 @app.route('/fitness')
 def fitness():
@@ -406,13 +548,45 @@ def caretakerlogin():
 def guardiandashboard():
     return render_template('guardiandashboard.html')
 
-@app.route('/reminder')
-def reminder():
-    return render_template('reminder.html')
+@app.route('/reminder', methods=['GET', 'POST'])
+def medicinereminder():
+    if 'username' not in session:
+        return redirect(url_for('login'))
 
-@app.route('/appointreminder')
-def appointreminder():
-    return render_template('appointreminder.html')
+    username = session['username']
+    user = Elderly.query.filter_by(username=username).first()
+
+    if request.method == 'POST':
+        medicine_name = request.form['medicine_name']
+        dosage = int(request.form['dosage'])
+        start_date = request.form['start_date']
+        end_date = request.form['end_date']
+
+        # Collect all the times (depending on dosage)
+        times = [request.form[f'time_{i}'] for i in range(1, dosage + 1)]
+        times_str = ','.join(times)  # Store times as a comma-separated string
+
+        # Save the medicine reminder in the database
+        new_medicine_reminder = MedicineReminder(
+            medicine_name=medicine_name,
+            dosage=dosage,
+            times=times_str,
+            start_date=datetime.strptime(start_date, "%Y-%m-%d").date(),
+            end_date=datetime.strptime(end_date, "%Y-%m-%d").date(),
+            user_id=user.eid
+        )
+
+        db.session.add(new_medicine_reminder)
+        db.session.commit()
+
+        flash('Medicine reminder added successfully!', 'success')
+        return redirect(url_for('medicinereminder'))
+
+    # Fetch the medicine reminders for the current user
+    medicine_reminders = MedicineReminder.query.filter_by(user_id=user.eid).all()
+    return render_template('reminder.html', medicine_reminders=medicine_reminders)
+
+
 
 @app.route('/newservice')
 def newservice():
