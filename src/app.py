@@ -306,6 +306,16 @@ def dashservices():
 def sos():
     return render_template('sos.html')
 
+@app.route('/caretakerdash')
+def caretakerdash():
+    return render_template('caretakerdash.html')
+
+@app.route('/yourhealth')
+def yourhealth():
+    return render_template('yourhealth.html')
+
+
+
 
 if __name__ == '__main__':
     with app.app_context():
