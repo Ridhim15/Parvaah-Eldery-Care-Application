@@ -1,22 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
 
-    <title>Parvaah Dashboard</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="{{url_for('static',filename='dashboard.css')}}"
-    />
+{% extends 'base.html' %} {% block style %}
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+/>
+<link
+  href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+  rel="stylesheet"
+/>
+<link
+  rel="stylesheet"
+  href="{{url_for('static',filename='dashboard.css')}}"
+/>
+{% endblock %} {% block content %}
+
+
+
+ 
     <style>
       a.service-item {
         text-decoration: none;
@@ -30,28 +30,12 @@
   </head>
 
   <body>
-    <!-- Navigation Bar -->
-    <header class="header">
-      <nav class="navbar container">
-        <a href="/" class="logo">
-          <img
-            src="../static/assets/images/Parvaah-logo.png"
-            width="40"
-            height="40"
-          />
-          <span>Parvaah</span>
-        </a>
-
-        <a href="./pages/profile.html" class="profile-icon">
-          <i class="fas fa-user-circle"></i
-          ><span>Naresh Gupts's Guardian Aditya Jain</span>
-        </a>
-      </nav>
-    </header>
+    
 
     <!-- Dashboard Section -->
     <main>
-      <section class="dashboard">
+      <section class="dashboard">    <div style="padding: 120px 0 0 0"></div>
+
         <div class="container dashboard-container">
           <!-- Services Buttons -->
           <div class="dashboard-services">
@@ -85,50 +69,6 @@
       </section>
     </main>
     <!-- Footer -->
-    <footer class="footer">
-      <div class="container">
-        <div class="footer-content">
-          <div class="footer-logo">
-            <img
-              src="../static/assets/images/Parvaah-logo.png"
-              alt="Parvaah Logo"
-              width="40"
-              height="40"
-            />
-            <span>Parvaah</span>
-          </div>
-          <div class="footer-links">
-            <a href="privacy.html">Privacy Policy</a>
-            <a href="terms.html">Terms of Service</a>
-            <a href="#contact">Contact Us</a>
-          </div>
-          <div class="social-links">
-            <a
-              href="https://www.facebook.com/profile.php?id=61567122158733"
-              aria-label="Facebook"
-              ><img
-                src="../static/assets/images/facebook.png"
-                width="24"
-                height="24"
-            /></a>
-            <a href="#" aria-label="Twitter"
-              ><img
-                src="../static/assets/images/twiter.png"
-                width="24"
-                height="24"
-            /></a>
-            <a
-              href="https://www.instagram.com/parvaahcare/"
-              aria-label="Instagram"
-              ><img
-                src="../static/assets/images/insta.jpg"
-                width="24"
-                height="24"
-            /></a>
-          </div>
-        </div>
-        <p class="copyright">&copy; 2023 Parvaah. All rights reserved.</p>
-      </div>
-    </footer>
-  </body>
-</html>
+       </body>
+  {% endblock content %}
+

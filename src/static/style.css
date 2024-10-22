@@ -17,7 +17,7 @@
 body {
 	font-family: "Poppins", sans-serif;
 	line-height: 1.6;
-	color: var(--text-color);
+	color: black;
 	background-color: var(--background-color);
 }
 
@@ -285,6 +285,7 @@ section h2 {
 .footer {
 	background-color: var(--light-bg-color);
 	padding: 3rem 0;
+	
 }
 
 .footer-content {
@@ -308,7 +309,7 @@ section h2 {
 .footer-links a {
 	margin-right: 1rem;
 	text-decoration: none;
-	color: var(--text-color);
+	color: black;
 }
 
 .social-links a {

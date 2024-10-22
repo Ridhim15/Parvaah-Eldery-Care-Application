@@ -1,0 +1,53 @@
+/* Container for the two tabs */
+.tab-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .tab-container button {
+    width: 50%;
+    background-color: inherit;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    text-align: center;
+    transition: 0.3s;
+    font-size: 17px;
+  }
+
+ 
+  section {
+    padding: 1rem 10rem;
+}
+  .tab-container button:hover {
+    background-color: var(--primary-color);
+    color: white;
+  }
+  
+  .tab-container button.active {
+    background-color: var(--secondary-color);
+    color: white;
+  }
+  
+  /* Full page container for content */
+  .dashboard-container {
+    padding: 20px;
+  }
+  
+  /* Hide content by default */
+  .tabcontent {
+    display: none;
+  }
+  
+  .tabcontent h3 {
+    margin-top: 0;
+  }
+  
+  #notification-panel {
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
