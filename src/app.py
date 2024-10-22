@@ -55,6 +55,7 @@ class Elderly(db.Model):
     bloodgroup        = db.Column(db.String(5))
     disease           = db.Column(db.String(200))
     allergy           = db.Column(db.String(200))
+    form_filled = db.Column(db.Boolean, default=False)  # New column to track form submission
     # gid      = db.Column(db.Integer)
     # guardian = db.relationship(Guardian, backref=db.backref('elderly', lazy=True))
     
@@ -170,26 +171,57 @@ def register():
         password = request.form['password']
         email    = request.form['email']
 
+        # Check if the username already exists
         existing_user = Elderly.query.filter_by(username=username).first()
         if existing_user:
             return make_response('User already exists', 400)
         else:
             session['username'] = username
             session['email'] = email
+            # Create a new user and save it to the database
             hashed_password = generate_password_hash(password)
             new_user = Elderly(username=username, password=hashed_password, email=email)
             db.session.add(new_user)
             db.session.commit()
-            create_user_health_table(username)
             session['username'] = new_user.username
             session['email'] = new_user.email
             session['profile_image'] = new_user.profile_image if new_user.profile_image else url_for('static', filename='assets/images/profile_def_m.png')
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('fill_form'))
     return make_response('Invalid request method', 405)
+
+# ------------------------------------ Form Route ----------------------------
+
+@app.route('/fill_form', methods=['GET', 'POST'])
+def fill_form():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        # Get the form data from the user
+        username = session['username']
+        diseases = request.form.getlist('diseases[]')  # Example for multiple selected diseases
+        blood_type = request.form['bloodType']
+        health_details = request.form['healthDetails']
+
+        # Update the user's information in the Elderly table
+        user = Elderly.query.filter_by(username=username).first()
+        user.disease = ','.join(diseases)  # Store diseases as a comma-separated string
+        user.bloodgroup = blood_type
+        user.allergy = health_details
+        user.form_filled = True  # Mark form as filled
+        db.session.commit()
+
+        # Create the health data table for this user
+        create_user_health_table(username)
+
+        # Redirect to the dashboard after form submission
+        return redirect(url_for('dashboard'))
+
+    return render_template('form.html')
 
 def create_user_health_table(username):
     """Dynamically create a table for each user to store their health records."""
-    table_name = f"health_{username}"  # Dynamic table name
+    table_name = f"health_{username}"  # Table name based on the username
     query = f"""
     CREATE TABLE IF NOT EXISTS {table_name} (
         mid INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -208,15 +240,20 @@ def login():
         username = request.form['username']
         password = request.form['password']
         
-        elderly = Elderly.query.filter_by(username=username, password=password).first()
+        user = Elderly.query.filter_by(username=username).first()
 
-        if elderly:
-            session['username'] = elderly.username
-            session['user_id'] = elderly.eid
-            session['profile_image'] = elderly.profile_image if elderly.profile_image else url_for('static', filename='assets/images/profile_def_m.png')
+        if user and check_password_hash(user.password, password):
+            session['username'] = user.username
+            session['user_id'] = user.eid
+
+            # If the form has not been filled, redirect to the form page
+            if not user.form_filled:
+                return redirect(url_for('fill_form'))
+
             return redirect(url_for('dashboard'))
         else:
             return 'Invalid username or password'
+    
     return render_template('login.html')
 
 @app.route('/logout', methods=['POST'])
@@ -297,7 +334,13 @@ def about():
 
 @app.route('/dashboard')
 def dashboard():
-    return render_template('dashboard.html')
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    username = session['username']
+    current_user = Elderly.query.filter_by(username=username).first()
+
+    return render_template('dashboard.html', user=current_user)
  
 @app.route('/profile')
 def profile():

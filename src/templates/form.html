@@ -1,150 +1,192 @@
 {% extends 'base.html' %} {% block style %}
 <link rel="stylesheet" href="{{ url_for('static', filename='form.css') }}" />
 {% endblock %} {% block content %}
+<style>
+  /* Highlighted box styling for selected diseases */
+  #selectedDiseasesContainer {
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+
+  /* Display selected diseases in a single line */
+  #selectedDiseases {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping to next line if space runs out */
+    gap: 10px; /* Adds spacing between disease items */
+  }
+
+  #selectedDiseases li {
+    background-color: #007bff; /* Blue background for selected items */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer; /* Add pointer to indicate clickability */
+    display: inline-block; /* Ensure each disease is displayed inline */
+  }
+
+  #selectedDiseases li:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }
+
+  .form-section {
+    margin-bottom: 15px;
+  }
+</style>
+
 <div class="content">
   <div class="container">
     <div class="form-container">
       <!-- Profile Picture Section -->
-      <div
-        class="profile-pic-container"
-        onclick="document.getElementById('profilePicUpload').click();"
-      >
-        <img
-          id="profilePic"
-          src="../static/assets/images/profilepicformedit.webp"
-          alt="Profile Picture"
-        />
-        <input
-          type="file"
-          id="profilePicUpload"
-          accept="image/*"
-          style="display: none"
-        />
-        <div class="edit-overlay">Click to upload</div>
-      </div>
+      <form action="/fill_form" method="POST">
+        <div
+          class="profile-pic-container"
+          onclick="document.getElementById('profilePicUpload').click();"
+        >
+          <img
+            id="profilePic"
+            src="../static/assets/images/profilepicformedit.webp"
+            alt="Profile Picture"
+          />
+          <input
+            type="file"
+            id="profilePicUpload"
+            accept="image/*"
+            style="display: none"
+          />
+          <div class="edit-overlay">Click to upload</div>
+        </div>
 
-      <!-- Personal Information Section -->
-      <div class="form-section">
-        <label for="name">Full Name:</label>
-        <input type="text" id="name" name="name" required />
-      </div>
+        <!-- Personal Information Section -->
+        <div class="form-section">
+          <label for="name">Full Name:</label>
+          <input type="text" id="name" name="name" required />
+        </div>
 
-      <div class="form-section">
-        <label for="email">User Email:</label>
-        <input type="email" id="email" name="email" required />
-      </div>
+        <div class="form-section">
+          <label for="email">User Email:</label>
+          <input type="email" id="email" name="email" required />
+        </div>
 
-      <div class="form-section">
-        <label for="gender">Gender:</label>
-        <select id="gender" name="gender" required>
-          <option value="" disabled selected>Select your gender</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
+        <div class="form-section">
+          <label for="gender">Gender:</label>
+          <select id="gender" name="gender" required>
+            <option value="" disabled selected>Select your gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
 
-      <div class="form-section">
-        <label for="address">Address:</label>
-        <input type="text" id="address" name="address" required />
-      </div>
+        <div class="form-section">
+          <label for="address">Address:</label>
+          <input type="text" id="address" name="address" required />
+        </div>
 
-      <div class="form-section">
-        <label for="dob">Date of Birth:</label>
-        <input type="date" id="dob" name="dob" required />
-      </div>
+        <div class="form-section">
+          <label for="dob">Date of Birth:</label>
+          <input type="date" id="dob" name="dob" required />
+        </div>
 
-      <div class="form-section">
-        <label for="motherName">Mother's Name:</label>
-        <input type="text" id="motherName" name="motherName" required />
-      </div>
+        <div class="form-section">
+          <label for="motherName">Mother's Name:</label>
+          <input type="text" id="motherName" name="motherName" required />
+        </div>
 
-      <div class="form-section">
-        <label for="fatherName">Father's Name:</label>
-        <input type="text" id="fatherName" name="fatherName" required />
-      </div>
+        <div class="form-section">
+          <label for="fatherName">Father's Name:</label>
+          <input type="text" id="fatherName" name="fatherName" required />
+        </div>
 
-      <!-- Health Information Section -->
-      <div class="form-section">
-        <label for="diseases">Diseases (Select all that apply):</label>
-        <select id="diseases" name="diseases[]">
-          <option value="diabetes">Diabetes</option>
-          <option value="heart_disease">Heart Disease</option>
-          <option value="hypertension">Hypertension</option>
-          <option value="arthritis">Arthritis</option>
-          <option value="asthma">Asthma</option>
-          <option value="cancer">Cancer</option>
-        </select>
-      </div>
+        <!-- Health Information Section -->
+        <div class="form-section">
+          <label for="diseases">Diseases (Select all that apply):</label>
+          <select id="diseases" name="diseases[]">
+            <option value="diabetes">Diabetes</option>
+            <option value="heart_disease">Heart Disease</option>
+            <option value="hypertension">Hypertension</option>
+            <option value="arthritis">Arthritis</option>
+            <option value="asthma">Asthma</option>
+            <option value="cancer">Cancer</option>
+          </select>
+        </div>
 
-      <!-- Display Selected Diseases Here -->
-      <div id="selectedDiseasesContainer" class="form-section">
-        <label>Selected Diseases:</label>
-        <ul id="selectedDiseases"></ul>
-      </div>
+        <!-- Display Selected Diseases Here -->
+        <div id="selectedDiseasesContainer" class="form-section">
+          <label>Selected Diseases:</label>
+          <ul id="selectedDiseases"></ul>
+        </div>
 
-      <div class="form-section">
-        <label for="bloodType">Blood Type:</label>
-        <select id="bloodType" name="bloodType" required>
-          <option value="A+">A+</option>
-          <option value="A-">A-</option>
-          <option value="B+">B+</option>
-          <option value="B-">B-</option>
-          <option value="O+">O+</option>
-          <option value="O-">O-</option>
-          <option value="AB+">AB+</option>
-          <option value="AB-">AB-</option>
-        </select>
-      </div>
+        <div class="form-section">
+          <label for="bloodType">Blood Type:</label>
+          <select id="bloodType" name="bloodType" required>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+          </select>
+        </div>
 
-      <div class="form-section">
-        <label for="bloodReport">Upload Blood Report:</label>
-        <input
-          type="file"
-          id="bloodReport"
-          name="bloodReport"
-          accept=".pdf,.jpg,.jpeg,.png"
-        />
-      </div>
+        <div class="form-section">
+          <label for="bloodReport">Upload Blood Report:</label>
+          <input
+            type="file"
+            id="bloodReport"
+            name="bloodReport"
+            accept=".pdf,.jpg,.jpeg,.png"
+          />
+        </div>
 
-      <div class="form-section">
-        <label for="healthDetails">Additional Health Details:</label>
-        <textarea id="healthDetails" name="healthDetails" rows="4"></textarea>
-      </div>
+        <div class="form-section">
+          <label for="healthDetails">Additional Health Details:</label>
+          <textarea id="healthDetails" name="healthDetails" rows="4"></textarea>
+        </div>
 
-      <!-- Emergency Contact Information -->
-      <div class="form-section">
-        <label for="guardianName">Guardian's Name:</label>
-        <input type="text" id="guardianName" name="guardianName" required />
-      </div>
+        <!-- Emergency Contact Information -->
+        <div class="form-section">
+          <label for="guardianName">Guardian's Name:</label>
+          <input type="text" id="guardianName" name="guardianName" required />
+        </div>
 
-      <div class="form-section">
-        <label for="guardianEmail">Guardian's Email:</label>
-        <input type="email" id="guardianEmail" name="guardianEmail" required />
-      </div>
+        <div class="form-section">
+          <label for="guardianEmail">Guardian's Email:</label>
+          <input
+            type="email"
+            id="guardianEmail"
+            name="guardianEmail"
+            required
+          />
+        </div>
 
-      <div class="form-section">
-        <label for="guardianAddress">Guardian's Address:</label>
-        <textarea
-          id="guardianAddress"
-          name="guardianAddress"
-          rows="3"
-          required
-        ></textarea>
-      </div>
+        <div class="form-section">
+          <label for="guardianAddress">Guardian's Address:</label>
+          <textarea
+            id="guardianAddress"
+            name="guardianAddress"
+            rows="3"
+            required
+          ></textarea>
+        </div>
 
-      <div class="form-section">
-        <label for="guardianContact">Guardian's Contact Number:</label>
-        <input
-          type="tel"
-          id="guardianContact"
-          name="guardianContact"
-          required
-        />
-      </div>
+        <div class="form-section">
+          <label for="guardianContact">Guardian's Contact Number:</label>
+          <input
+            type="tel"
+            id="guardianContact"
+            name="guardianContact"
+            required
+          />
+        </div>
 
-      <!-- Submit Button -->
-      <button type="submit" onclick="submitForm()">Submit</button>
+        <!-- Submit Button -->
+        <button type="submit" onclick="submitForm()">Submit</button>
+      </form>
     </div>
   </div>
 </div>
