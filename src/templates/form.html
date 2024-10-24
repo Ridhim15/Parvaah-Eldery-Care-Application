@@ -14,21 +14,27 @@
     list-style-type: none;
     padding: 0;
     display: flex;
-    flex-wrap: wrap; /* Allows wrapping to next line if space runs out */
-    gap: 10px; /* Adds spacing between disease items */
+    flex-wrap: wrap;
+    /* Allows wrapping to next line if space runs out */
+    gap: 10px;
+    /* Adds spacing between disease items */
   }
 
   #selectedDiseases li {
-    background-color: #007bff; /* Blue background for selected items */
+    background-color: #007bff;
+    /* Blue background for selected items */
     color: white;
     padding: 5px 10px;
     border-radius: 3px;
-    cursor: pointer; /* Add pointer to indicate clickability */
-    display: inline-block; /* Ensure each disease is displayed inline */
+    cursor: pointer;
+    /* Add pointer to indicate clickability */
+    display: inline-block;
+    /* Ensure each disease is displayed inline */
   }
 
   #selectedDiseases li:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: #0056b3;
+    /* Darker blue on hover */
   }
 
   .form-section {
@@ -41,33 +47,20 @@
     <div class="form-container">
       <!-- Profile Picture Section -->
       <form action="/fill_form" method="POST">
-        <div
-          class="profile-pic-container"
-          onclick="document.getElementById('profilePicUpload').click();"
-        >
-          <img
-            id="profilePic"
-            src="../static/assets/images/profilepicformedit.webp"
-            alt="Profile Picture"
-          />
-          <input
-            type="file"
-            id="profilePicUpload"
-            accept="image/*"
-            style="display: none"
-          />
+        <div class="profile-pic-container" onclick="document.getElementById('profilePicUpload').click();">
+          <img id="profilePic" src="../static/assets/images/profile_def_m.png" alt="Profile Picture" />
+          <input type="file" id="profilePicUpload" accept="image/*" style="display: none" />
           <div class="edit-overlay">Click to upload</div>
         </div>
 
         <!-- Personal Information Section -->
         <div class="form-section">
           <label for="name">Full Name:</label>
-          <input type="text" id="name" name="name" required />
+          <input type="text" id="name" name="name" value="{{ user.name if user.name else user.username }}" required />
         </div>
-
         <div class="form-section">
           <label for="email">User Email:</label>
-          <input type="email" id="email" name="email" required />
+          <input type="email" id="email" name="email" value="{{ user.email }}" required>
         </div>
 
         <div class="form-section">
@@ -135,12 +128,7 @@
 
         <div class="form-section">
           <label for="bloodReport">Upload Blood Report:</label>
-          <input
-            type="file"
-            id="bloodReport"
-            name="bloodReport"
-            accept=".pdf,.jpg,.jpeg,.png"
-          />
+          <input type="file" id="bloodReport" name="bloodReport" accept=".pdf,.jpg,.jpeg,.png" />
         </div>
 
         <div class="form-section">
@@ -156,32 +144,17 @@
 
         <div class="form-section">
           <label for="guardianEmail">Guardian's Email:</label>
-          <input
-            type="email"
-            id="guardianEmail"
-            name="guardianEmail"
-            required
-          />
+          <input type="email" id="guardianEmail" name="guardianEmail" required />
         </div>
 
         <div class="form-section">
           <label for="guardianAddress">Guardian's Address:</label>
-          <textarea
-            id="guardianAddress"
-            name="guardianAddress"
-            rows="3"
-            required
-          ></textarea>
+          <textarea id="guardianAddress" name="guardianAddress" rows="3" required></textarea>
         </div>
 
         <div class="form-section">
           <label for="guardianContact">Guardian's Contact Number:</label>
-          <input
-            type="tel"
-            id="guardianContact"
-            name="guardianContact"
-            required
-          />
+          <input type="tel" id="guardianContact" name="guardianContact" required />
         </div>
 
         <!-- Submit Button -->
@@ -197,37 +170,37 @@
 <script>
   // Profile picture upload logic
   document
-    .getElementById("profilePicUpload")
-    .addEventListener("change", function () {
-      const file = this.files[0];
-      if (file) {
+    .getElementById( "profilePicUpload" )
+    .addEventListener( "change", function () {
+      const file = this.files[ 0 ];
+      if ( file ) {
         const reader = new FileReader();
-        reader.onload = function (e) {
-          document.getElementById("profilePic").src = e.target.result;
+        reader.onload = function ( e ) {
+          document.getElementById( "profilePic" ).src = e.target.result;
         };
-        reader.readAsDataURL(file);
+        reader.readAsDataURL( file );
       }
-    });
+    } );
 
   // JavaScript to handle disease selection and display
-  document.getElementById("diseases").addEventListener("change", function () {
-    const selectedOption = this.options[this.selectedIndex];
-    const li = document.createElement("li");
+  document.getElementById( "diseases" ).addEventListener( "change", function () {
+    const selectedOption = this.options[ this.selectedIndex ];
+    const li = document.createElement( "li" );
     li.textContent = selectedOption.text;
     li.dataset.value = selectedOption.value;
 
-    document.getElementById("selectedDiseases").appendChild(li);
-    this.remove(this.selectedIndex);
+    document.getElementById( "selectedDiseases" ).appendChild( li );
+    this.remove( this.selectedIndex );
 
-    li.addEventListener("click", function () {
-      const option = new Option(li.textContent, li.dataset.value);
-      document.getElementById("diseases").add(option);
+    li.addEventListener( "click", function () {
+      const option = new Option( li.textContent, li.dataset.value );
+      document.getElementById( "diseases" ).add( option );
       li.remove();
-    });
-  });
+    } );
+  } );
 
-  function submitForm() {
-    alert("Form submitted!");
+  function submitForm () {
+    alert( "Form submitted!" );
   }
 </script>
 {% endblock content %}
