@@ -278,7 +278,7 @@ def register():
             session['email'] = new_user.email
             session['profile_image'] = new_user.profile_image if new_user.profile_image else url_for('static', filename='assets/images/profile_def_m.png')
             
-            return redirect(url_for('fill_form',user=new))
+            return redirect(url_for('fill_form',user=new_user))
     return make_response('Invalid request method', 405)
 
 # ------------------------------------ Form Route ----------------------------

@@ -56,11 +56,13 @@
         <!-- Personal Information Section -->
         <div class="form-section">
           <label for="name">Full Name:</label>
-          <input type="text" id="name" name="name" value="{{ user.name if user.name else user.username }}" required />
+          <input type="text" id="name" name="name" value="{{ user.name if user.name else user.username }}" {% if
+            user.name or user.username %} readonly style="background-color: #dfe1e3;" {% endif %} required />
         </div>
         <div class="form-section">
           <label for="email">User Email:</label>
-          <input type="email" id="email" name="email" value="{{ user.email }}" required>
+          <input type="email" id="email" name="email" value="{{ user.email if user.email else '' }}" {% if user.email
+            %}readonly style="background-color: #dfe1e3;" {% endif %} required>
         </div>
 
         <div class="form-section">
@@ -82,16 +84,27 @@
           <label for="dob">Date of Birth:</label>
           <input type="date" id="dob" name="dob" required />
         </div>
-
-        <div class="form-section">
-          <label for="motherName">Mother's Name:</label>
-          <input type="text" id="motherName" name="motherName" required />
+        <div class="form-section" id="age_section" style="display:none;">
+          <label for="age">Great {{ user.name if user.name else user.username }}! You're:</label>
+          <span id="age" style="background-color: #dfe1e3; padding: 5px; border-radius: 3px;">
+          </span>
         </div>
 
-        <div class="form-section">
-          <label for="fatherName">Father's Name:</label>
-          <input type="text" id="fatherName" name="fatherName" required />
-        </div>
+        <script>
+          document.getElementById( 'dob' ).addEventListener( 'change', function () {
+            const dob = new Date( this.value );
+            const age_section = document.getElementById( 'age_section' );
+            const ageSpan = document.getElementById( 'age' );
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+            if ( monthDiff < 0 || ( monthDiff === 0 && today.getDate() < dob.getDate() ) ) {
+              age--;
+            }
+            age_section.style.display = 'block';
+            ageSpan.textContent = age + ' Years old';
+          } );
+        </script>
 
         <!-- Health Information Section -->
         <div class="form-section">
