@@ -68,6 +68,17 @@
       <a href="#" class="btn" onclick="window.history.back();">Back</a>
 
       <p class="text">You will receive reminders for your medications.</p>
+
+      <h3>Your Medicine Reminders</h3>
+      <ul>
+        {% for reminder in medicine_reminders %}
+        <li>
+          {{ reminder.medicine_name }} ({{ reminder.dosage }} times) <br />
+          Times: {{ reminder.times }} <br />
+          From {{ reminder.start_date }} to {{ reminder.end_date }}
+        </li>
+        {% endfor %}
+      </ul>
     </div>
   </div>
 </main>

@@ -10,7 +10,6 @@ class UserRole(enum.Enum):
 
 class User(db.Model):
     __tablename__ = 'users'
-
     user_id = db.Column(db.Integer, primary_key=True)  # Primary Key
     full_name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
@@ -26,7 +25,6 @@ class User(db.Model):
     disease = db.Column(db.String(200))
     blood_type = db.Column(db.String(5))
     additional_health_details = db.Column(db.String(500))
-    
     # Guardian-Elderly Relationship (Multiple Guardians/Elderly connected)
     guardians = db.relationship('GuardianElderly', backref='elderly_user', primaryjoin="User.user_id == GuardianElderly.elderly_id", lazy=True)
     elderly_users = db.relationship('GuardianElderly', backref='guardian_user', primaryjoin="User.user_id == GuardianElderly.guardian_id", lazy=True)
@@ -43,6 +41,21 @@ class GuardianElderly(db.Model):
 
     def __repr__(self):
         return f"<GuardianElderly (Guardian: {self.guardian_id}, Elderly: {self.elderly_id})>"
+#     # Guardian-Elderly Relationship (One Guardian per Elderly)
+#     guardian = db.relationship('GuardianElderly', backref='elderly_user', uselist=False, primaryjoin="User.email == GuardianElderly.elderly_email", lazy=True)
+#     elderly_user = db.relationship('GuardianElderly', backref='guardian_user', uselist=False, primaryjoin="User.email == GuardianElderly.guardian_email", lazy=True)
+
+#     def __repr__(self):
+#         return f"<User {self.full_name} ({self.role})>"
+# class GuardianElderly(db.Model):
+#     __tablename__ = 'guardian_elderly'  # Corrected table name definition
+
+#     id = db.Column(db.Integer, primary_key=True)
+#     guardian_email = db.Column(db.String(50), db.ForeignKey('users.email'), nullable=False, unique=True)  # Link to guardian email
+#     elderly_email = db.Column(db.String(50), db.ForeignKey('users.email'), nullable=False, unique=True)   # Link to elderly email
+
+#     def __repr__(self):
+#         return f"<GuardianElderly (Guardian: {self.guardian_email}, Elderly: {self.elderly_email})>"
 
 class BookingStatus(enum.Enum):
     pending = "pending"
@@ -78,7 +91,6 @@ class MedicineReminder(db.Model):
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
-
     def __repr__(self):
         return f"<MedicineReminder {self.medicine_name} for User {self.user_id}>"
 
@@ -98,18 +110,14 @@ class Caretaker(db.Model):
     def __repr__(self):
         return f"<Caretaker {self.full_name}>"
 
-
-
 class AppointmentReminder(db.Model):
     __tablename__ = 'appointment_reminders'
-
     id = db.Column(db.Integer, primary_key=True)
     appointment_name = db.Column(db.String(200), nullable=False)
     location = db.Column(db.String(300), nullable=False)
     time = db.Column(db.Time, nullable=False)
     date = db.Column(db.Date, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
-
     def __repr__(self):
         return f"<AppointmentReminder {self.appointment_name} for User {self.user_id}>"
 

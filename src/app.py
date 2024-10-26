@@ -22,7 +22,9 @@ from sqlalchemy import text
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # Import models from models.py
+
 from models import AppointmentReminder, HealthInfo, db, User, GuardianElderly, Booking, MedicineReminder, Caretaker, UserRole, BookingStatus
+
 
 # load_dotenv()
 
@@ -38,7 +40,6 @@ app.config['SESSION_TYPE']             = 'sqlalchemy'
 app.config['SESSION_SQLALCHEMY']       = db
 app.config['SESSION_SQLALCHEMY_TABLE'] = 'sessions'
 Session(app)
-
 
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Login -------------------------------------------
@@ -150,10 +151,61 @@ def login():
     
     return render_template('login.html')
 
+@app.route('/login_guardian', methods=['GET', 'POST'])
+def login_guardian():
+    print("Guardian LOGIN attempted")
+    if request.method == 'POST':
+        print('Huh, this is /login_guardian')
+        email = request.form['email']
+        password = request.form['password']
+        
+        user = User.query.filter_by(email=email, role=UserRole.guardian).first()
+        
+        if user and check_password_hash(user.password, password):
+            print('Guardian email and password are correct')
+            session['email'] = user.email
+            session['role'] = 'guardian'
+            session['username'] = user.full_name
+            session['user_id'] = user.user_id
+            session['profile_image'] = user.profile_image
+            
+            # Redirect to guardian-specific dashboard
+            print(f'{session["username"]} logged in successfully as guardian')
+            return redirect(url_for('dashboard_guardian'))
+        else:
+            flash('Invalid email or password')
+            print('Invalid email or password for guardian')
+    
+    return render_template('login_guardian.html')
+
+# Caretaker Login
+@app.route('/login_caretaker', methods=['GET', 'POST'])
+def login_caretaker():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        
+        caretaker = Caretaker.query.filter_by(email=email).first()
+        
+        if caretaker and check_password_hash(caretaker.password, password):
+            session['username'] = caretaker.full_name
+            session['caretaker_id'] = caretaker.caretaker_id
+            session['email'] = caretaker.email
+            session['role'] = 'caretaker'
+            
+            # Redirect to caretaker-specific dashboard
+            return redirect(url_for('caretaker_dashboard'))
+        else:
+            flash('Invalid email or password')
+    
+    return render_template('login_caretaker.html')
+
+
+
 @app.route('/logout', methods=['GET'])
 def logout():
     print(f'{session["username"]} logged out successfully')
-    print(f'{session['email']}: session["email"]')
+    print(f"{session['email']}: session['email']")
     session.clear()
     flash("You have been logged out.", "info")
     return redirect(url_for('index'))
@@ -185,9 +237,6 @@ api.add_resource(login_status, '/api/login_status')
 def about():
     return render_template('about.html')
 
- 
-
-
 
 @app.route('/dashboard')
 def dashboard():
@@ -204,6 +253,14 @@ def dashboard():
     return render_template('dashboard.html', user=user, 
                            upcoming_appointments=upcoming_appointments, 
                            upcoming_reminders=upcoming_reminders)
+# @app.route('/profile')
+# def profile():
+#     if 'username' not in session:
+#         return redirect(url_for('login'))
+#     user = User.query.filter_by(full_name=session['username']).first()
+#     # health = db.session.execute(text(f"SELECT * FROM health_{user.full_name}")).fetchall()
+
+#     return render_template('profile.html', user=user, health=health)
 
 @app.route('/profile')
 def profile():
@@ -213,6 +270,20 @@ def profile():
     health = db.session.execute(text(f"SELECT * FROM health_info")).fetchall()
 
     return render_template('profile.html', user=user, health=health)
+
+    
+#     # Fetch the elderly user based on the session username (full_name assumed unique for now)
+#     elderly_user = User.query.filter_by(full_name=session['username']).first()
+    
+#     if not elderly_user:
+#         return "User not found.", 404
+
+#     # Fetch guardian(s) using the email as the linking key
+#     guardian_relations = GuardianElderly.query.filter_by(elderly_id=elderly_user.email).all()
+#     guardians = [User.query.filter_by(email=relation.guardian_id).first() for relation in guardian_relations]
+
+#     return render_template('profile.html', user=elderly_user, guardians=guardians)
+
 
 @app.route('/emergency')
 def emergency():
@@ -233,15 +304,6 @@ def contact():
 @app.route('/community')
 def community():
     return render_template('community.html')
-
-
-
-
-
-
-
-
-
 
 @app.route('/booking', methods=['GET', 'POST'])
 def booking():
@@ -290,7 +352,6 @@ def booking():
 
     return render_template('booking.html')
 
-
 @app.route('/fitness')
 def fitness():
     return render_template('fitness.html')
@@ -311,17 +372,87 @@ def testimonials():
 def user():
     return render_template('user.html')
 
-@app.route('/guardian')
-def guardian():
-    return render_template('guardian.html')
 
-@app.route('/caretakerlogin')
-def caretakerlogin():
-    return render_template('caretakerlogin.html')
+@app.route('/register_guardian', methods=['GET', 'POST'])
+def register_guardian():
+    if request.method == 'POST':
+        full_name = request.form['full_name']
+        email = request.form['email']
+        password = request.form['password']
+        elderly_email = request.form['elderly_email']
 
-@app.route('/guardiandashboard')
-def guardiandashboard():
-    return render_template('guardiandashboard.html')
+        # Check if elderly with provided email exists
+        elderly = User.query.filter_by(email=elderly_email, role=UserRole.elderly).first()
+        if not elderly:
+            print("Elderly email not found. Please verify.")
+            flash("Elderly email not found. Please verify.")
+            return redirect(url_for('register_guardian'))
+
+        # Check if guardian already exists
+        if User.query.filter_by(email=email).first():
+            print("Guardian Email already registered.")
+            flash("Guardian Email already registered.")
+            return redirect(url_for('register_guardian'))
+
+        # Create new guardian user
+        new_guardian = User(
+            full_name=full_name,
+            email=email,
+            password=generate_password_hash(password),
+            role=UserRole.guardian
+        )
+        db.session.add(new_guardian)
+        db.session.commit()
+
+        # Link the new guardian to the existing elderly user
+        guardian_elderly_link = GuardianElderly(
+            guardian_email=email,
+            elderly_email=elderly_email
+        )
+        db.session.add(guardian_elderly_link)
+        db.session.commit()
+
+        flash("Registration successful. Redirecting to dashboard.")
+        return redirect(url_for('dashboard_guardian'))
+
+    return render_template('register_guardian.html')
+
+@app.route('/dashboard_guardian')
+def dashboard_guardian():
+    return render_template('dashboard_guardian.html')
+
+@app.route('/reminder', methods=['GET', 'POST'])
+def medicinereminder():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    username = session['username']
+    user = User.query.filter_by(full_name=username).first()
+
+    if request.method == 'POST':
+        medicine_name = request.form['medicine_name']
+        dosage = int(request.form['dosage'])
+        start_date = request.form['start_date']
+        end_date = request.form['end_date']
+
+        # Collect all the times (depending on dosage)
+        times = [request.form[f'time_{i}'] for i in range(1, dosage + 1)]
+        times_str = ','.join(times)  # Store times as a comma-separated string
+
+        # Save the medicine reminder in the database
+        new_medicine_reminder = MedicineReminder(
+            medicine_name=medicine_name,
+            dosage=dosage,
+            times=times_str,
+            start_date=datetime.strptime(start_date, "%Y-%m-%d").date(),
+            end_date=datetime.strptime(end_date, "%Y-%m-%d").date(),
+            user_id=user.user_id
+        )
+        db.session.add(new_medicine_reminder)
+        db.session.commit()
+
+        flash('Medicine reminder added successfully!', 'success')
+        return redirect(url_for('medicinereminder'))
 
 @app.route('/reminder', methods=['GET', 'POST'])
 def medicinereminder():
@@ -474,7 +605,6 @@ def yourhealth():
                 flash('Please fill out all fields for sugar level.', 'error')
 
         return redirect(url_for('yourhealth'))
-
     return render_template('yourhealth.html')
 
 # Route to create sample data
@@ -566,8 +696,8 @@ def refresh_upcoming():
                            upcoming_reminders=upcoming_reminders)
 
 
-
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+    # create_sample_data()  # Uncomment to create sample data before running the app
     app.run(debug=True)
