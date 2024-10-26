@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login - Parvaah</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='login-style.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='guardian.css') }}" />
 </head>
 
 <body>
@@ -14,9 +14,10 @@
       <div class="inner-box">
         <div class="forms-wrap">
           <!-------------------------------------------------------------------------------------------------
-          --------------------------------------------- Sign Up Form ----------------------------------------
+          --------------------------------------------- Log In Form ----------------------------------------
           ------------------------------------------------------------------------------------------------- -->
-          <form action="/register" method="POST" autocomplete="on" class="sign-up-form">
+
+          <form action="/login_guardian" method="POST" autocomplete="off" class="sign-in-form">
             <a href="/" class="home-link">
               <div class="logo" style="text-align: center; margin-bottom: 20px">
                 <img src="{{url_for('static',filename='/Assets/images/Parvaah-logo.png')}}" alt="parvaah-logo"
@@ -30,75 +31,22 @@
             </a>
 
             <div class="heading">
-              <h1>Elderly</h1>
-              <h2>Get Started</h2>
-              <h6>Already have an account?</h6>
-              <a href="#" class="toggle">Log in</a>
-            </div>
-
-            <div class="actual-form">
-              <div class="input-wrap">
-                <input type="text" minlength="1" class="input-field" name="full_name" autocomplete="on" required />
-                <label>Your Good Name</label>
-              </div>
-              <div class="input-wrap">
-                <input type="email" class="input-field" name="email" autocomplete="on" required />
-                <label>Your Email-ID</label>
-              </div>
-              <div class="input-wrap">
-                <input type="password" minlength="4" class="input-field" name="password" autocomplete="on" required />
-                <label>Password</label>
-              </div>
-              <input type="submit" value="Sign Up" class="btn" />
-
-              <button type="button" class="btn google-login">
-                Signup with Google
-              </button>
-
-              <p class="text">
-                By signing up, I agree to the
-                <a href="#">Terms of Services</a> and
-                <a href="#">Privacy Policy</a>
-              </p>
-            </div>
-          </form>
-          <!-------------------------------------------------------------------------------------------------
-          --------------------------------------------- Log in Form ----------------------------------------
-          ------------------------------------------------------------------------------------------------- -->
-          <form action="/login" autocomplete="on" class="sign-in-form" method="POST">
-            <a href="/" class="home-link">
-              <div class="logo" style="text-align: center; margin-bottom: 20px">
-                <img src="{{url_for('static',filename='/Assets/images/Parvaah-logo.png')}}" alt="parvaah-logo"
-                  style="width: 80px; height: auto" />
-                <div class="logo-text">
-                  <h1>Parvaah</h1>
-                  <h5>Care at Your Fingertips</h5>
-                </div>
-                <!-- style="font-size: 2.5em; margin-top: 10px; -->
-              </div>
-            </a>
-
-            <div class="heading">
-              <h1>Elderly</h1>
+              <h2>Guardian</h2>
               <h6>Not registred yet?</h6>
               <a href="#" class="toggle">Sign up</a>
             </div>
 
             <div class="actual-form">
               <div class="input-wrap">
-                <input type="text" name="username" minlength="4" class="input-field" autocomplete="off" />
-                <label>Your Username </label>
-              </div>
-              or
-              <div class="input-wrap">
-                <input type="text" name="email" minlength="4" class="input-field" autocomplete="off" />
+                <input type="text" minlength="4" class="input-field" autocomplete="on" name="email" required />
                 <label>Your Email ID</label>
               </div>
 
               <div class="input-wrap">
-                <input type="password" name="password" minlength="4" class="input-field" autocomplete="off" required />
+                <input type="password" minlength="4" class="input-field" autocomplete="off" name="password" required />
                 <label>Password</label>
               </div>
+
               <button type="submit" value="Sign In" class="btn">Login</button>
 
               <button type="button" class="btn google-login">
@@ -111,13 +59,68 @@
               <p class="or-text">OR</p>
               <!-- Added OR text here -->
 
-              <button type="button" class="btn otp-login" onclick="window.location.href='/login_guardian'">
-                Are you a Guardian Person?
+              <button type="button" class="btn otp-login" onclick="window.location.href='/login'">
+                Are you an Elderly Person?
               </button>
 
               <p class="text">
                 Forgotten your password or you login datails?
                 <a href="#">Get help</a> signing in
+              </p>
+            </div>
+          </form>
+          <!-------------------------------------------------------------------------------------------------
+                    --------------------------------------------- Sign Up Form ----------------------------------------
+                    ------------------------------------------------------------------------------------------------- -->
+          <form action="/register_guardian" method="POST" autocomplete="on" class="sign-up-form">
+            <a href="/" class="home-link">
+              <div class="logo" style="text-align: center; margin-bottom: 20px">
+                <img src="{{url_for('static',filename='/Assets/images/Parvaah-logo.png')}}" alt="parvaah-logo"
+                  style="width: 80px; height: auto" />
+                <div class="logo-text">
+                  <h1>Parvaah</h1>
+                  <h5>Care at Your Fingertips</h5>
+                </div>
+                <!-- style="font-size: 2.5em; margin-top: 10px; -->
+              </div>
+            </a>
+
+            <div class="heading">
+              <h1>Guardian</h1>
+              <h2>Get Started</h2>
+              <h6>Already have an account?</h6>
+              <a href="#" class="toggle">Log in</a>
+            </div>
+
+            <div class="actual-form">
+              <div class="input-wrap">
+                <input type="text" minlength="4" class="input-field" autocomplete="off" name="full_name" required />
+                <label>Your Name</label>
+              </div>
+              <div class="input-wrap">
+                <input type="email" class="input-field" autocomplete="off" name="elderly_email" required />
+                <label>Elderly's Email-ID</label>
+              </div>
+              <div class="input-wrap">
+                <input type="email" class="input-field" autocomplete="off" name="email" required />
+                <label>Your Email-ID</label>
+              </div>
+
+              <div class="input-wrap">
+                <input type="password" minlength="4" class="input-field" autocomplete="off" name="password" required />
+                <label>Password</label>
+              </div>
+
+              <input type="submit" value="Sign Up" class="btn" />
+
+              <button type="button" class="btn google-login">
+                Signup with Google
+              </button>
+
+              <p class="text">
+                By signing up, I agree to the
+                <a href="#">Terms of Services</a> and
+                <a href="#">Privacy Policy</a>
               </p>
             </div>
           </form>

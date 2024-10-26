@@ -10,7 +10,7 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 110vh;
     position: relative; /* To position images behind the form */
 }
 

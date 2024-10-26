@@ -21,28 +21,35 @@
 
     <!-- Profile Information -->
     <div class="profile-info">
-      <h2>John Doe</h2>
-      <p><strong>Date of Birth:</strong> January 1, 1950</p>
-      <p><strong>Email:</strong> johndoe@example.com</p>
-      <p><strong>Address:</strong> 123 Main St, City, State, Country</p>
+      <h2>{{ user.full_name if user.full_name else user.username }}</h2>
+      <p><strong>Date of Birth:</strong> {{ user.dob }}</p>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Address:</strong> {{ user.address }}</p>
     </div>
   </div>
 
   <!-- Medical Information Section -->
   <div class="profile-container medical-info">
     <h3>Medical Information</h3>
-    <p><strong>Blood Type:</strong> <span class="blood-group">O+</span></p>
-    <p><strong>Diseases/Conditions:</strong> Hypertension, Diabetes</p>
+    <p>
+      <strong>Blood Type:</strong>
+      <span class="blood-group">{{ user.blood_type }}</span>
+    </p>
+    <p><strong>Diseases/Conditions:</strong> {{ user.disease }}</p>
   </div>
 
   <!-- Guardian Information Section -->
   <div class="profile-container guardian-info">
     <h3>Guardian Information</h3>
-    <p><strong>Name:</strong> Jane Doe</p>
-    <p><strong>Phone:</strong> +1234567890</p>
-    <p><strong>Address:</strong> 456 Guardian St, City, State, Country</p>
+    {% if guardians %} {% for guardian in guardians %}
+    <p><strong>Name:</strong> {{ guardian.full_name }}</p>
+    <p><strong>Email:</strong> {{ guardian.email }}</p>
+    <p><strong>Phone:</strong> {{ guardian.phone_no }}</p>
+    <p><strong>Address:</strong> {{ guardian.address }}</p>
+    <hr />
+    {% endfor %} {% else %}
+    <p>No guardians assigned.</p>
+    {% endif %}
   </div>
 </main>
 <div style="padding: 50px 0 0 0"></div>
-
-{% endblock content %}

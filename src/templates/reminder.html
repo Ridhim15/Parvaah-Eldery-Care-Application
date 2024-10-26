@@ -20,8 +20,6 @@
   alt="Background Right"
 />
 <main>
-  <!-- Left and Right Background Images -->
-
   <div class="box">
     <div class="heading">
       <h2>Medicine Reminder</h2>
@@ -29,33 +27,76 @@
     </div>
 
     <div class="actual-form">
-      <div class="input-wrap">
-        <input
-          type="text"
-          class="input-field"
-          placeholder="Medicine Name"
-          required
-        />
-      </div>
+      <form action="{{ url_for('medicinereminder') }}" method="POST">
+        <div class="input-wrap">
+          <input
+            type="text"
+            name="medicine_name"
+            class="input-field"
+            placeholder="Medicine Name"
+            required
+          />
+        </div>
 
-      <div class="input-wrap">
-        <input type="text" class="input-field" placeholder="Dosage" required />
-      </div>
+        <div class="input-wrap">
+          <input
+            type="number"
+            name="dosage"
+            class="input-field"
+            placeholder="Dosage"
+            min="1"
+            id="dosage"
+            required
+          />
+        </div>
 
-      <div class="input-wrap">
-        <input type="time" class="input-field" required />
-      </div>
+        <div id="time-inputs"></div>
 
-      <div class="input-wrap">
-        <input type="date" class="input-field" required />
-      </div>
+        <div class="input-wrap">
+          <label for="start_date">Start Date</label>
+          <input type="date" name="start_date" class="input-field" required />
+        </div>
 
-      <a href="#" class="btn">Set Reminder</a>
-      <!-- Button to set reminder -->
-      <a href="#" class="btn" onclick="window.history.back();">Go Back</a>
+        <div class="input-wrap">
+          <label for="end_date">End Date</label>
+          <input type="date" name="end_date" class="input-field" required />
+        </div>
+
+        <button type="submit" class="btn">Set Reminder</button>
+      </form>
+
+      <a href="#" class="btn" onclick="window.history.back();">Back</a>
 
       <p class="text">You will receive reminders for your medications.</p>
+
+      <h3>Your Medicine Reminders</h3>
+      <ul>
+        {% for reminder in medicine_reminders %}
+        <li>
+          {{ reminder.medicine_name }} ({{ reminder.dosage }} times) <br />
+          Times: {{ reminder.times }} <br />
+          From {{ reminder.start_date }} to {{ reminder.end_date }}
+        </li>
+        {% endfor %}
+      </ul>
     </div>
   </div>
 </main>
+
+<script>
+  document.getElementById("dosage").addEventListener("change", function () {
+    const dosage = this.value;
+    const timeInputsDiv = document.getElementById("time-inputs");
+    timeInputsDiv.innerHTML = ""; // Clear previous inputs
+
+    for (let i = 1; i <= dosage; i++) {
+      timeInputsDiv.innerHTML += `
+        <div class="input-wrap">
+          <label for="time_${i}">Time ${i}</label>
+          <input type="time" name="time_${i}" class="input-field" required />
+        </div>
+      `;
+    }
+  });
+</script>
 {% endblock content %}

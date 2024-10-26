@@ -39,30 +39,36 @@
         <i class="fas fa-bullhorn"></i><span id="sos-timer">SOS</span>
       </a>
     </div>
+
+    <!-- Upcoming Appointments -->
     <div class="upcoming-section">
       <div class="appointments">
         <h3><i class="fas fa-star"></i> Upcoming Appointments</h3>
+        {% if upcoming_appointments %} {% for appointment in
+        upcoming_appointments %}
         <p>
           <i class="fas fa-lightbulb blinking-bulb"></i>
-          Dr. Aditya's appointment for knee pain (due today at 10 AM)
+          {{ appointment.title }} at {{ appointment.location }} (due on {{
+          appointment.date }} at {{ appointment.time }})
         </p>
-        <p>
-          <i class="fas fa-lightbulb blinking-bulb"></i>
-          Dr. Yasuuu's appointment for private part's pain (due tomorrow at 10
-          AM)
-        </p>
+        {% endfor %} {% else %}
+        <p>No upcoming appointments.</p>
+        {% endif %}
       </div>
 
+      <!-- Upcoming Medicine Reminders -->
       <div class="reminders">
         <h3><i class="fas fa-star"></i> Upcoming Reminders</h3>
+        {% if upcoming_reminders %} {% for reminder in upcoming_reminders %}
         <p>
           <i class="fas fa-lightbulb blinking-bulb"></i>
-          BP meds to be taken today at 10 AM
+          {{ reminder.medicine_name }} ({{ reminder.dosage }} doses) to be taken
+          between {{ reminder.start_date }} and {{ reminder.end_date }} at {{
+          reminder.times }}.
         </p>
-        <p>
-          <i class="fas fa-lightbulb blinking-bulb"></i>
-          Weed to be taken this Sunday at 11 PM
-        </p>
+        {% endfor %} {% else %}
+        <p>No upcoming medicine reminders.</p>
+        {% endif %}
       </div>
     </div>
 
@@ -76,14 +82,24 @@
         <img src="../static/Assets/images/appoint.png" width="64" />
         <h3>Appointment Reminder</h3>
       </a>
+      <a href="/homecare?type=homecare" class="service-item">
+        <img src="../static/assets/favcions/shield.png" width="64" />
+        <h3>HomeCare</h3>
+      </a>
+
+      <a href="/medicalcare?type=medicalcare" class="service-item">
+        <img src="../static/Assets/images/medicalcare.avif" width="64" />
+        <h3>Medical Care</h3>
+      </a>
+
+      <!-- New Service Button -->
+      <a href="/yourhealth" class="service-item">
+        <img src="../static/assets/favcions/better-health.png" width="64" />
+        <h3>Your Health</h3>
+      </a>
       <a href="/community" class="service-item">
         <img src="../static/Assets/images/community.png" width="64" />
         <h3>Community</h3>
-      </a>
-      <!-- New Service Button -->
-      <a href="/dashservices" class="service-item">
-        <img src="../static/Assets/images/services.png" width="64" />
-        <h3>Services</h3>
       </a>
     </div>
   </div>
