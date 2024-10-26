@@ -39,6 +39,7 @@
         <i class="fas fa-bullhorn"></i><span id="sos-timer">SOS</span>
       </a>
     </div>
+<<<<<<< Updated upstream
     <div class="upcoming-section">
       <div class="appointments">
         <h3><i class="fas fa-star"></i> Upcoming Appointments</h3>
@@ -64,6 +65,36 @@
           Weed to be taken this Sunday at 11 PM
         </p>
       </div>
+=======
+
+    <!-- templates/upcoming_section.html -->
+    <div class="appointments">
+      <h3><i class="fas fa-star"></i> Upcoming Appointments</h3>
+      {% if upcoming_appointments %} {% for appointment in upcoming_appointments
+      %}
+      <p>
+        <i class="fas fa-lightbulb blinking-bulb"></i> {{
+        appointment.appointment_name }} at {{ appointment.location }} (due on {{
+        appointment.date }} at {{ appointment.time }})
+      </p>
+      {% endfor %} {% else %}
+      <p>No upcoming appointments.</p>
+      {% endif %}
+    </div>
+
+    <div class="reminders">
+      <h3><i class="fas fa-star"></i> Upcoming Reminders</h3>
+      {% if upcoming_reminders %} {% for reminder in upcoming_reminders %}
+      <p>
+        <i class="fas fa-lightbulb blinking-bulb"></i> {{ reminder.medicine_name
+        }} ({{ reminder.dosage }} doses) to be taken between {{
+        reminder.start_date }} and {{ reminder.end_date }} at {{ reminder.times
+        }}.
+      </p>
+      {% endfor %} {% else %}
+      <p>No upcoming medicine reminders.</p>
+      {% endif %}
+>>>>>>> Stashed changes
     </div>
 
     <!-- Services Buttons -->
@@ -132,4 +163,25 @@
     timerSpan.innerText = buttonType === "emergency" ? "Emergency" : "SOS";
   }
 </script>
+<script>
+  function refreshUpcomingSection() {
+    fetch("/refresh-upcoming")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.text();
+      })
+      .then((html) => {
+        document.querySelector(".upcoming-section").innerHTML = html;
+      })
+      .catch((error) =>
+        console.error("Error refreshing appointments and reminders:", error)
+      );
+  }
+
+  // Refresh every 10 seconds
+  setInterval(refreshUpcomingSection, 10000);
+</script>
+
 {% endblock content %}

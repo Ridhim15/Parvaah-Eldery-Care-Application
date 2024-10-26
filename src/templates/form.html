@@ -14,21 +14,27 @@
     list-style-type: none;
     padding: 0;
     display: flex;
-    flex-wrap: wrap; /* Allows wrapping to next line if space runs out */
-    gap: 10px; /* Adds spacing between disease items */
+    flex-wrap: wrap;
+    /* Allows wrapping to next line if space runs out */
+    gap: 10px;
+    /* Adds spacing between disease items */
   }
 
   #selectedDiseases li {
-    background-color: #007bff; /* Blue background for selected items */
+    background-color: #007bff;
+    /* Blue background for selected items */
     color: white;
     padding: 5px 10px;
     border-radius: 3px;
-    cursor: pointer; /* Add pointer to indicate clickability */
-    display: inline-block; /* Ensure each disease is displayed inline */
+    cursor: pointer;
+    /* Add pointer to indicate clickability */
+    display: inline-block;
+    /* Ensure each disease is displayed inline */
   }
 
   #selectedDiseases li:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: #0056b3;
+    /* Darker blue on hover */
   }
 
   .form-section {
@@ -40,6 +46,7 @@
   <div class="container">
     <div class="form-container">
       <!-- Profile Picture Section -->
+<<<<<<< Updated upstream
       <div
         class="profile-pic-container"
         onclick="document.getElementById('profilePicUpload').click();"
@@ -68,6 +75,48 @@
         <label for="email">User Email:</label>
         <input type="email" id="email" name="email" required />
       </div>
+=======
+      <form action="/fill_form" method="POST">
+        <div
+          class="profile-pic-container"
+          onclick="document.getElementById('profilePicUpload').click();"
+        >
+          <img
+            id="profilePic"
+            src="../static/assets/images/profile_def_m.png"
+            alt="Profile Picture"
+          />
+          <input
+            type="file"
+            id="profilePicUpload"
+            accept="image/*"
+            style="display: none"
+          />
+          <div class="edit-overlay">Click to upload</div>
+        </div>
+
+        <!-- Personal Information Section -->
+        <div class="form-section">
+          <label for="full_name">Full Name:</label>
+          <input
+            type="text"
+            id="full_name"
+            name="full_name"
+            value="{{ user.full_name if user.full_name else user.username }}"
+            required
+          />
+        </div>
+        <div class="form-section">
+          <label for="email">User Email:</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value="{{ user.email }}"
+            required
+          />
+        </div>
+>>>>>>> Stashed changes
 
       <div class="form-section">
         <label for="gender">Gender:</label>
@@ -79,6 +128,7 @@
         </select>
       </div>
 
+<<<<<<< Updated upstream
       <div class="form-section">
         <label for="address">Address:</label>
         <input type="text" id="address" name="address" required />
@@ -98,6 +148,29 @@
         <label for="fatherName">Father's Name:</label>
         <input type="text" id="fatherName" name="fatherName" required />
       </div>
+=======
+        <div class="form-section">
+          <label for="address">Address:</label>
+          <input
+            type="text"
+            id="address"
+            name="address"
+            value="{{ user.address }}"
+            required
+          />
+        </div>
+
+        <div class="form-section">
+          <label for="dob">Date of Birth:</label>
+          <input
+            type="date"
+            id="dob"
+            name="dob"
+            value="{{ user.dob }}"
+            required
+          />
+        </div>
+>>>>>>> Stashed changes
 
       <!-- Health Information Section -->
       <div class="form-section">
@@ -118,6 +191,7 @@
         <ul id="selectedDiseases"></ul>
       </div>
 
+<<<<<<< Updated upstream
       <div class="form-section">
         <label for="bloodType">Blood Type:</label>
         <select id="bloodType" name="bloodType" required>
@@ -131,6 +205,21 @@
           <option value="AB-">AB-</option>
         </select>
       </div>
+=======
+        <div class="form-section">
+          <label for="blood_type">Blood Type:</label>
+          <select id="blood_type" name="blood_type" required>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+          </select>
+        </div>
+>>>>>>> Stashed changes
 
       <div class="form-section">
         <label for="bloodReport">Upload Blood Report:</label>
@@ -142,6 +231,7 @@
         />
       </div>
 
+<<<<<<< Updated upstream
       <div class="form-section">
         <label for="healthDetails">Additional Health Details:</label>
         <textarea id="healthDetails" name="healthDetails" rows="4"></textarea>
@@ -152,6 +242,49 @@
         <label for="guardianName">Guardian's Name:</label>
         <input type="text" id="guardianName" name="guardianName" required />
       </div>
+=======
+        <div class="form-section">
+          <label for="additional_health_details"
+            >Additional Health Details:</label
+          >
+          <textarea
+            id="additional_health_details"
+            name="additional_health_details"
+            rows="4"
+            required
+          >
+{{ user.additional_health_details }}</textarea
+          >
+        </div>
+
+        <div class="form-section">
+          <label for="phone_no">your Phone Number:</label>
+          <input
+            type="text"
+            id="phone_no"
+            name="phone_no"
+            value="{{ user.phone_no }}"
+            required
+          />
+        </div>
+
+        <!-- <div class="form-section">
+          <label for="disease">Disease:</label>
+          <input
+            type="text"
+            id="disease"
+            name="disease"
+            value="{{ user.disease }}"
+            required
+          />
+        </div> -->
+
+        <!-- Emergency Contact Information -->
+        <div class="form-section">
+          <label for="guardianName">Guardian's Name:</label>
+          <input type="text" id="guardianName" name="guardianName" required />
+        </div>
+>>>>>>> Stashed changes
 
       <div class="form-section">
         <label for="guardianEmail">Guardian's Email:</label>

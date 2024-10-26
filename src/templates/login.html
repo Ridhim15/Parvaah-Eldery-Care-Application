@@ -55,20 +55,11 @@
                     type="text"
                     minlength="1"
                     class="input-field"
-                    name="username"
+                    name="full_name"
                     autocomplete="on"
                     required
                   />
                   <label>Your Good Name</label>
-                </div>
-                <div class="input-wrap">
-                  <input
-                    type="email"
-                    class="input-field"
-                    autocomplete="off"
-                    required
-                  />
-                  <label>Guardian's Email-ID</label>
                 </div>
                 <div class="input-wrap">
                   <input
@@ -107,7 +98,12 @@
             <!-------------------------------------------------------------------------------------------------
           --------------------------------------------- Log in Form ----------------------------------------
           ------------------------------------------------------------------------------------------------- -->
-            <form action="index.html" autocomplete="off" class="sign-in-form">
+            <form
+              action="/login"
+              autocomplete="on"
+              class="sign-in-form"
+              method="POST"
+            >
               <a href="/" class="home-link">
                 <div
                   class="logo"
@@ -136,10 +132,21 @@
                 <div class="input-wrap">
                   <input
                     type="text"
+                    name="username"
                     minlength="4"
                     class="input-field"
                     autocomplete="off"
-                    required
+                  />
+                  <label>Your Username </label>
+                </div>
+                or
+                <div class="input-wrap">
+                  <input
+                    type="text"
+                    name="email"
+                    minlength="4"
+                    class="input-field"
+                    autocomplete="off"
                   />
                   <label>Your Email ID</label>
                 </div>
@@ -147,6 +154,7 @@
                 <div class="input-wrap">
                   <input
                     type="password"
+                    name="password"
                     minlength="4"
                     class="input-field"
                     autocomplete="off"

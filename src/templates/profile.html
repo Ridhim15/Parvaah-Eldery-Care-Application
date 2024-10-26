@@ -1,12 +1,6 @@
 {% extends 'base.html' %} {% block style %}
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-/>
-<link
-  href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-  rel="stylesheet"
-/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="{{url_for('static',filename='profile.css')}}" />
 {% endblock %} {% block content %}
 <div style="padding: 80px 0 0 0"></div>
@@ -21,18 +15,18 @@
 
     <!-- Profile Information -->
     <div class="profile-info">
-      <h2>John Doe</h2>
-      <p><strong>Date of Birth:</strong> January 1, 1950</p>
-      <p><strong>Email:</strong> johndoe@example.com</p>
-      <p><strong>Address:</strong> 123 Main St, City, State, Country</p>
+      <h2>{{user.name if user.name else user.username}}</h2>
+      <p><strong>Date of Birth:</strong> {{user.dob}} </p>
+      <p><strong>Email:</strong> {{user.email}} </p>
+      <p><strong>Address:</strong> {{user.address}} </p>
     </div>
   </div>
 
   <!-- Medical Information Section -->
   <div class="profile-container medical-info">
     <h3>Medical Information</h3>
-    <p><strong>Blood Type:</strong> <span class="blood-group">O+</span></p>
-    <p><strong>Diseases/Conditions:</strong> Hypertension, Diabetes</p>
+    <p><strong>Blood Type:</strong> <span class="blood-group">{{user.bloodgroup}}</span></p>
+    <p><strong>Diseases/Conditions:</strong>{{user.disease}}</p>
   </div>
 
   <!-- Guardian Information Section -->
