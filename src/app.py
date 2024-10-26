@@ -109,7 +109,7 @@ def fill_form():
         db.session.commit()
 
         # Create the health data table for this user
-        create_user_health_table(username)
+        # create_user_health_table(username)
 
         # Redirect to the dashboard after form submission
         return redirect(url_for('dashboard'))
@@ -117,12 +117,12 @@ def fill_form():
     user = User.query.filter_by(full_name=session['username']).first()
     return render_template('form.html', user=user)
 
-def create_user_health_table(username):
-    """Dynamically create a table for each user to store their health records."""
-    table_name = f"health_{username}"
-    query = text(f"CREATE TABLE IF NOT EXISTS {table_name} (id INTEGER PRIMARY KEY, date DATE, sugar INTEGER, bp_sys INTEGER, bp_dia INTEGER)")
-    db.session.execute(query)
-    db.session.commit()
+# def create_user_health_table(username):
+#     """Dynamically create a table for each user to store their health records."""
+#     table_name = f"health_{username}"
+#     query = text(f"CREATE TABLE IF NOT EXISTS {table_name} (id INTEGER PRIMARY KEY, date DATE, sugar INTEGER, bp_sys INTEGER, bp_dia INTEGER)")
+#     db.session.execute(query)
+#     db.session.commit()
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -448,39 +448,6 @@ def medicinereminder():
             end_date=datetime.strptime(end_date, "%Y-%m-%d").date(),
             user_id=user.user_id
         )
-        db.session.add(new_medicine_reminder)
-        db.session.commit()
-
-        flash('Medicine reminder added successfully!', 'success')
-        return redirect(url_for('medicinereminder'))
-
-@app.route('/reminder', methods=['GET', 'POST'])
-def medicinereminder():
-    if 'username' not in session:
-        return redirect(url_for('login'))
-
-    username = session['username']
-    user = User.query.filter_by(full_name=username).first()
-
-    if request.method == 'POST':
-        medicine_name = request.form['medicine_name']
-        dosage = int(request.form['dosage'])
-        start_date = request.form['start_date']
-        end_date = request.form['end_date']
-
-        # Collect all the times (depending on dosage)
-        times = [request.form[f'time_{i}'] for i in range(1, dosage + 1)]
-        times_str = ','.join(times)  # Store times as a comma-separated string
-
-        # Save the medicine reminder in the database
-        new_medicine_reminder = MedicineReminder(
-            medicine_name=medicine_name,
-            dosage=dosage,
-            times=times_str,
-            start_date=datetime.strptime(start_date, "%Y-%m-%d").date(),
-            end_date=datetime.strptime(end_date, "%Y-%m-%d").date(),
-            user_id=user.user_id
-        )
 
         db.session.add(new_medicine_reminder)
         db.session.commit()
@@ -492,6 +459,7 @@ def medicinereminder():
     medicine_reminders = MedicineReminder.query.filter_by(user_id=user.user_id).all()
     return render_template('reminder.html', medicine_reminders=medicine_reminders)
 
+ 
 
 @app.route('/appointreminder', methods=['GET', 'POST'])
 def appointreminder():
