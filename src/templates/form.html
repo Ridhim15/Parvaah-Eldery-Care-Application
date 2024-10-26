@@ -118,57 +118,6 @@
             required
           />
         </div>
-
-        <div class="form-section">
-          <label for="phone_no">Phone Number:</label>
-          <input
-            type="text"
-            id="phone_no"
-            name="phone_no"
-            value="{{ user.phone_no }}"
-            required
-          />
-        </div>
-
-        <div class="form-section">
-          <label for="disease">Disease:</label>
-          <input
-            type="text"
-            id="disease"
-            name="disease"
-            value="{{ user.disease }}"
-            required
-          />
-        </div>
-
-        <div class="form-section">
-          <label for="blood_type">Blood Type:</label>
-          <select id="blood_type" name="blood_type" required>
-            <option value="A+">A+</option>
-            <option value="A-">A-</option>
-            <option value="B+">B+</option>
-            <option value="B-">B-</option>
-            <option value="O+">O+</option>
-            <option value="O-">O-</option>
-            <option value="AB+">AB+</option>
-            <option value="AB-">AB-</option>
-          </select>
-        </div>
-
-        <div class="form-section">
-          <label for="additional_health_details"
-            >Additional Health Details:</label
-          >
-          <textarea
-            id="additional_health_details"
-            name="additional_health_details"
-            rows="4"
-            required
-          >
-{{ user.additional_health_details }}</textarea
-          >
-        </div>
-
         <!-- Health Information Section -->
         <div class="form-section">
           <label for="diseases">Diseases (Select all that apply):</label>
@@ -189,12 +138,51 @@
         </div>
 
         <div class="form-section">
+          <label for="blood_type">Blood Type:</label>
+          <select id="blood_type" name="blood_type" required>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+          </select>
+        </div>
+
+        <div class="form-section">
           <label for="bloodReport">Upload Blood Report:</label>
           <input
             type="file"
             id="bloodReport"
             name="bloodReport"
             accept=".pdf,.jpg,.jpeg,.png"
+          />
+        </div>
+
+        <div class="form-section">
+          <label for="additional_health_details"
+            >Additional Health Details:</label
+          >
+          <textarea
+            id="additional_health_details"
+            name="additional_health_details"
+            rows="4"
+            required
+          >
+{{ user.additional_health_details }}</textarea
+          >
+        </div>
+
+        <div class="form-section">
+          <label for="phone_no">your Phone Number:</label>
+          <input
+            type="text"
+            id="phone_no"
+            name="phone_no"
+            value="{{ user.phone_no }}"
+            required
           />
         </div>
 

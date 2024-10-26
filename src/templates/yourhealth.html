@@ -6,66 +6,61 @@
 <div class="content">
   <div class="container">
     <div
+      class="form-container"
       style="
         background-color: #ffffff;
-        padding-top: 50px;
-        padding-left: 50px;
-        padding-right: 50px;
-        padding-bottom: 50px;
+        padding: 50px;
         border-radius: 8px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         width: 100%;
         margin: 0 auto;
-      "
-      class="form-container"
-    >
+      ">
       <h2 style="padding-left: 450px">Enter Health Information</h2>
+
       <!-- Blood Pressure Section -->
-      <div class="form-section">
-        <label for="bpDate">Blood Pressure Date:</label>
-        <input type="date" id="bpDate" name="bpDate" required />
-      </div>
+      <form action="{{ url_for('yourhealth') }}" method="POST">
+        <input type="hidden" name="form_type" value="blood_pressure" />
 
-      <div class="form-section">
-        <label for="systol">Systolic:</label>
-        <input type="number" id="systol" name="systol" required />
-      </div>
+        <div class="form-section">
+          <label for="bpDate">Blood Pressure Date:</label>
+          <input type="date" id="bpDate" name="bpDate" required />
+        </div>
 
-      <div class="form-section">
-        <label for="dystol">Diastolic:</label>
-        <input type="number" id="dystol" name="dystol" required />
-      </div>
+        <div class="form-section">
+          <label for="systol">Systolic:</label>
+          <input type="number" id="systol" name="systol" required />
+        </div>
 
-      <div class="form-section">
-        <label for="pulse">Pulse:</label>
-        <input type="number" id="pulse" name="pulse" required />
-      </div>
+        <div class="form-section">
+          <label for="dystol">Diastolic:</label>
+          <input type="number" id="dystol" name="dystol" required />
+        </div>
 
-      <button type="submit" onclick="submitBP()">Submit Blood Pressure</button>
+        <div class="form-section">
+          <label for="pulse">Pulse:</label>
+          <input type="number" id="pulse" name="pulse" required />
+        </div>
+
+        <button type="submit">Submit Blood Pressure</button>
+      </form>
 
       <!-- Sugar Level Section -->
-      <div class="form-section">
-        <label for="sugarDate">Sugar Test Date:</label>
-        <input type="date" id="sugarDate" name="sugarDate" required />
-      </div>
+      <form action="{{ url_for('yourhealth') }}" method="POST">
+        <input type="hidden" name="form_type" value="sugar_level" />
 
-      <div class="form-section">
-        <label for="sugarLevel">Sugar Level:</label>
-        <input type="number" id="sugarLevel" name="sugarLevel" required />
-      </div>
+        <div class="form-section">
+          <label for="sugarDate">Sugar Test Date:</label>
+          <input type="date" id="sugarDate" name="sugarDate" required />
+        </div>
 
-      <button type="submit" onclick="submitSugar()">Submit Sugar Level</button>
+        <div class="form-section">
+          <label for="sugarLevel">Sugar Level:</label>
+          <input type="number" id="sugarLevel" name="sugarLevel" required />
+        </div>
+
+        <button type="submit">Submit Sugar Level</button>
+      </form>
     </div>
   </div>
 </div>
-
-<script>
-  function submitBP() {
-    alert("Blood Pressure submitted!");
-  }
-
-  function submitSugar() {
-    alert("Sugar level submitted!");
-  }
-</script>
 {% endblock content %}
