@@ -7,6 +7,10 @@ from flask_session import Session
 from flask_dance.contrib.google import make_google_blueprint, google
 from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
 from requests.models import Response
+import matplotlib.pyplot as plt
+import pandas as pd
+import io
+import base64
 
 # from dotenv import load_dotenv
 from functools import partial
@@ -37,101 +41,6 @@ Session(app)
 
 
 # -------------------------------------------------------------------------------------------------
-<<<<<<< Updated upstream
-# --------------------------------------------- Database Classes ----------------------------------
-# -------------------------------------------------------------------------------------------------
-
-class Elderly(db.Model):
-    eid           = db.Column(db.Integer, primary_key=True)
-    name          = db.Column(db.String(100))
-    username      = db.Column(db.String(50), unique=True, nullable=False)
-    email         = db.Column(db.String(50), unique=True, nullable=False)
-    password      = db.Column(db.String(50), nullable=False)
-    dob           = db.Column(db.Date)
-    phone         = db.Column(db.String(15))
-    profile_image = db.Column(db.String(200))
-    # gid      = db.Column(db.Integer)
-    # guardian = db.relationship(Guardian, backref=db.backref('elderly', lazy=True))
-    
-    def __init__(self, username, password, email):
-        self.username = username
-        self.password = password
-        self.email = email
-    
-    def check_password(self, password):
-        return check_password_hash(self.password, password)
-
-
-class Guardian(db.Model):
-    gid           = db.Column(db.Integer, primary_key=True)
-    name          = db.Column(db.String(100))
-    username      = db.Column(db.String(50), unique=True, nullable=False)
-    email         = db.Column(db.String(50), unique=True, nullable=False)
-    password      = db.Column(db.String(50), nullable=False)
-    dob           = db.Column(db.Date)
-    phone         = db.Column(db.String(15))
-    profile_image = db.Column(db.String(200))
-    # elderly= db.relationship(Elderly, backref=db.backref('guardian', lazy=True))
-    def __init__(self, username, password, email):
-        self.username = username
-        self.password = password
-        self.email = email
-
-    def check_password(self, password):
-        return check_password_hash(self.password, password)
-class Caretaker(db.Model):
-    cid           = db.Column(db.Integer, primary_key=True)
-    name          = db.Column(db.String(100))
-    username      = db.Column(db.String(50), unique=True, nullable=False)
-    email         = db.Column(db.String(50), unique=True, nullable=False)
-    password      = db.Column(db.String(50), nullable=False)
-    dob           = db.Column(db.Date)
-    phone         = db.Column(db.String(15))
-    profile_image = db.Column(db.String(200))
-    # elderly= db.relationship(Elderly, backref=db.backref('guardian', lazy=True))
-
-    def __init__(self, username, password, email):
-        self.username = username
-        self.password = password
-        self.email    = email
-
-    def check_password(self, password):
-        return check_password_hash(self.password, password)
-
-# -------------------------------------------------------------------------------------------------
-# --------------------------------------------- Google Auth ---------------------------------------
-# -------------------------------------------------------------------------------------------------
-
-# environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
-# environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-# blueprint = make_google_blueprint(
-#     client_id     = environ['GOOGLE_CLIENT_ID'],
-#     client_secret = environ['GOOGLE_CLIENT_SECRET'],
-#     scope         = ['email','profile'],
-#     offline       = True,
-#     redirect_to   = 'google_auth'
-# )
-# app.register_blueprint(blueprint, url_prefix='/login')
-
-# @app.route('/google_auth')
-# def google_auth():
-#     # get email and name from google
-#     if not google.authorized:
-#         return redirect(url_for('google.login'))
-#     try:
-#         resp = google.get('/oauth2/v2/userinfo')
-#         assert resp.ok, resp.text
-#         email = resp.json()['email']
-#         name = resp.json()['name']
-#         session['email'] = email
-#         session['name']  = name
-#         return redirect(url_for('dashboard'))
-#     except TokenExpiredError:
-#         return redirect(url_for('google.login'))
-
-# -------------------------------------------------------------------------------------------------
-=======
->>>>>>> Stashed changes
 # --------------------------------------------- Login -------------------------------------------
 # -------------------------------------------------------------------------------------------------
 
@@ -153,38 +62,22 @@ def register():
         full_name = request.form['full_name']
         password = request.form['password']
         email    = request.form['email']
-<<<<<<< Updated upstream
-
-        user = Elderly.query.filter_by(username=username).first()
-        if user:
-            return make_response('User already exists', 400)
-=======
         print(f'full_name: {full_name}, password: {password}, email: {email}')
         # Check if the username already exists
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
             return redirect(url_for('login'))
->>>>>>> Stashed changes
         else:
             session['username'] = full_name
             session['email'] = email
-<<<<<<< Updated upstream
-            new_user = Elderly(username=username, password=password, email=email)
-=======
             # Create a new user and save it to the database
             hashed_password = generate_password_hash(password)
             new_user = User(full_name=full_name, password=hashed_password, email=email, role=UserRole.elderly)
->>>>>>> Stashed changes
             db.session.add(new_user)
             db.session.commit()
             session['username'] = new_user.full_name
             session['email'] = new_user.email
             session['profile_image'] = new_user.profile_image if new_user.profile_image else url_for('static', filename='assets/images/profile_def_m.png')
-<<<<<<< Updated upstream
-            return redirect(url_for('dashboard'))
-    return make_response('Invalid request method', 405)
-
-=======
             
             return redirect(url_for('fill_form', user=new_user))
     return make_response('Invalid request method', 405)
@@ -230,7 +123,6 @@ def create_user_health_table(username):
     db.session.execute(query)
     db.session.commit()
 
->>>>>>> Stashed changes
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     print("LOGIN attempted")
@@ -240,14 +132,6 @@ def login():
         email = request.form['email']
         password = request.form['password']
         
-<<<<<<< Updated upstream
-        elderly = Elderly.query.filter_by(username=username, password=password).first()
-
-        if elderly:
-            session['username'] = elderly.username
-            session['user_id'] = elderly.eid
-            session['profile_image'] = elderly.profile_image if elderly.profile_image else url_for('static', filename='assets/images/profile_def_m.png')
-=======
         user = User.query.filter_by(full_name=username).first() or User.query.filter_by(email=email).first()
 
         if user and check_password_hash(user.password, password):
@@ -260,10 +144,10 @@ def login():
             if not user.disease or not user.blood_type or not user.additional_health_details:
                 return redirect(url_for('fill_form'))
             print(f'{session["username"]} logged in successfully')
->>>>>>> Stashed changes
             return redirect(url_for('dashboard'))
         else:
             return 'Invalid username or password'
+    
     return render_template('login.html')
 
 @app.route('/logout', methods=['GET'])
@@ -292,10 +176,6 @@ class login_status(Resource):
 
 api.add_resource(login_status, '/api/login_status')
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Routes and Views ----------------------------------
 # -------------------------------------------------------------------------------------------------
@@ -305,12 +185,6 @@ api.add_resource(login_status, '/api/login_status')
 def about():
     return render_template('about.html')
 
-<<<<<<< Updated upstream
-@app.route('/dashboard')
-def dashboard():
-    return render_template('dashboard.html')
- 
-=======
  
 
 
@@ -331,7 +205,6 @@ def dashboard():
                            upcoming_appointments=upcoming_appointments, 
                            upcoming_reminders=upcoming_reminders)
 
->>>>>>> Stashed changes
 @app.route('/profile')
 def profile():
     if 'username' not in session:
@@ -361,10 +234,6 @@ def contact():
 def community():
     return render_template('community.html')
 
-<<<<<<< Updated upstream
-@app.route('/booking')
-def booking():
-=======
 
 
 
@@ -419,8 +288,8 @@ def booking():
         flash('Service booked successfully!', 'success')
         return redirect(url_for('thanks'))
 
->>>>>>> Stashed changes
     return render_template('booking.html')
+
 
 @app.route('/fitness')
 def fitness():
@@ -454,15 +323,6 @@ def caretakerlogin():
 def guardiandashboard():
     return render_template('guardiandashboard.html')
 
-<<<<<<< Updated upstream
-@app.route('/reminder')
-def reminder():
-    return render_template('reminder.html')
-
-@app.route('/appointreminder')
-def appointreminder():
-    return render_template('appointreminder.html')
-=======
 @app.route('/reminder', methods=['GET', 'POST'])
 def medicinereminder():
     if 'username' not in session:
@@ -537,7 +397,6 @@ def appointreminder():
     appointment_reminders = AppointmentReminder.query.filter_by(user_id=user.user_id).all()
     return render_template('appointreminder.html', appointments=appointment_reminders)
 
->>>>>>> Stashed changes
 
 @app.route('/newservice')
 def newservice():
@@ -559,8 +418,6 @@ def dashservices():
 def sos():
     return render_template('sos.html')
 
-<<<<<<< Updated upstream
-=======
 @app.route('/caretakerdash')
 def caretakerdash():
     return render_template('caretakerdash.html')
@@ -709,7 +566,6 @@ def refresh_upcoming():
                            upcoming_reminders=upcoming_reminders)
 
 
->>>>>>> Stashed changes
 
 if __name__ == '__main__':
     with app.app_context():
