@@ -279,7 +279,7 @@ def profile():
         return "User not found.", 404
 
     # Fetch guardian(s) using the email as the linking key
-    guardian_relations = GuardianElderly.query.filter_by(elderly_id=elderly_user.email).all()
+    guardian_relations = GuardianElderly.query.filter_by(elderly_email=elderly_user.email).all()
     guardians = [User.query.filter_by(email=relation.guardian_id).first() for relation in guardian_relations]
 
     return render_template('profile.html', user=elderly_user, guardians=guardians)
