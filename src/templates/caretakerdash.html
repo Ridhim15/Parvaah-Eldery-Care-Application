@@ -1,0 +1,82 @@
+{% extends 'base.html' %} {% block style %}
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+/>
+<link
+  href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+  rel="stylesheet"
+/>
+<link
+  rel="stylesheet"
+  href="{{url_for('static',filename='caretakerdash.css')}}"
+/>
+{% endblock %} {% block content %}
+<div style="padding: 120px 0 0 0"></div>
+<div>
+  <h3 style="padding-left: 10rem">
+    Thankyou For Making The World A Better And Safe Place
+  </h3>
+</div>
+
+<section class="dashboard">
+  <div class="tab-container">
+    <!-- Left: Notifications Tab -->
+    <button
+      class="tablinks"
+      onclick="openTab(event, 'notifications')"
+      id="defaultOpen"
+    >
+      Notifications
+    </button>
+    <!-- Right: My Work Tab -->
+    <button class="tablinks" onclick="openTab(event, 'mywork')">My Work</button>
+  </div>
+
+  <!-- Content Section -->
+  <div class="container dashboard-container">
+    <!-- Notifications Tab Content -->
+    <div id="notifications" class="tabcontent">
+      <h3>Notifications</h3>
+      <div id="notification-panel">
+        <p>Loading notifications...</p>
+      </div>
+    </div>
+
+    <!-- My Work Tab Content -->
+    <div id="mywork" class="tabcontent">
+      <h3>My Work</h3>
+      <p>This is the My Work tab. Add your tasks here.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  function openTab(evt, tabName) {
+    let tabcontent = document.getElementsByClassName("tabcontent");
+    for (let i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    let tablinks = document.getElementsByClassName("tablinks");
+    for (let i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+
+  document.getElementById("defaultOpen").click();
+
+  // Auto-refresh notifications every 1 minute
+  setInterval(function () {
+    let notificationPanel = document.getElementById("notification-panel");
+    fetch("/get-notifications") // Placeholder for actual notification URL
+      .then((response) => response.text())
+      .then((data) => {
+        notificationPanel.innerHTML = data;
+      });
+  }, 60000); // 60000ms = 1 minute
+</script>
+<div style="padding: 200px 0 0 0"></div>
+
+{% endblock content %}

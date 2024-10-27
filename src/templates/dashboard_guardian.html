@@ -1,0 +1,66 @@
+{% extends 'base.html' %} {% block style %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="{{url_for('static',filename='dashboard.css')}}" />
+{% endblock %} {% block content %}
+
+
+
+
+<style>
+  a.service-item {
+    text-decoration: none;
+    color: black;
+  }
+
+  a.service-item:hover {
+    color: black;
+  }
+</style>
+</head>
+
+<body>
+
+
+  <!-- Dashboard Section -->
+  <main>
+    <section class="dashboard">
+      <div style="padding: 120px 0 0 0"></div>
+      <h1>Guardian Dashboard</h1>
+      <div style="padding: 50px 0 0 0"></div>
+
+      <div class="container dashboard-container">
+        <!-- Services Buttons -->
+        <div class="dashboard-services">
+          <a href="/medicalcare" class="service-item">
+            <img src="../static/Assets/images/medicalcare.avif" width="64" />
+            <h3>Medical Care</h3>
+          </a>
+          <a href="/homecare" class="service-item">
+            <img src="../static/Assets/images/homecare.avif" width="64" />
+            <h3>HomeCare</h3>
+          </a>
+          <a href="/reminder" class="service-item">
+            <img src="../static/assets/images/medrem.png" width="64" />
+            <h3>Medicine Reminder</h3>
+          </a>
+          <a href="/appointreminder" class="service-item">
+            <img src="../static/Assets/images/appoint.png" width="64" />
+            <h3>Appointment Reminder</h3>
+          </a>
+
+          <a href="/community" class="service-item">
+            <img src="../static/Assets/images/community.png" width="64" />
+            <h3>Community</h3>
+          </a>
+          <a href="/insights" class="service-item">
+            <img src="../static/Assets/images/insights.avif" width="64" />
+            <h3>Insights</h3>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <!-- Footer -->
+</body>
+{% endblock content %}

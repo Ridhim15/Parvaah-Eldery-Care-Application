@@ -7,7 +7,10 @@
   href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
   rel="stylesheet"
 />
-<link rel="stylesheet" href="{{url_for('static',filename='reminder.css')}}" />
+<link
+  rel="stylesheet"
+  href="{{url_for('static',filename='appointreminder.css')}}"
+/>
 {% endblock %} {% block content %}
 <img
   src="../static/assets/images/PARVAH (6).png"
@@ -27,36 +30,50 @@
     </div>
 
     <div class="actual-form">
-      <div class="input-wrap">
-        <input
-          type="text"
-          class="input-field"
-          placeholder="Appointment Title"
-          required
-        />
-      </div>
+      <form action="{{ url_for('appointreminder') }}" method="POST">
+        <div class="input-wrap">
+          <input
+            type="text"
+            name="title"
+            class="input-field"
+            placeholder="Appointment Title"
+            required
+          />
+        </div>
 
-      <div class="input-wrap">
-        <input
-          type="text"
-          class="input-field"
-          placeholder="Location"
-          required
-        />
-      </div>
+        <div class="input-wrap">
+          <input
+            type="text"
+            name="location"
+            class="input-field"
+            placeholder="Location"
+            required
+          />
+        </div>
 
-      <div class="input-wrap">
-        <input type="time" class="input-field" required />
-      </div>
+        <div class="input-wrap">
+          <input type="time" name="time" class="input-field" required />
+        </div>
 
-      <div class="input-wrap">
-        <input type="date" class="input-field" required />
-      </div>
+        <div class="input-wrap">
+          <input type="date" name="date" class="input-field" required />
+        </div>
 
-      <a href="#" class="btn">Set Reminder</a
-      ><a href="#" class="btn" onclick="window.history.back();">Go Back</a>
+        <button type="submit" class="btn">Set Reminder</button>
+      </form>
+
+      <a href="#" class="btn" onclick="window.history.back();">Back</a>
 
       <p class="text">You will receive reminders for your appointments.</p>
+
+      <!-- <ul>
+        {% for appointment in appointments %}
+        <li>
+          {{ appointment.title }} at {{ appointment.location }} on {{
+          appointment.date }} at {{ appointment.time }}
+        </li>
+        {% endfor %}
+      </ul> -->
     </div>
   </div>
 </main>

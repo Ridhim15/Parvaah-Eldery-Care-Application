@@ -7,30 +7,6 @@
     --highlight-color: #e63946;
 }
 
-
-
-body {
-    font-family: "Poppins", sans-serif;
-    line-height: 1.6;
-    background-color: var(--background-color);
-    color: var(--text-color);
-}
-
-.container {
-    padding: 0 20px;
-    
-}
-
-/* Header with Home and Logout Buttons */
-.header {
-    background-color: var(--background-color);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 1rem 0;
-    display: flex;
-}
-
-
-
 /* Profile Section */
 .profile-section {
     display: grid;
