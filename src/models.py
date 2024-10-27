@@ -9,8 +9,7 @@ class UserRole(enum.Enum):
     elderly = "elderly"
 
 class User(db.Model):
-    __tablename__ = 'users'  # Corrected table name definition
-
+    __tablename__ = 'users'
     user_id = db.Column(db.Integer, primary_key=True)  # Primary Key
     full_name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
@@ -26,6 +25,10 @@ class User(db.Model):
     disease = db.Column(db.String(200))
     blood_type = db.Column(db.String(5))
     additional_health_details = db.Column(db.String(500))
+    # # Guardian-Elderly Relationship (Multiple Guardians/Elderly connected)
+    # guardians = db.relationship('GuardianElderly', backref='elderly_user', primaryjoin="User.user_id == GuardianElderly.elderly_id", lazy=True)
+    # elderly_users = db.relationship('GuardianElderly', backref='guardian_user', primaryjoin="User.user_id == GuardianElderly.guardian_id", lazy=True)
+    
     
     # Guardian-Elderly Relationship (One Guardian per Elderly)
     guardian = db.relationship('GuardianElderly', backref='elderly_user', uselist=False, primaryjoin="User.email == GuardianElderly.elderly_email", lazy=True)
@@ -33,6 +36,17 @@ class User(db.Model):
 
     def __repr__(self):
         return f"<User {self.full_name} ({self.role})>"
+
+# class GuardianElderly(db.Model):
+#     __tablename__ = 'guardian_elderly'
+
+#     id = db.Column(db.Integer, primary_key=True)
+#     guardian_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)  # Link to guardian user_id
+#     elderly_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)   # Link to elderly user_id
+
+#     def __repr__(self):
+#         return f"<GuardianElderly (Guardian: {self.guardian_id}, Elderly: {self.elderly_id})>"
+   
 class GuardianElderly(db.Model):
     __tablename__ = 'guardian_elderly'  # Corrected table name definition
 
@@ -54,13 +68,19 @@ class Booking(db.Model):
     booking_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)  # Who made the booking
     caretaker_id = db.Column(db.Integer, db.ForeignKey('caretakers.caretaker_id'), nullable=True)  # Assigned caretaker
-    service = db.Column(db.String(100), nullable=False)  # Service booked
-    date = db.Column(db.DateTime, default=datetime.utcnow)  # Booking date
+
+    type_of_service = db.Column(db.String(100), nullable=False)  # Type of service booked
+    service = db.Column(db.String(100), nullable=False)  # Specific service booked
+    
+    start_date = db.Column(db.Date, nullable=False)  # Start date of booking
+    start_time = db.Column(db.Time, nullable=False)  # Start time of booking
+    end_date = db.Column(db.Date, nullable=False)  # End date of booking
+    end_time = db.Column(db.Time, nullable=False)  # End time of booking
+    
     status = db.Column(db.Enum(BookingStatus), default=BookingStatus.pending)  # Booking status
 
-    def _repr_(self):
+    def __repr__(self):
         return f"<Booking {self.booking_id} (Status: {self.status})>"
-
 class MedicineReminder(db.Model):
     __tablename__ = 'medicine_reminders'
 
@@ -71,8 +91,7 @@ class MedicineReminder(db.Model):
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
-
-    def _repr_(self):
+    def __repr__(self):
         return f"<MedicineReminder {self.medicine_name} for User {self.user_id}>"
 
 class Caretaker(db.Model):
@@ -88,7 +107,7 @@ class Caretaker(db.Model):
     # Relationship with Bookings
     bookings = db.relationship('Booking', backref='caretaker', lazy=True)
 
-    def _repr_(self):
+    def __repr__(self):
         return f"<Caretaker {self.full_name}>"
 
 class AppointmentReminder(db.Model):
@@ -99,6 +118,32 @@ class AppointmentReminder(db.Model):
     time = db.Column(db.Time, nullable=False)
     date = db.Column(db.Date, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
-
-    def _repr_(self):
+    def __repr__(self):
         return f"<AppointmentReminder {self.appointment_name} for User {self.user_id}>"
+
+
+
+
+
+
+class HealthInfo(db.Model):
+    __tablename__ = 'health_info'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    
+    # Blood Pressure fields
+    bp_date = db.Column(db.Date, nullable=True)  # Made nullable
+    systolic = db.Column(db.Integer, nullable=True)  # Made nullable
+    diastolic = db.Column(db.Integer, nullable=True)  # Made nullable
+    pulse = db.Column(db.Integer, nullable=True)  # Made nullable
+
+    # Sugar Level fields
+    sugar_date = db.Column(db.Date, nullable=True)  # Made nullable
+    sugar_level = db.Column(db.Integer, nullable=True)  # Made nullable
+
+    # Relationship to the User model
+    user = db.relationship('User', backref=db.backref('health_info', lazy=True))
+
+    def __repr__(self):
+        return f"<HealthInfo for User {self.user_id}>"

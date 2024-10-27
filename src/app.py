@@ -22,7 +22,9 @@ from sqlalchemy import text
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # Import models from models.py
-from models import AppointmentReminder, db, User, GuardianElderly, Booking, MedicineReminder, Caretaker, UserRole, BookingStatus
+
+from models import AppointmentReminder, HealthInfo, db, User, GuardianElderly, Booking, MedicineReminder, Caretaker, UserRole, BookingStatus
+
 
 # load_dotenv()
 
@@ -38,9 +40,6 @@ app.config['SESSION_TYPE']             = 'sqlalchemy'
 app.config['SESSION_SQLALCHEMY']       = db
 app.config['SESSION_SQLALCHEMY_TABLE'] = 'sessions'
 Session(app)
-
-
-
 
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Login -------------------------------------------
@@ -110,7 +109,7 @@ def fill_form():
         db.session.commit()
 
         # Create the health data table for this user
-        create_user_health_table(username)
+        # create_user_health_table(username)
 
         # Redirect to the dashboard after form submission
         return redirect(url_for('dashboard'))
@@ -118,12 +117,12 @@ def fill_form():
     user = User.query.filter_by(full_name=session['username']).first()
     return render_template('form.html', user=user)
 
-def create_user_health_table(username):
-    """Dynamically create a table for each user to store their health records."""
-    table_name = f"health_{username}"
-    query = text(f"CREATE TABLE IF NOT EXISTS {table_name} (id INTEGER PRIMARY KEY, date DATE, sugar INTEGER, bp_sys INTEGER, bp_dia INTEGER)")
-    db.session.execute(query)
-    db.session.commit()
+# def create_user_health_table(username):
+#     """Dynamically create a table for each user to store their health records."""
+#     table_name = f"health_{username}"
+#     query = text(f"CREATE TABLE IF NOT EXISTS {table_name} (id INTEGER PRIMARY KEY, date DATE, sugar INTEGER, bp_sys INTEGER, bp_dia INTEGER)")
+#     db.session.execute(query)
+#     db.session.commit()
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -151,7 +150,6 @@ def login():
             return 'Invalid username or password'
     
     return render_template('login.html')
-
 
 @app.route('/login_guardian', methods=['GET', 'POST'])
 def login_guardian():
@@ -239,10 +237,6 @@ api.add_resource(login_status, '/api/login_status')
 def about():
     return render_template('about.html')
 
- 
-
-
-
 
 @app.route('/dashboard')
 def dashboard():
@@ -252,12 +246,13 @@ def dashboard():
     username = session['username']
     user = User.query.filter_by(full_name=username).first()
 
-    # Fetch upcoming appointments and medicine reminders for the logged-in user
+    # Fetch initial upcoming appointments and medicine reminders for the logged-in user
     upcoming_appointments = AppointmentReminder.query.filter_by(user_id=user.user_id).all()
     upcoming_reminders = MedicineReminder.query.filter_by(user_id=user.user_id).all()
 
-    return render_template('dashboard.html', user=user, upcoming_appointments=upcoming_appointments, upcoming_reminders=upcoming_reminders)
-
+    return render_template('dashboard.html', user=user, 
+                           upcoming_appointments=upcoming_appointments, 
+                           upcoming_reminders=upcoming_reminders)
 # @app.route('/profile')
 # def profile():
 #     if 'username' not in session:
@@ -271,18 +266,23 @@ def dashboard():
 def profile():
     if 'username' not in session:
         return redirect(url_for('login'))
+    user = User.query.filter_by(full_name=session['username']).first()
+    health = db.session.execute(text(f"SELECT * FROM health_info")).fetchall()
+
+    return render_template('profile.html', user=user, health=health)
+
     
-    # Fetch the elderly user based on the session username (full_name assumed unique for now)
-    elderly_user = User.query.filter_by(full_name=session['username']).first()
+#     # Fetch the elderly user based on the session username (full_name assumed unique for now)
+#     elderly_user = User.query.filter_by(full_name=session['username']).first()
     
-    if not elderly_user:
-        return "User not found.", 404
+#     if not elderly_user:
+#         return "User not found.", 404
 
     # Fetch guardian(s) using the email as the linking key
     guardian_relations = GuardianElderly.query.filter_by(elderly_email=elderly_user.email).all()
     guardians = [User.query.filter_by(email=relation.guardian_id).first() for relation in guardian_relations]
 
-    return render_template('profile.html', user=elderly_user, guardians=guardians)
+#     return render_template('profile.html', user=elderly_user, guardians=guardians)
 
 
 @app.route('/emergency')
@@ -305,7 +305,6 @@ def contact():
 def community():
     return render_template('community.html')
 
-
 @app.route('/booking', methods=['GET', 'POST'])
 def booking():
     if 'username' not in session:
@@ -315,24 +314,36 @@ def booking():
     user = User.query.filter_by(full_name=username).first()
 
     if request.method == 'POST':
-        service = request.form['service']
-        start_date = request.form['start_date']
-        start_time = request.form['start_time']
-        end_date = request.form['end_date']
-        end_time = request.form['end_time']
-        
-        # Combine date and time into datetime objects
+        # Retrieve form data
+        type_of_service = request.form.get('type')
+        service = request.form.get('service')
+        start_date = request.form.get('start_date')
+        start_time = request.form.get('start_time')
+        end_date = request.form.get('end_date')
+        end_time = request.form.get('end_time')
+
+        # Ensure date and time values are provided
+        if not all([start_date, start_time, end_date, end_time]):
+            flash("Please fill out all date and time fields.", "error")
+            return redirect(url_for('booking'))
+
+        # Convert date and time inputs into datetime objects
         start_datetime = datetime.strptime(f"{start_date} {start_time}", "%Y-%m-%d %H:%M")
         end_datetime = datetime.strptime(f"{end_date} {end_time}", "%Y-%m-%d %H:%M")
 
         # Create a new booking instance
         new_booking = Booking(
             user_id=user.user_id,
+            type_of_service=type_of_service,
             service=service,
-            date=start_datetime,  # Start date and time
+            start_date=start_datetime.date(),
+            start_time=start_datetime.time(),
+            end_date=end_datetime.date(),
+            end_time=end_datetime.time(),
             status=BookingStatus.pending  # Default status
         )
 
+        # Add and commit the new booking to the database
         db.session.add(new_booking)
         db.session.commit()
 
@@ -340,11 +351,6 @@ def booking():
         return redirect(url_for('thanks'))
 
     return render_template('booking.html')
-
-
-
-
-
 
 @app.route('/fitness')
 def fitness():
@@ -380,7 +386,7 @@ def register_guardian():
         if not elderly:
             print("Elderly email not found. Please verify.")
             flash("Elderly email not found. Please verify.")
-            return redirect(url_for('register_guardian'))
+            return redirect(url_for('login'))
 
         # Check if guardian already exists
         if User.query.filter_by(email=email).first():
@@ -409,7 +415,7 @@ def register_guardian():
         flash("Registration successful. Redirecting to dashboard.")
         return redirect(url_for('dashboard_guardian'))
 
-    return render_template('register_guardian.html')
+    return render_template('login_guardian.html')
 
 @app.route('/dashboard_guardian')
 def dashboard_guardian():
@@ -453,6 +459,7 @@ def medicinereminder():
     medicine_reminders = MedicineReminder.query.filter_by(user_id=user.user_id).all()
     return render_template('reminder.html', medicine_reminders=medicine_reminders)
 
+ 
 
 @app.route('/appointreminder', methods=['GET', 'POST'])
 def appointreminder():
@@ -510,15 +517,62 @@ def dashservices():
 def sos():
     return render_template('sos.html')
 
-@app.route('/dashboard_caretaker')
-def dashboard_caretaker():
-    return render_template('dashboard_caretaker.html')
+@app.route('/caretakerdash')
+def caretakerdash():
+    return render_template('caretakerdash.html')
 
 
 
-
-@app.route('/yourhealth')
+@app.route('/yourhealth', methods=['GET', 'POST'])
 def yourhealth():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    username = session['username']
+    user = User.query.filter_by(full_name=username).first()
+
+    if request.method == 'POST':
+        form_type = request.form.get('form_type')
+        
+        if form_type == 'blood_pressure':
+            # Handle blood pressure form submission
+            bp_date = request.form.get('bpDate')
+            systolic = request.form.get('systol')
+            diastolic = request.form.get('dystol')
+            pulse = request.form.get('pulse')
+
+            if all([bp_date, systolic, diastolic, pulse]):
+                health_info = HealthInfo(
+                    user_id=user.user_id,
+                    bp_date=datetime.strptime(bp_date, "%Y-%m-%d").date(),
+                    systolic=int(systolic),
+                    diastolic=int(diastolic),
+                    pulse=int(pulse),
+                )
+                db.session.add(health_info)
+                db.session.commit()
+                flash('Blood pressure information submitted successfully!', 'success')
+            else:
+                flash('Please fill out all fields for blood pressure.', 'error')
+
+        elif form_type == 'sugar_level':
+            # Handle sugar level form submission
+            sugar_date = request.form.get('sugarDate')
+            sugar_level = request.form.get('sugarLevel')
+
+            if all([sugar_date, sugar_level]):
+                health_info = HealthInfo(
+                    user_id=user.user_id,
+                    sugar_date=datetime.strptime(sugar_date, "%Y-%m-%d").date(),
+                    sugar_level=int(sugar_level)
+                )
+                db.session.add(health_info)
+                db.session.commit()
+                flash('Sugar level information submitted successfully!', 'success')
+            else:
+                flash('Please fill out all fields for sugar level.', 'error')
+
+        return redirect(url_for('yourhealth'))
     return render_template('yourhealth.html')
 
 # Route to create sample data
@@ -589,6 +643,25 @@ def create_sample_data():
 
     return "Sample data created successfully!"
 
+
+@app.route('/refresh-upcoming')
+def refresh_upcoming():
+    if 'username' not in session:
+        return jsonify({'error': 'User not logged in'}), 401
+
+    # Fetch user info
+    user = User.query.filter_by(full_name=session['username']).first()
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    # Fetch upcoming appointments and medicine reminders
+    upcoming_appointments = AppointmentReminder.query.filter_by(user_id=user.user_id).all()
+    upcoming_reminders = MedicineReminder.query.filter_by(user_id=user.user_id).all()
+
+    # Render the partial template with updated data
+    return render_template('upcoming_section.html', 
+                           upcoming_appointments=upcoming_appointments, 
+                           upcoming_reminders=upcoming_reminders)
 
 
 if __name__ == '__main__':
