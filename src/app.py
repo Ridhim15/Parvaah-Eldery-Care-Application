@@ -386,7 +386,7 @@ def register_guardian():
         if not elderly:
             print("Elderly email not found. Please verify.")
             flash("Elderly email not found. Please verify.")
-            return redirect(url_for('register_guardian'))
+            return redirect(url_for('login'))
 
         # Check if guardian already exists
         if User.query.filter_by(email=email).first():
@@ -415,7 +415,7 @@ def register_guardian():
         flash("Registration successful. Redirecting to dashboard.")
         return redirect(url_for('dashboard_guardian'))
 
-    return render_template('register_guardian.html')
+    return render_template('login_guardian.html')
 
 @app.route('/dashboard_guardian')
 def dashboard_guardian():

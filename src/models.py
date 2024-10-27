@@ -25,37 +25,37 @@ class User(db.Model):
     disease = db.Column(db.String(200))
     blood_type = db.Column(db.String(5))
     additional_health_details = db.Column(db.String(500))
-    # Guardian-Elderly Relationship (Multiple Guardians/Elderly connected)
-    guardians = db.relationship('GuardianElderly', backref='elderly_user', primaryjoin="User.user_id == GuardianElderly.elderly_id", lazy=True)
-    elderly_users = db.relationship('GuardianElderly', backref='guardian_user', primaryjoin="User.user_id == GuardianElderly.guardian_id", lazy=True)
+    # # Guardian-Elderly Relationship (Multiple Guardians/Elderly connected)
+    # guardians = db.relationship('GuardianElderly', backref='elderly_user', primaryjoin="User.user_id == GuardianElderly.elderly_id", lazy=True)
+    # elderly_users = db.relationship('GuardianElderly', backref='guardian_user', primaryjoin="User.user_id == GuardianElderly.guardian_id", lazy=True)
+    
+    
+    # Guardian-Elderly Relationship (One Guardian per Elderly)
+    guardian = db.relationship('GuardianElderly', backref='elderly_user', uselist=False, primaryjoin="User.email == GuardianElderly.elderly_email", lazy=True)
+    elderly_user = db.relationship('GuardianElderly', backref='guardian_user', uselist=False, primaryjoin="User.email == GuardianElderly.guardian_email", lazy=True)
 
     def __repr__(self):
         return f"<User {self.full_name} ({self.role})>"
 
-class GuardianElderly(db.Model):
-    __tablename__ = 'guardian_elderly'
-
-    id = db.Column(db.Integer, primary_key=True)
-    guardian_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)  # Link to guardian user_id
-    elderly_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)   # Link to elderly user_id
-
-    def __repr__(self):
-        return f"<GuardianElderly (Guardian: {self.guardian_id}, Elderly: {self.elderly_id})>"
-#     # Guardian-Elderly Relationship (One Guardian per Elderly)
-#     guardian = db.relationship('GuardianElderly', backref='elderly_user', uselist=False, primaryjoin="User.email == GuardianElderly.elderly_email", lazy=True)
-#     elderly_user = db.relationship('GuardianElderly', backref='guardian_user', uselist=False, primaryjoin="User.email == GuardianElderly.guardian_email", lazy=True)
-
-#     def __repr__(self):
-#         return f"<User {self.full_name} ({self.role})>"
 # class GuardianElderly(db.Model):
-#     __tablename__ = 'guardian_elderly'  # Corrected table name definition
+#     __tablename__ = 'guardian_elderly'
 
 #     id = db.Column(db.Integer, primary_key=True)
-#     guardian_email = db.Column(db.String(50), db.ForeignKey('users.email'), nullable=False, unique=True)  # Link to guardian email
-#     elderly_email = db.Column(db.String(50), db.ForeignKey('users.email'), nullable=False, unique=True)   # Link to elderly email
+#     guardian_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)  # Link to guardian user_id
+#     elderly_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)   # Link to elderly user_id
 
 #     def __repr__(self):
-#         return f"<GuardianElderly (Guardian: {self.guardian_email}, Elderly: {self.elderly_email})>"
+#         return f"<GuardianElderly (Guardian: {self.guardian_id}, Elderly: {self.elderly_id})>"
+   
+class GuardianElderly(db.Model):
+    __tablename__ = 'guardian_elderly'  # Corrected table name definition
+
+    id = db.Column(db.Integer, primary_key=True)
+    guardian_email = db.Column(db.String(50), db.ForeignKey('users.email'), nullable=False, unique=True)  # Link to guardian email
+    elderly_email = db.Column(db.String(50), db.ForeignKey('users.email'), nullable=False, unique=True)   # Link to elderly email
+
+    def __repr__(self):
+        return f"<GuardianElderly (Guardian: {self.guardian_email}, Elderly: {self.elderly_email})>"
 
 class BookingStatus(enum.Enum):
     pending = "pending"
