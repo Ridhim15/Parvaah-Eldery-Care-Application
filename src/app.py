@@ -626,5 +626,5 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     atexit.register(prompt_and_delete_folders)
-    app.run(host='192.168.29.235') # for hosting the local host will only run on ridhim's desktop
-    # app.run(debug=True)
+    app.run(host='192.168.29.235') # for hosting the local host will only run on ridhim's desktop (Comment this line and uncomment the one below)
+    # app.run(debug=True) 
