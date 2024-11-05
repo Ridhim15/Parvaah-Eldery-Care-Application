@@ -8,27 +8,38 @@
   <link rel="stylesheet" href="{{ url_for('static',filename='style.css' )}}" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
     rel="stylesheet" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-  <link rel="manifest" href="/site.webmanifest" />
+
+  <link rel="apple-touch-icon" sizes="180x180" href="../static/assets/favcions/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../static/assets/favcions/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="../static/assets/favcions/favicon-16x16.png" />
+  <link rel="manifest" href="../static/assets/favcions/site.webmanifest" />
   {% block style %}{% endblock %}
 
   <script defer>
+    console.log( "Checking Login Status" );
     fetch( '/api/login_status' )
       .then( response => response.json() )
       .then( data => {
-        console.log( data );
+        console.log( "USER DATA:", data );
         if ( data.status == "logged_in" ) {
-          // Hide the login button
-          document.getElementById( "landing_nav").style.display = 'none';
-          // Show the profile-info div
-          document.getElementById( "login_nav" ).style.display = 'flex';
-          // Fill in the user data (given to us by the API :3)
+          // Hide the landing nav
+          console.log( "Logged In" );
+          document.getElementById( "landing_nav" ).style.display = 'none';
+          // Show the appropriate navbar based on the user role
+          if ( data.role == "elderly" ) {
+            console.log( "Elderly Nav" );
+            document.getElementById( "elderly_nav" ).style.display = 'flex';
+          } else if ( data.role == "guardian" ) {
+            document.getElementById( "guardian_nav" ).style.display = 'flex';
+          } else if ( data.role == "caretaker" ) {
+            document.getElementById( "caretaker_nav" ).style.display = 'flex';
+          }
+          console.log( "Setting Profile Info" );
           document.getElementById( "username" ).innerText = data.username;
           document.getElementById( "profile-pic" ).src = data.profile_image;
+          console.log( "Script End" );
         }
-      } )
+      } );
   </script>
 </head>
 
@@ -36,7 +47,7 @@
   <div class="main-container">
     <!-- Header / Navbar -->
     <header class="header">
-          <!-------------------------------------------------------------------------------------------------
+      <!-------------------------------------------------------------------------------------------------
           --------------------------------------------- Landing Nav  ----------------------------------------
           ------------------------------------------------------------------------------------------------- -->
       <nav id="landing_nav" class="navbar container">
@@ -51,19 +62,23 @@
           <li><a href="/testimonials">Testimonials</a></li>
           <li><a href="/contact">Contact</a></li>
         </ul>
-          <div id="login-button">
-            <a href="/user" class="btn btn-primary">Login / Sign Up</a>
-          </div>
+        <div id="login-button">
+          <a href="/user" class="btn btn-primary">Login / Sign Up</a>
         </div>
       </nav>
-          <!-------------------------------------------------------------------------------------------------
-          --------------------------------------------- Logged in nav ----------------------------------------
+
+      <!-------------------------------------------------------------------------------------------------
+          --------------------------------------------- Elderly Nav ----------------------------------------
           ------------------------------------------------------------------------------------------------- -->
-      <nav id="login_nav" class="navbar container" style="display: none;">
-        <a href="/" class="logo">
+      <nav id="elderly_nav" class="navbar container" style="display: none;">
+        <a href="/dashboard" class="logo">
           <img src="../static/assets/images/Parvaah-logo.png" width="40" height="40" />
-          <span>Parvaah</span>
+          <div class="logo-text">
+            <span>Parvaah</span>
+            <p style="display: block; font-size: small">Elderly</p>
+          </div>
         </a>
+
         <ul class="nav-links">
           <li><a href="/dashboard">Dashboard</a></li>
         </ul>
@@ -78,7 +93,60 @@
             <a href="/logout" class="clear_link">Logout</a>
           </div>
         </div>
-        
+      </nav>
+
+      <!-------------------------------------------------------------------------------------------------
+          --------------------------------------------- Guardian Nav ----------------------------------------
+          ------------------------------------------------------------------------------------------------- -->
+      <nav id="guardian_nav" class="navbar container" style="display: none;">
+        <a href="/dashboard_guardian" class="logo">
+          <img src="../static/assets/images/Parvaah-logo.png" width="40" height="40" />
+          <div class="logo-text">
+            <span>Parvaah</span>
+            <p style="display: block; font-size: small">Guardian</p>
+          </div>
+        </a>
+        <ul class="nav-links">
+          <li><a href="/dashboard_guardian">Dashboard</a></li>
+        </ul>
+        <div class="profile">
+          <div id="profile-info" class="profile-info">
+            <a href="/profile" class="clear_link">
+              <span id="username"></span>
+              <img id="profile-pic" alt="Profile Pic" width="40" height="40">
+            </a>
+          </div>
+          <div id="logout-btn">
+            <a href="/logout" class="clear_link">Logout</a>
+          </div>
+        </div>
+      </nav>
+
+      <!-------------------------------------------------------------------------------------------------
+          --------------------------------------------- Caretaker Nav ----------------------------------------
+          ------------------------------------------------------------------------------------------------- -->
+      <nav id="caretaker_nav" class="navbar container" style="display: none;">
+        <a href="/dashboard_caretaker" class="logo">
+          <img src="../static/assets/images/Parvaah-logo.png" width="40" height="40" />
+          <div class="logo-text">
+            <span>Parvaah</span>
+            <p style="display: block; font-size: small">Caretaker</p>
+          </div>
+        </a>
+        <ul class="nav-links">
+          <li><a href="/dashboard_caretaker">Dashboard</a></li>
+        </ul>
+        <div class="profile">
+          <div id="profile-info" class="profile-info">
+            <a href="/profile" class="clear_link">
+              <span id="username"></span>
+              <img id="profile-pic" alt="Profile Pic" width="40" height="40">
+            </a>
+          </div>
+          <div id="logout-btn">
+            <a href="/logout" class="clear_link">Logout</a>
+          </div>
+        </div>
       </nav>
     </header>
 
