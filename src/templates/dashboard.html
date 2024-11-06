@@ -1,13 +1,7 @@
 {% extends 'base.html' %} {% block style %}
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-/>
-<link
-  href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-  rel="stylesheet"
-/>
-<link rel="stylesheet" href="{{url_for('static',filename='dashboard.css')}}" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="{{url_for('static',filename='css/dashboard.css')}}" />
 {% endblock %} {% block content %}
 <!-- Dashboard Section -->
 <section class="dashboard">
@@ -16,26 +10,13 @@
     <div style="padding: 50px 0 0 0"></div>
 
     <div class="dashboard-buttons">
-      <a
-        href="javascript:void(0)"
-        class="btn-dashboard emergency-btn"
-        onmousedown="startHold(event, 'emergency')"
-        onmouseup="endHold(event)"
-        ontouchstart="startHold(event, 'emergency')"
-        ontouchend="endHold(event)"
-      >
-        <i class="fas fa-exclamation-triangle"></i
-        ><span id="emergency-timer">Emergency</span>
+      <a href="javascript:void(0)" class="btn-dashboard emergency-btn" onmousedown="startHold(event, 'emergency')"
+        onmouseup="endHold(event)" ontouchstart="startHold(event, 'emergency')" ontouchend="endHold(event)">
+        <i class="fas fa-exclamation-triangle"></i><span id="emergency-timer">Emergency</span>
       </a>
 
-      <a
-        href="javascript:void(0)"
-        class="btn-dashboard sos-btn"
-        onmousedown="startHold(event, 'sos')"
-        onmouseup="endHold(event)"
-        ontouchstart="startHold(event, 'sos')"
-        ontouchend="endHold(event)"
-      >
+      <a href="javascript:void(0)" class="btn-dashboard sos-btn" onmousedown="startHold(event, 'sos')"
+        onmouseup="endHold(event)" ontouchstart="startHold(event, 'sos')" ontouchend="endHold(event)">
         <i class="fas fa-bullhorn"></i><span id="sos-timer">SOS</span>
       </a>
     </div>
@@ -101,68 +82,6 @@
   </div>
 </section>
 
-<script>
-  let holdTimeout;
-  let holdTime = 3000; // 3 seconds
-  let interval;
-
-  function startHold(event, buttonType) {
-    let startTime = Date.now();
-    const button = event.currentTarget;
-    const timerSpan = document.getElementById(buttonType + "-timer");
-
-    let remainingTime = holdTime / 1000;
-    timerSpan.innerText = `${remainingTime}s`;
-
-    interval = setInterval(() => {
-      remainingTime -= 1;
-      timerSpan.innerText = `${remainingTime}s`;
-    }, 1000);
-
-    holdTimeout = setTimeout(() => {
-      clearInterval(interval);
-      timerSpan.innerText = buttonType === "emergency" ? "Emergency" : "SOS";
-
-      if (buttonType === "emergency") {
-        window.location.href = "/emergency";
-      } else if (buttonType === "sos") {
-        window.location.href = "/sos";
-      }
-    }, holdTime);
-  }
-
-  function endHold(event) {
-    const button = event.currentTarget;
-    const buttonType = button.classList.contains("emergency-btn")
-      ? "emergency"
-      : "sos";
-    const timerSpan = document.getElementById(buttonType + "-timer");
-
-    clearTimeout(holdTimeout);
-    clearInterval(interval);
-
-    timerSpan.innerText = buttonType === "emergency" ? "Emergency" : "SOS";
-  }
-</script>
-<script>
-  function refreshUpcomingSection() {
-    fetch("/refresh-upcoming")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.text();
-      })
-      .then((html) => {
-        document.querySelector(".upcoming-section").innerHTML = html;
-      })
-      .catch((error) =>
-        console.error("Error refreshing appointments and reminders:", error)
-      );
-  }
-
-  // Refresh every 10 seconds
-  setInterval(refreshUpcomingSection, 10000);
-</script>
+<script src="{{url_for('static',filename='js/dashboard.js')}}"></script>
 
 {% endblock content %}

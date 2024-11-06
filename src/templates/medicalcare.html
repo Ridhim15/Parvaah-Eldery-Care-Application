@@ -1,16 +1,7 @@
 {% extends 'base.html' %} {% block style %}
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-/>
-<link
-  href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-  rel="stylesheet"
-/>
-<link
-  rel="stylesheet"
-  href="{{url_for('static',filename='medicalcare.css')}}"
-/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="{{url_for('static',filename='css/medicalcare.css')}}" />
 {% endblock %} {% block content %}
 
 <div style="padding: 50px 0 0 0"></div>
@@ -22,11 +13,7 @@
   <div class="services-section">
     <!-- Blood Test Service (As Button) -->
     <a href="/booking?type=medicalcare&service=Blood Test" class="service-card">
-      <img
-        src="../static/assets/images/bloodtest.jpeg"
-        alt="Blood Test Logo"
-        class="service-logo"
-      />
+      <img src="../static/assets/images/bloodtest.jpeg" alt="Blood Test Logo" class="service-logo" />
       <h2 class="service-name">Blood Test</h2>
       <div class="service-description">
         Schedule blood tests at home. Our medical team will assist with all
@@ -35,15 +22,8 @@
     </a>
 
     <!-- Bathing/Dressing Service (As Button) -->
-    <a
-      href="/booking?type=medicalcare&service=Bathing/Dressing"
-      class="service-card"
-    >
-      <img
-        src="../static/assets/images/bathandbody.png"
-        alt="Bathing Logo"
-        class="service-logo"
-      />
+    <a href="/booking?type=medicalcare&service=Bathing/Dressing" class="service-card">
+      <img src="../static/assets/images/bathandbody.png" alt="Bathing Logo" class="service-logo" />
       <h2 class="service-name">Bathing/Dressing</h2>
       <div class="service-description">
         We assist with personal care, including bathing, grooming, and dressing,
@@ -53,11 +33,7 @@
 
     <!-- Nursing Service (As Button) -->
     <a href="/booking?type=medicalcare&service=Nursing" class="service-card">
-      <img
-        src="../static/assets/images/nursing.png"
-        alt="Nursing Logo"
-        class="service-logo"
-      />
+      <img src="../static/assets/images/nursing.png" alt="Nursing Logo" class="service-logo" />
       <h2 class="service-name">Nursing</h2>
       <div class="service-description">
         Our certified nurses provide in-home care, from medication management to
@@ -66,15 +42,8 @@
     </a>
 
     <!-- Physiotherapy Service (As Button) -->
-    <a
-      href="/booking?type=medicalcare&service=Physiotherapy"
-      class="service-card"
-    >
-      <img
-        src="../static/assets/images/langda.jpeg"
-        alt="Physiotherapy Logo"
-        class="service-logo"
-      />
+    <a href="/booking?type=medicalcare&service=Physiotherapy" class="service-card">
+      <img src="../static/assets/images/langda.jpeg" alt="Physiotherapy Logo" class="service-logo" />
       <h2 class="service-name">Physiotherapy</h2>
       <div class="service-description">
         We offer physiotherapy services to help improve mobility, strength, and

@@ -1,10 +1,10 @@
+console.log("Login script loaded")
 const inputs = document.querySelectorAll(".input-field")
 const toggle_btn = document.querySelectorAll(".toggle")
 const main = document.querySelector("main")
 const bullets = document.querySelectorAll(".bullets span")
 const images = document.querySelectorAll(".image")
 const texts = document.querySelectorAll(".text") // Add this line to select text elements
-
 
 console.log("Login works")
 inputs.forEach(inp => {
@@ -42,9 +42,9 @@ bullets.forEach(bullet => {
 	bullet.addEventListener("click", moveSlider)
 })
 
-
 let currentIndex = 1
 setInterval(() => {
 	moveSlider.call(bullets[currentIndex - 1]) // Use call to set the correct context
 	currentIndex = (currentIndex % bullets.length) + 1 // Cycle through bullets
 }, 5000)
+
