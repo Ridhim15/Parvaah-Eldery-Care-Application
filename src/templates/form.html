@@ -1,5 +1,5 @@
 {% extends 'base.html' %} {% block style %}
-<link rel="stylesheet" href="{{ url_for('static', filename='form.css') }}" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/form.css') }}" />
 {% endblock %} {% block content %}
 <style>
   /* Highlighted box styling for selected diseases */
@@ -47,44 +47,36 @@
     <div class="form-container">
       <!-- Profile Picture Section -->
       <form action="/fill_form" method="POST">
-        <div
-          class="profile-pic-container"
-          onclick="document.getElementById('profilePicUpload').click();"
-        >
-          <img
-            id="profilePic"
-            src="../static/assets/images/profile_def_m.png"
-            alt="Profile Picture"
-          />
-          <input
-            type="file"
-            id="profilePicUpload"
-            accept="image/*"
-            style="display: none"
-          />
+
+        <div class="profile-pic-container" onclick="document.getElementById('profilePicUpload').click();">
+          <img id="profilePic" src="../static/assets/images/profile_def_m.png" alt="Profile Picture" />
+          <input type="file" name='profile_image' id="profilePicUpload" accept="image/*" style="display: none"
+            onchange="previewImage(event)" />
           <div class="edit-overlay">Click to upload</div>
         </div>
+
+        <script>
+          function previewImage ( event ) {
+            const reader = new FileReader();
+            reader.onload = function () {
+              const output = document.getElementById( 'profilePic' );
+              output.src = reader.result;
+            };
+            reader.readAsDataURL( event.target.files[ 0 ] );
+          }
+        </script>
 
         <!-- Personal Information Section -->
         <div class="form-section">
           <label for="full_name">Full Name:</label>
-          <input
-            type="text"
-            id="full_name"
-            name="full_name"
-            value="{{ user.full_name if user.full_name else user.username }}"
-            required
-          />
+          <input type="text" id="full_name" name="full_name"
+            value="{{ user.full_name if user.full_name else user.username }}" {% if user.full_name %}
+            style="background-color: #dcdcdc; cursor: not-allowed;" readonly {% endif %} required />
         </div>
         <div class="form-section">
           <label for="email">User Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value="{{ user.email }}"
-            required
-          />
+          <input type="email" id="email" name="email" value="{{ user.email }}" {% if user.email %}
+            style="background-color: #dcdcdc; cursor: not-allowed;" readonly {% endif %} required />
         </div>
 
         <div class="form-section">
@@ -99,29 +91,64 @@
 
         <div class="form-section">
           <label for="address">Address:</label>
-          <input
-            type="text"
-            id="address"
-            name="address"
-            value="{{ user.address }}"
-            required
-          />
+          <input type="text" id="address" name="address" value="{{ user.address if user.address else ''}}" required />
         </div>
 
         <div class="form-section">
           <label for="dob">Date of Birth:</label>
-          <input
-            type="date"
-            id="dob"
-            name="dob"
-            value="{{ user.dob }}"
-            required
-          />
+          <input type="date" id="dob" name="dob" value="{{ user.dob }}" required />
         </div>
+
+        <div class="form-section" id="age_section" style="display:none;">
+          <label for="age">Great {{ user.name if user.name else user.username }}! You're:</label>
+          <span class="age" id="age">
+          </span>
+        </div>
+
+        <script>
+          document.getElementById( 'dob' ).addEventListener( 'change', function () {
+            const dob = new Date( this.value );
+            const age_section = document.getElementById( 'age_section' );
+            const ageSpan = document.getElementById( 'age' );
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+            if ( monthDiff < 0 || ( monthDiff === 0 && today.getDate() < dob.getDate() ) ) {
+              age--;
+            }
+            age_section.style.display = 'block';
+            ageSpan.textContent = age + ' Years old';
+          } );
+        </script>
+
+        <div class="form-section">
+          <label for="phone_no">Phone Number:</label>
+          <input type="text" id="phone_no" name="phone_no" value="{{ user.phone_no if user.phone_no else '' }}"
+            required />
+        </div>
+
+        <div class="form-section">
+          <label for="blood_type">Blood Type:</label>
+          <select id="blood_type" name="blood_type" required>
+            <option value="" disabled selected>Select your blood type</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+          </select>
+        </div>
+
+
+
         <!-- Health Information Section -->
         <div class="form-section">
           <label for="diseases">Diseases (Select all that apply):</label>
           <select id="diseases" name="diseases[]">
+            <option value="none" selected>Select Diseases</option>
             <option value="diabetes">Diabetes</option>
             <option value="heart_disease">Heart Disease</option>
             <option value="hypertension">Hypertension</option>
@@ -134,56 +161,24 @@
         <!-- Display Selected Diseases Here -->
         <div id="selectedDiseasesContainer" class="form-section">
           <label>Selected Diseases:</label>
-          <ul id="selectedDiseases"></ul>
+          <ul id="selectedDiseases">
+            {% if user.diseases %}
+            {% for disease in user.diseases.split(',') %}
+            <li data-value="{{ disease }}">{{ disease }}</li>
+            {% endfor %}
+            {% endif %}
+          </ul>
         </div>
 
         <div class="form-section">
-          <label for="blood_type">Blood Type:</label>
-          <select id="blood_type" name="blood_type" required>
-            <option value="A+">A+</option>
-            <option value="A-">A-</option>
-            <option value="B+">B+</option>
-            <option value="B-">B-</option>
-            <option value="O+">O+</option>
-            <option value="O-">O-</option>
-            <option value="AB+">AB+</option>
-            <option value="AB-">AB-</option>
-          </select>
+          <label for="additional_health_details">Additional Health Details:</label>
+          <textarea id="additional_health_details" name="additional_health_details"
+            rows="4">{{ user.additional_health_details if user.additional_health_details else ''}}</textarea>
         </div>
 
         <div class="form-section">
           <label for="bloodReport">Upload Blood Report:</label>
-          <input
-            type="file"
-            id="bloodReport"
-            name="bloodReport"
-            accept=".pdf,.jpg,.jpeg,.png"
-          />
-        </div>
-
-        <div class="form-section">
-          <label for="additional_health_details"
-            >Additional Health Details:</label
-          >
-          <textarea
-            id="additional_health_details"
-            name="additional_health_details"
-            rows="4"
-            required
-          >
-{{ user.additional_health_details }}</textarea
-          >
-        </div>
-
-        <div class="form-section">
-          <label for="phone_no">your Phone Number:</label>
-          <input
-            type="text"
-            id="phone_no"
-            name="phone_no"
-            value="{{ user.phone_no }}"
-            required
-          />
+          <input type="file" id="bloodReport" name="bloodReport" accept=".pdf,.jpg,.jpeg,.png" />
         </div>
 
         <!-- Emergency Contact Information -->
@@ -194,32 +189,17 @@
 
         <div class="form-section">
           <label for="guardianEmail">Guardian's Email:</label>
-          <input
-            type="email"
-            id="guardianEmail"
-            name="guardianEmail"
-            required
-          />
+          <input type="email" id="guardianEmail" name="guardianEmail" required />
         </div>
 
         <div class="form-section">
           <label for="guardianAddress">Guardian's Address:</label>
-          <textarea
-            id="guardianAddress"
-            name="guardianAddress"
-            rows="3"
-            required
-          ></textarea>
+          <textarea id="guardianAddress" name="guardianAddress" rows="3" required></textarea>
         </div>
 
         <div class="form-section">
           <label for="guardianContact">Guardian's Contact Number:</label>
-          <input
-            type="tel"
-            id="guardianContact"
-            name="guardianContact"
-            required
-          />
+          <input type="tel" id="guardianContact" name="guardianContact" required />
         </div>
 
         <!-- Submit Button -->
@@ -233,39 +213,40 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
 <script>
-  // Profile picture upload logic
-  document
-    .getElementById("profilePicUpload")
-    .addEventListener("change", function () {
-      const file = this.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          document.getElementById("profilePic").src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
+  document.getElementById( "diseases" ).addEventListener( "change", function () {
+    const selectedOption = this.options[ this.selectedIndex ];
+    if ( selectedOption.value === "none" ) return;
 
-  // JavaScript to handle disease selection and display
-  document.getElementById("diseases").addEventListener("change", function () {
-    const selectedOption = this.options[this.selectedIndex];
-    const li = document.createElement("li");
+    const li = document.createElement( "li" );
     li.textContent = selectedOption.text;
     li.dataset.value = selectedOption.value;
 
-    document.getElementById("selectedDiseases").appendChild(li);
-    this.remove(this.selectedIndex);
+    document.getElementById( "selectedDiseases" ).appendChild( li );
+    this.remove( this.selectedIndex );
 
-    li.addEventListener("click", function () {
-      const option = new Option(li.textContent, li.dataset.value);
-      document.getElementById("diseases").add(option);
+    li.addEventListener( "click", function () {
+      const option = new Option( li.textContent, li.dataset.value );
+      document.getElementById( "diseases" ).add( option );
       li.remove();
-    });
-  });
+    } );
 
-  function submitForm() {
-    alert("Form submitted!");
-  }
+    // Create hidden input field for the selected disease
+    const input = document.createElement( "input" );
+    input.type = "hidden";
+    input.name = "diseases[]";
+    input.value = selectedOption.value;
+    li.appendChild( input );
+  } );
+
+  // Ensure hidden inputs are included in the form submission
+  document.getElementById( "form" ).addEventListener( "submit", function () {
+    const selectedDiseases = document.getElementById( "selectedDiseases" ).children;
+    for ( let i = 0; i < selectedDiseases.length; i++ ) {
+      const input = selectedDiseases[ i ].querySelector( "input" );
+      if ( input ) {
+        this.appendChild( input );
+      }
+    }
+  } );
 </script>
 {% endblock content %}

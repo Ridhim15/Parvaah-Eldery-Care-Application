@@ -1,35 +1,26 @@
 {% extends 'base.html' %} {% block style %}
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-/>
-<link
-  href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-  rel="stylesheet"
-/>
-<link
-  rel="stylesheet"
-  href="{{url_for('static',filename='dashservices.css')}}"
-/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="{{url_for('static',filename='css/dashservices.css')}}" />
 {% endblock %} {% block content %}
 
 <div style="padding: 250px 0 0 0"></div>
 
- 
-  <section class="dashboard">
-    <div class="container dashboard-container">
-      <div class="dashboard-services">
-        <a href="/medicalcare" class="service-item">
-          <img src="../static/Assets/images/medicalcare.avif" width="64" />
-          <h3>Medical Care</h3>
-        </a>
-        <a href="/homecare" class="service-item">
-          <img src="../static/Assets/images/homecare.avif" width="64" />
-          <h3>HomeCare</h3>
-        </a>
-      </div>
+
+<section class="dashboard">
+  <div class="container dashboard-container">
+    <div class="dashboard-services">
+      <a href="/medicalcare" class="service-item">
+        <img src="../static/Assets/images/medicalcare.avif" width="64" />
+        <h3>Medical Care</h3>
+      </a>
+      <a href="/homecare" class="service-item">
+        <img src="../static/Assets/images/homecare.avif" width="64" />
+        <h3>HomeCare</h3>
+      </a>
     </div>
-  </section>
+  </div>
+</section>
 </main>
 <div style="padding: 110px 0 0 0"></div>
 

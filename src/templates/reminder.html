@@ -1,24 +1,10 @@
 {% extends 'base.html' %} {% block style %}
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-/>
-<link
-  href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-  rel="stylesheet"
-/>
-<link rel="stylesheet" href="{{url_for('static',filename='reminder.css')}}" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="{{url_for('static',filename='css/reminder.css')}}" />
 {% endblock %} {% block content %}
-<img
-  src="../static/assets/images/PARVAH (6).png"
-  class="bg-left"
-  alt="Background Left"
-/>
-<img
-  src="../static/assets/images/PARVAH (5).png"
-  class="bg-right"
-  alt="Background Right"
-/>
+<img src="../static/assets/images/PARVAH (6).png" class="bg-left" alt="Background Left" />
+<img src="../static/assets/images/PARVAH (5).png" class="bg-right" alt="Background Right" />
 <main>
   <div class="box">
     <div class="heading">
@@ -29,25 +15,11 @@
     <div class="actual-form">
       <form action="{{ url_for('medicinereminder') }}" method="POST">
         <div class="input-wrap">
-          <input
-            type="text"
-            name="medicine_name"
-            class="input-field"
-            placeholder="Medicine Name"
-            required
-          />
+          <input type="text" name="medicine_name" class="input-field" placeholder="Medicine Name" required />
         </div>
 
         <div class="input-wrap">
-          <input
-            type="number"
-            name="dosage"
-            class="input-field"
-            placeholder="Dosage"
-            min="1"
-            id="dosage"
-            required
-          />
+          <input type="number" name="dosage" class="input-field" placeholder="Dosage" min="1" id="dosage" required />
         </div>
 
         <div id="time-inputs"></div>
@@ -84,19 +56,19 @@
 </main>
 
 <script>
-  document.getElementById("dosage").addEventListener("change", function () {
+  document.getElementById( "dosage" ).addEventListener( "change", function () {
     const dosage = this.value;
-    const timeInputsDiv = document.getElementById("time-inputs");
+    const timeInputsDiv = document.getElementById( "time-inputs" );
     timeInputsDiv.innerHTML = ""; // Clear previous inputs
 
-    for (let i = 1; i <= dosage; i++) {
+    for ( let i = 1; i <= dosage; i++ ) {
       timeInputsDiv.innerHTML += `
         <div class="input-wrap">
-          <label for="time_${i}">Time ${i}</label>
-          <input type="time" name="time_${i}" class="input-field" required />
+          <label for="time_${ i }">Time ${ i }</label>
+          <input type="time" name="time_${ i }" class="input-field" required />
         </div>
       `;
     }
-  });
+  } );
 </script>
 {% endblock content %}

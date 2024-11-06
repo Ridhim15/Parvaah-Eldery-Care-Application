@@ -1,0 +1,173 @@
+/* Profile Picture Section */
+.profile-pic-container {
+	position: relative;
+	width: 150px;
+	height: 150px;
+	margin: 0 auto 20px;
+	border-radius: 50%;
+	overflow: hidden;
+	text-align: center;
+	cursor: pointer;
+}
+
+/* Circular profile picture styling */
+#profilePic {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 50%;
+	display: block;
+	border: 2px solid #ccc;
+}
+
+/* Hide file input */
+#profilePicUpload {
+	display: none;
+}
+
+/* Edit overlay styling */
+.edit-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.6);
+	color: white;
+	font-size: 18px;
+	text-align: center;
+	line-height: 150px;
+	border-radius: 50%;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+
+/* Show edit overlay on hover */
+.profile-pic-container:hover .edit-overlay {
+	opacity: 1;
+}
+
+/* Form container styling */
+
+.content {
+	background-color: #ffffff;
+	padding: 20px;
+	width: 100%;
+	min-height: 100vh;
+}
+
+.form-container {
+	background-color: #ffffff;
+	padding-top: 100px;
+	padding-left: 50px;
+	padding-right: 50px;
+	padding-bottom: 50px;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	width: 100%;
+	margin: 0 auto;
+}
+
+.age {
+	background-color: #007bff;
+	color: white;
+	padding: 5px 10px;
+	border-radius: 3px;
+	cursor: pointer;
+	display: inline-block;
+}
+
+/* Form section */
+.form-section {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	flex-wrap: wrap; /* Ensures proper display on smaller screens */
+}
+
+/* Label styling */
+.form-section label {
+	display: inline-block;
+	width: 200px;
+	text-align: right;
+	margin-right: 10px;
+	font-size: 16px;
+	font-weight: bold;
+	color: #333;
+}
+
+/* Input, select, and textarea styling */
+.form-section select,
+.form-section input[type="text"],
+.form-section input[type="number"],
+.form-section input[type="email"],
+.form-section input[type="file"],
+.form-section input[type="tel"],
+.form-section textarea,
+.form-section input[type="date"] {
+	/* Added styling for date input */
+	width: calc(100% - 220px);
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: 14px;
+	background-color: #f9f9f9;
+}
+
+/* Textarea-specific styling */
+.form-section textarea {
+	resize: vertical;
+}
+
+/* Responsive adjustments for smaller screens */
+@media screen and (max-width: 600px) {
+	.form-section label {
+		width: 100%;
+		text-align: left;
+		margin-bottom: 5px;
+	}
+
+	.form-section select,
+    .form-section input[type=text],
+    .form-section input[type=number],
+    .form-section input[type=email],
+    .form-section input[type=file],
+    .form-section input[type=tel],
+    .form-section input[type=date], /* Added for date input */
+    .form-section textarea {
+		width: 100%;
+	}
+
+	button {
+		margin-left: 0;
+		width: 100%;
+	}
+}
+
+/* Button styling */
+button {
+	background-color: #4caf50;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	padding: 10px 20px;
+	cursor: pointer;
+	margin-left: 210px;
+	font-size: 16px;
+	transition: background-color 0.3s ease;
+}
+
+button:hover {
+	background-color: #45a049;
+}
+
+/* Responsive button adjustment */
+@media screen and (max-width: 600px) {
+	button {
+		margin-left: 0;
+		width: 100%;
+	}
+}
+

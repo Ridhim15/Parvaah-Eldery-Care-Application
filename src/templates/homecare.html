@@ -1,5 +1,5 @@
 {% extends 'base.html' %} {% block style %}
-<link rel="stylesheet" href="{{url_for('static',filename='homecare.css')}}" />
+<link rel="stylesheet" href="{{url_for('static',filename='css/homecare.css')}}" />
 {% endblock style %} {% block content %}
 
 <div style="padding: 50px 0 0 0"></div>
@@ -11,11 +11,7 @@
   <div class="services-section">
     <!-- Housekeeping Service (As Button) -->
     <a href="/booking?type=homecare&service=Housekeeping" class="service-card">
-      <img
-        src="../static/assets/images/cleaner.png"
-        alt="Housekeeping Logo"
-        class="service-logo"
-      />
+      <img src="../static/assets/images/cleaner.png" alt="Housekeeping Logo" class="service-logo" />
       <h2 class="service-name">Housekeeping</h2>
       <div class="service-description">
         Our housekeeping service ensures your home remains clean, organized, and
@@ -25,11 +21,7 @@
 
     <!-- Cooking Service (As Button) -->
     <a href="/booking?type=homecare&service=Cooking" class="service-card">
-      <img
-        src="../static/assets/images/cooking.png"
-        alt="Cooking Logo"
-        class="service-logo"
-      />
+      <img src="../static/assets/images/cooking.png" alt="Cooking Logo" class="service-logo" />
       <h2 class="service-name">Cooking</h2>
       <div class="service-description">
         Our skilled cooks prepare fresh, nutritious meals tailored to your
@@ -39,11 +31,7 @@
 
     <!-- Daily/Weekly Check-ins (As Button) -->
     <a href="/booking?type=homecare&service=Laundary" class="service-card">
-      <img
-        src="../static/assets/favcions/laundry-machine.png"
-        alt="Check-ins Logo"
-        class="service-logo"
-      />
+      <img src="../static/assets/favcions/laundry-machine.png" alt="Check-ins Logo" class="service-logo" />
       <h2 class="service-name">Laundary</h2>
       <div class="service-description">
         Regular check-ins to ensure the well-being and health of our elderly

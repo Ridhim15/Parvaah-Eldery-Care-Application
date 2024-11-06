@@ -22,7 +22,7 @@ class User(db.Model):
     dob = db.Column(db.Date)
     phone_no = db.Column(db.String(15), unique=True)
     address = db.Column(db.String(500))
-    disease = db.Column(db.String(200))
+    diseases = db.Column(db.String(200))
     blood_type = db.Column(db.String(5))
     additional_health_details = db.Column(db.String(500))
     # # Guardian-Elderly Relationship (Multiple Guardians/Elderly connected)

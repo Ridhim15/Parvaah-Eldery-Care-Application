@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block style %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="{{url_for('static',filename='profile.css')}}" />
+<link rel="stylesheet" href="{{url_for('static',filename='css/profile.css')}}" />
 {% endblock %} {% block content %}
 <div style="padding: 80px 0 0 0"></div>
 
@@ -10,7 +10,9 @@
   <div class="profile-section">
     <!-- Profile Photo -->
     <div class="profile-photo">
-      <img src="https://via.placeholder.com/150" alt="User Photo" />
+      <img
+        src="{{ user.profile_image if user.profile_image else url_for('static', filename='assets/images/profile_def_m.png') }}"
+        alt="User Photo" />
     </div>
 
     <!-- Profile Information -->
@@ -18,7 +20,7 @@
       <h2>{{ user.full_name if user.full_name else user.username }}</h2>
       <p><strong>Date of Birth:</strong> {{ user.dob }}</p>
       <p><strong>Email:</strong> {{ user.email }}</p>
-      <p><strong>Address:</strong> {{ user.address }}</p>
+      <p><strong>Address:</strong> {{ user.address or 'Not provided'}}</p>
     </div>
   </div>
 
@@ -29,7 +31,7 @@
       <strong>Blood Type:</strong>
       <span class="blood-group">{{ user.blood_type }}</span>
     </p>
-    <p><strong>Diseases/Conditions:</strong> {{ user.disease }}</p>
+    <p><strong>Diseases/Conditions:</strong> {{ user.diseases }}</p>
   </div>
 
   <!-- Guardian Information Section -->
