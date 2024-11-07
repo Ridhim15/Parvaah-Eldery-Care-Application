@@ -72,7 +72,7 @@ def index():
 
 @app.route('/register', methods=['POST'])
 def register():
-    print("\n\nRegistering user\n\n\n")
+    print("\n\n REGISTERING THE USER NOW \n\n\n")
 
     if request.method == 'POST':
         #fetching form data from the user
@@ -97,7 +97,8 @@ def register():
             session['email'] = new_user.email
             session['role'] = new_user.role.value
             session['profile_image'] = new_user.profile_image if new_user.profile_image else url_for('static', filename='assets/images/profile_def_m.png')
-            
+            print("\n\n Session updated successfully\n\n")
+            print("Session data: ", session,"\n\n")
             return redirect(url_for('form', user=new_user))
     return make_response('Invalid request method', 405)
 
