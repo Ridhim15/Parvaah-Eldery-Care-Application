@@ -1,3 +1,6 @@
+import atexit
+import shutil
+import os
 import email
 from flask import Flask, flash, render_template, redirect, url_for, session, request, jsonify, make_response, send_from_directory
 from flask_restful import Api, Resource
@@ -12,7 +15,6 @@ import pandas as pd
 import io
 import base64
 
-# from dotenv import load_dotenv
 from functools import partial
 from os import environ
 from datetime import datetime, timedelta
@@ -21,17 +23,19 @@ import mysql.connector
 from sqlalchemy import text
 from werkzeug.security import generate_password_hash, check_password_hash
 
-# Import models from models.py
 
-from models import AppointmentReminder, HealthInfo, db, User, GuardianElderly, Booking, MedicineReminder, Caretaker, UserRole, BookingStatus
+from models import AppointmentReminder, db, User, GuardianElderly, Booking, MedicineReminder, Caretaker, UserRole, BookingStatus
 
 
+# from dotenv import load_dotenv
 # load_dotenv()
 
 app = Flask(__name__)
 api = Api(app)
+
 # app.secret_key = environ['SECRET_KEY']
 # load_dotenv()
+
 # -------------------- Session and SQL config --------------------
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///databases.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -65,6 +69,9 @@ def index():
     else:
         return render_template('index.html', logged_in=logged_in)
 
+# -------------------------------------------------------------------------------------------------
+# --------------------------------------------- Register ------------------------------------------
+# -------------------------------------------------------------------------------------------------
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -77,6 +84,7 @@ def register():
         # Check if the username already exists
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
+            alert('User already exists')
             return redirect(url_for('login'))
         else:
             session['username'] = full_name
@@ -84,10 +92,12 @@ def register():
             # Create a new user and save it to the database
             hashed_password = generate_password_hash(password)
             new_user = User(full_name=full_name, password=hashed_password, email=email, role=UserRole.elderly)
+            print(f'new_user: {new_user}')
             db.session.add(new_user)
             db.session.commit()
             session['username'] = new_user.full_name
             session['email'] = new_user.email
+            session['role'] = new_user.role.value
             session['profile_image'] = new_user.profile_image if new_user.profile_image else url_for('static', filename='assets/images/profile_def_m.png')
             
             return redirect(url_for('fill_form', user=new_user))
@@ -151,28 +161,40 @@ def register_guardian():
 @app.route('/form', methods=['GET','POST'])
 @app.route('/fill_form', methods=['GET', 'POST'])
 def fill_form():
-    if 'username' not in session:
+    if 'email' not in session:
         return redirect(url_for('login'))
 
     if request.method == 'POST':
+        print("Form submitted")
         # Get the form data from the user
         username = session['username']
+        email = session['email']
+        profile_image = request.form['profile_image']
         diseases = request.form.getlist('diseases[]')  # Example for multiple selected diseases
         blood_type = request.form['blood_type']
+        address = request.form['address']
+        gender = request.form['gender']
+        phone_no = request.form['phone_no']
         additional_health_details = request.form['additional_health_details']
         dob = request.form['dob']
-        
+        print(f"ONBOARDING FORM DATA: {request.form}")
 
         # Update the user's information in the User table
         user = User.query.filter_by(full_name=username).first()
-        user.disease = ','.join(diseases)  # Store diseases as a comma-separated string
+        user.diseases = ','.join([disease for disease in diseases if disease and disease.lower() != 'none'])
         user.blood_type = blood_type
         user.additional_health_details = additional_health_details
         user.dob = datetime.strptime(dob, "%Y-%m-%d").date()
+        user.profile_image=profile_image
+        user.gender = gender
+        user.phone_no = phone_no
+        user.address = address
+
         db.session.commit()
+        print("Session data: ", session)
 
         # Create the health data table for this user
-        # create_user_health_table(username)
+        create_user_health_table(username)
 
         # Redirect to the dashboard after form submission
         return redirect(url_for('dashboard'))
@@ -180,12 +202,9 @@ def fill_form():
     user = User.query.filter_by(full_name=session['username']).first()
     return render_template('form.html', user=user)
 
-# def create_user_health_table(username):
-#     """Dynamically create a table for each user to store their health records."""
-#     table_name = f"health_{username}"
-#     query = text(f"CREATE TABLE IF NOT EXISTS {table_name} (id INTEGER PRIMARY KEY, date DATE, sugar INTEGER, bp_sys INTEGER, bp_dia INTEGER)")
-#     db.session.execute(query)
-#     db.session.commit()
+# -------------------------------------------------------------------------------------------------
+# --------------------------------------------- Logins --------------------------------------------
+# -------------------------------------------------------------------------------------------------
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -204,8 +223,9 @@ def login():
             session['user_id'] = user.user_id
             session['profile_image'] = user.profile_image
             session['email'] = user.email
+            session['role'] = user.role.value  # Set the role in the session
             # If the form has not been filled, redirect to the form page
-            if not user.disease or not user.blood_type or not user.additional_health_details:
+            if not user.disease or not user.blood_type:
                 return redirect(url_for('fill_form'))
             print(f'{session["username"]} logged in successfully')
             return redirect(url_for('dashboard'))
@@ -218,7 +238,7 @@ def login():
 def login_guardian():
     print("Guardian LOGIN attempted")
     if request.method == 'POST':
-        print('Huh, this is /login_guardian')
+        print("")
         email = request.form['email']
         password = request.form['password']
         
@@ -227,7 +247,7 @@ def login_guardian():
         if user and check_password_hash(user.password, password):
             print('Guardian email and password are correct')
             session['email'] = user.email
-            session['role'] = 'guardian'
+            session['role'] = user.role.value  # Set the role in the session
             session['username'] = user.full_name
             session['user_id'] = user.user_id
             session['profile_image'] = user.profile_image
@@ -264,6 +284,9 @@ def login_caretaker():
     return render_template('logins/login_caretaker.html')
 
 
+# -------------------------------------------------------------------------------------------------
+# --------------------------------------------- Logout --------------------------------------------
+# -------------------------------------------------------------------------------------------------
 
 @app.route('/logout', methods=['GET'])
 def logout():
@@ -273,33 +296,27 @@ def logout():
     flash("You have been logged out.", "info")
     return redirect(url_for('index'))
 
-@app.route('/test')
-def test():
-    print(session)
-    return 'Logged in' if 'username' in session else 'Not logged in'
-
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- APIs ----------------------------------------------
 # -------------------------------------------------------------------------------------------------
 
 class login_status(Resource):
     def get(self):
-        if 'username' in session:
-            return {'status': 'logged_in', 'username': session['username'],'profile_image':session.get('profile_image')}
+        if 'email' in session:
+            return {
+                'status': 'logged_in',
+                'username': session['username'],
+                'profile_image': session.get('profile_image'),
+                'role': session.get('role')
+            }
         else:
             return {'status': 'logged_out'}
 
 api.add_resource(login_status, '/api/login_status')
 
 # -------------------------------------------------------------------------------------------------
-# --------------------------------------------- Routes and Views ----------------------------------
+# --------------------------------------------- Dashboards ----------------------------------------
 # -------------------------------------------------------------------------------------------------
-
-
-@app.route('/about')
-def about():
-    return render_template('about.html')
-
 
 @app.route('/dashboard')
 def dashboard():
@@ -309,7 +326,7 @@ def dashboard():
     username = session['username']
     user = User.query.filter_by(full_name=username).first()
 
-    # Fetch initial upcoming appointments and medicine reminders for the logged-in user
+    # Fetch upcoming appointments and medicine reminders for the logged-in user
     upcoming_appointments = AppointmentReminder.query.filter_by(user_id=user.user_id).all()
     upcoming_reminders = MedicineReminder.query.filter_by(user_id=user.user_id).all()
 
@@ -334,26 +351,17 @@ def about():
 
 @app.route('/profile')
 def profile():
+    print("\n\nThis is the profile page\n\n")
     if 'username' not in session:
         return redirect(url_for('login'))
+
     user = User.query.filter_by(full_name=session['username']).first()
-    health = db.session.execute(text(f"SELECT * FROM health_info")).fetchall()
+    print(f"User : {user}")
 
-    return render_template('profile.html', user=user, health=health)
-
-    
-#     # Fetch the elderly user based on the session username (full_name assumed unique for now)
-#     elderly_user = User.query.filter_by(full_name=session['username']).first()
-    
-#     if not elderly_user:
-#         return "User not found.", 404
-
-#     # Fetch guardian(s) using the email as the linking key
-#     guardian_relations = GuardianElderly.query.filter_by(elderly_id=elderly_user.email).all()
-#     guardians = [User.query.filter_by(email=relation.guardian_id).first() for relation in guardian_relations]
-
-#     return render_template('profile.html', user=elderly_user, guardians=guardians)
-
+    # Use outerjoin to handle missing relationships
+    guardian_elderly = db.session.query(GuardianElderly).outerjoin(User, GuardianElderly.elderly_email == User.email).filter(GuardianElderly.guardian_email == user.email).first()
+    print(f"Guardian_Elderly: {guardian_elderly}")
+    return render_template('profile.html', user=user, guardian_elderly=guardian_elderly)
 
 @app.route('/emergency')
 def emergency():
@@ -375,6 +383,7 @@ def contact():
 def community():
     return render_template('community.html')
 
+
 @app.route('/booking', methods=['GET', 'POST'])
 def booking():
     if 'username' not in session:
@@ -384,36 +393,24 @@ def booking():
     user = User.query.filter_by(full_name=username).first()
 
     if request.method == 'POST':
-        # Retrieve form data
-        type_of_service = request.form.get('type')
-        service = request.form.get('service')
-        start_date = request.form.get('start_date')
-        start_time = request.form.get('start_time')
-        end_date = request.form.get('end_date')
-        end_time = request.form.get('end_time')
-
-        # Ensure date and time values are provided
-        if not all([start_date, start_time, end_date, end_time]):
-            flash("Please fill out all date and time fields.", "error")
-            return redirect(url_for('booking'))
-
-        # Convert date and time inputs into datetime objects
+        service = request.form['service']
+        start_date = request.form['start_date']
+        start_time = request.form['start_time']
+        end_date = request.form['end_date']
+        end_time = request.form['end_time']
+        
+        # Combine date and time into datetime objects
         start_datetime = datetime.strptime(f"{start_date} {start_time}", "%Y-%m-%d %H:%M")
         end_datetime = datetime.strptime(f"{end_date} {end_time}", "%Y-%m-%d %H:%M")
 
         # Create a new booking instance
         new_booking = Booking(
             user_id=user.user_id,
-            type_of_service=type_of_service,
             service=service,
-            start_date=start_datetime.date(),
-            start_time=start_datetime.time(),
-            end_date=end_datetime.date(),
-            end_time=end_datetime.time(),
+            date=start_datetime,  # Start date and time
             status=BookingStatus.pending  # Default status
         )
 
-        # Add and commit the new booking to the database
         db.session.add(new_booking)
         db.session.commit()
 
@@ -441,55 +438,6 @@ def testimonials():
 @app.route('/user')
 def user():
     return render_template('user.html')
-
-
-@app.route('/register_guardian', methods=['GET', 'POST'])
-def register_guardian():
-    if request.method == 'POST':
-        full_name = request.form['full_name']
-        email = request.form['email']
-        password = request.form['password']
-        elderly_email = request.form['elderly_email']
-
-        # Check if elderly with provided email exists
-        elderly = User.query.filter_by(email=elderly_email, role=UserRole.elderly).first()
-        if not elderly:
-            print("Elderly email not found. Please verify.")
-            flash("Elderly email not found. Please verify.")
-            return redirect(url_for('login'))
-
-        # Check if guardian already exists
-        if User.query.filter_by(email=email).first():
-            print("Guardian Email already registered.")
-            flash("Guardian Email already registered.")
-            return redirect(url_for('register_guardian'))
-
-        # Create new guardian user
-        new_guardian = User(
-            full_name=full_name,
-            email=email,
-            password=generate_password_hash(password),
-            role=UserRole.guardian
-        )
-        db.session.add(new_guardian)
-        db.session.commit()
-
-        # Link the new guardian to the existing elderly user
-        guardian_elderly_link = GuardianElderly(
-            guardian_email=email,
-            elderly_email=elderly_email
-        )
-        db.session.add(guardian_elderly_link)
-        db.session.commit()
-
-        flash("Registration successful. Redirecting to dashboard.")
-        return redirect(url_for('dashboard_guardian'))
-
-    return render_template('login_guardian.html')
-
-@app.route('/dashboard_guardian')
-def dashboard_guardian():
-    return render_template('dashboard_guardian.html')
 
 @app.route('/reminder', methods=['GET', 'POST'])
 def medicinereminder():
@@ -529,7 +477,6 @@ def medicinereminder():
     medicine_reminders = MedicineReminder.query.filter_by(user_id=user.user_id).all()
     return render_template('reminder.html', medicine_reminders=medicine_reminders)
 
- 
 
 @app.route('/appointreminder', methods=['GET', 'POST'])
 def appointreminder():
@@ -587,67 +534,15 @@ def dashservices():
 def sos():
     return render_template('sos.html')
 
-@app.route('/caretakerdash')
-def caretakerdash():
-    return render_template('caretakerdash.html')
-
-
-
-@app.route('/yourhealth', methods=['GET', 'POST'])
+@app.route('/yourhealth')
 def yourhealth():
-    if 'username' not in session:
-        return redirect(url_for('login'))
-
-    username = session['username']
-    user = User.query.filter_by(full_name=username).first()
-
-    if request.method == 'POST':
-        form_type = request.form.get('form_type')
-        
-        if form_type == 'blood_pressure':
-            # Handle blood pressure form submission
-            bp_date = request.form.get('bpDate')
-            systolic = request.form.get('systol')
-            diastolic = request.form.get('dystol')
-            pulse = request.form.get('pulse')
-
-            if all([bp_date, systolic, diastolic, pulse]):
-                health_info = HealthInfo(
-                    user_id=user.user_id,
-                    bp_date=datetime.strptime(bp_date, "%Y-%m-%d").date(),
-                    systolic=int(systolic),
-                    diastolic=int(diastolic),
-                    pulse=int(pulse),
-                )
-                db.session.add(health_info)
-                db.session.commit()
-                flash('Blood pressure information submitted successfully!', 'success')
-            else:
-                flash('Please fill out all fields for blood pressure.', 'error')
-
-        elif form_type == 'sugar_level':
-            # Handle sugar level form submission
-            sugar_date = request.form.get('sugarDate')
-            sugar_level = request.form.get('sugarLevel')
-
-            if all([sugar_date, sugar_level]):
-                health_info = HealthInfo(
-                    user_id=user.user_id,
-                    sugar_date=datetime.strptime(sugar_date, "%Y-%m-%d").date(),
-                    sugar_level=int(sugar_level)
-                )
-                db.session.add(health_info)
-                db.session.commit()
-                flash('Sugar level information submitted successfully!', 'success')
-            else:
-                flash('Please fill out all fields for sugar level.', 'error')
-
-        return redirect(url_for('yourhealth'))
     return render_template('yourhealth.html')
 
 # Route to create sample data
-@app.route('/create_sample_data')
+app.route('/create_sample_data')
 def create_sample_data():
+    print("Creating sample data...\n\n")
+
     # Create elderly user
     elderly_user = User(
         full_name="Ridhim",
@@ -682,8 +577,8 @@ def create_sample_data():
 
     # Create guardian-elderly relationship
     guardian_elderly = GuardianElderly(
-        guardian_id=guardian_user.user_id,
-        elderly_id=elderly_user.user_id
+        guardian_email=guardian_user.email,
+        elderly_email=elderly_user.email
     )
     db.session.add(guardian_elderly)
     db.session.commit()

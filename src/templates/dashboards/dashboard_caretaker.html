@@ -1,16 +1,7 @@
 {% extends 'base.html' %} {% block style %}
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-/>
-<link
-  href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-  rel="stylesheet"
-/>
-<link
-  rel="stylesheet"
-  href="{{url_for('static',filename='caretakerdash.css')}}"
-/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="{{url_for('static',filename='css/caretakerdash.css')}}" />
 {% endblock %} {% block content %}
 <div style="padding: 120px 0 0 0"></div>
 <div>
@@ -22,11 +13,7 @@
 <section class="dashboard">
   <div class="tab-container">
     <!-- Left: Notifications Tab -->
-    <button
-      class="tablinks"
-      onclick="openTab(event, 'notifications')"
-      id="defaultOpen"
-    >
+    <button class="tablinks" onclick="openTab(event, 'notifications')" id="defaultOpen">
       Notifications
     </button>
     <!-- Right: My Work Tab -->
@@ -52,30 +39,30 @@
 </section>
 
 <script>
-  function openTab(evt, tabName) {
-    let tabcontent = document.getElementsByClassName("tabcontent");
-    for (let i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].style.display = "none";
+  function openTab ( evt, tabName ) {
+    let tabcontent = document.getElementsByClassName( "tabcontent" );
+    for ( let i = 0; i < tabcontent.length; i++ ) {
+      tabcontent[ i ].style.display = "none";
     }
-    let tablinks = document.getElementsByClassName("tablinks");
-    for (let i = 0; i < tablinks.length; i++) {
-      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    let tablinks = document.getElementsByClassName( "tablinks" );
+    for ( let i = 0; i < tablinks.length; i++ ) {
+      tablinks[ i ].className = tablinks[ i ].className.replace( " active", "" );
     }
-    document.getElementById(tabName).style.display = "block";
+    document.getElementById( tabName ).style.display = "block";
     evt.currentTarget.className += " active";
   }
 
-  document.getElementById("defaultOpen").click();
+  document.getElementById( "defaultOpen" ).click();
 
   // Auto-refresh notifications every 1 minute
-  setInterval(function () {
-    let notificationPanel = document.getElementById("notification-panel");
-    fetch("/get-notifications") // Placeholder for actual notification URL
-      .then((response) => response.text())
-      .then((data) => {
+  setInterval( function () {
+    let notificationPanel = document.getElementById( "notification-panel" );
+    fetch( "/get-notifications" ) // Placeholder for actual notification URL
+      .then( ( response ) => response.text() )
+      .then( ( data ) => {
         notificationPanel.innerHTML = data;
-      });
-  }, 60000); // 60000ms = 1 minute
+      } );
+  }, 60000 ); // 60000ms = 1 minute
 </script>
 <div style="padding: 200px 0 0 0"></div>
 
