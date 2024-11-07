@@ -84,6 +84,7 @@ def register():
         # Check if the username already exists
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
+            print("\n\n THE USER ALREADY EXISTS\n\n")
             return redirect(url_for('login'))
         else:
             session['username'] = full_name
