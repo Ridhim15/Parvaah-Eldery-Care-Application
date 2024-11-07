@@ -227,11 +227,13 @@ def login():
             session['role'] = user.role.value  # Set the role in the session
             # If the form has not been filled, redirect to the form page
             if not user.diseases or not user.blood_type:
-                return redirect(url_for('fill_form'))
+                return redirect(url_for('form'))
             print(f'{session["username"]} logged in successfully')
             return redirect(url_for('dashboard'))
-        else:
+        elif user:
             return 'Invalid username or password'
+        else:
+            return 'You are not registers yet. Please register first'
     
     return render_template('logins/login.html')
 
@@ -322,6 +324,7 @@ api.add_resource(login_status, '/api/login_status')
 @app.route('/dashboard')
 def dashboard():
     if 'username' not in session:
+        print('Username not in session')
         return redirect(url_for('login'))
 
     username = session['username']
