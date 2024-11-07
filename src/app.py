@@ -62,9 +62,9 @@ def index():
     if logged_in:
         email = session['email']
         current_user = User.query.filter_by(email=email).first()
-        return render_template('dashboard.html', logged_in=logged_in, current_user=current_user)
+        return render_template('dashboards/dashboard.html', logged_in=logged_in, current_user=current_user)
     else:
-        return render_template('index.html', logged_in=logged_in)
+        return render_template('routes/index.html', logged_in=logged_in)
 
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Register ------------------------------------------
@@ -72,6 +72,8 @@ def index():
 
 @app.route('/register', methods=['POST'])
 def register():
+    print("\n\nRegistering user\n\n\n")
+
     if request.method == 'POST':
         #fetching form data from the user
         full_name = request.form['full_name']
@@ -81,7 +83,6 @@ def register():
         # Check if the username already exists
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
-            alert('User already exists')
             return redirect(url_for('login'))
         else:
             session['username'] = full_name
@@ -97,7 +98,7 @@ def register():
             session['role'] = new_user.role.value
             session['profile_image'] = new_user.profile_image if new_user.profile_image else url_for('static', filename='assets/images/profile_def_m.png')
             
-            return redirect(url_for('fill_form', user=new_user))
+            return redirect(url_for('form', user=new_user))
     return make_response('Invalid request method', 405)
 
 
@@ -157,7 +158,7 @@ def register_guardian():
 
 @app.route('/form', methods=['GET','POST'])
 @app.route('/fill_form', methods=['GET', 'POST'])
-def fill_form():
+def form():
     if 'email' not in session:
         return redirect(url_for('login'))
 
@@ -197,7 +198,7 @@ def fill_form():
         return redirect(url_for('dashboard'))
 
     user = User.query.filter_by(full_name=session['username']).first()
-    return render_template('form.html', user=user)
+    return render_template('forms/form.html', user=user)
 
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Logins --------------------------------------------
@@ -344,7 +345,7 @@ def dashboard_caretaker():
 
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    return render_template('routes/about.html')
 
 @app.route('/profile')
 def profile():
@@ -358,27 +359,27 @@ def profile():
     # Use outerjoin to handle missing relationships
     guardian_elderly = db.session.query(GuardianElderly).outerjoin(User, GuardianElderly.elderly_email == User.email).filter(GuardianElderly.guardian_email == user.email).first()
     print(f"Guardian_Elderly: {guardian_elderly}")
-    return render_template('profile.html', user=user, guardian_elderly=guardian_elderly)
+    return render_template('routes/profile.html', user=user, guardian_elderly=guardian_elderly)
 
 @app.route('/emergency')
 def emergency():
-    return render_template('emergency.html')
+    return render_template('routes/emergency.html')
 
 @app.route('/homecare')
 def homecare():
-    return render_template('homecare.html')
+    return render_template('routes/homecare.html')
 
 @app.route('/medicalcare')
 def medicalcare():
-    return render_template('medicalcare.html')
+    return render_template('routes/medicalcare.html')
 
 @app.route('/contact')
 def contact():
-    return render_template('contact.html')
+    return render_template('routes/contact.html')
 
 @app.route('/community')
 def community():
-    return render_template('community.html')
+    return render_template('routes/community.html')
 
 
 @app.route('/booking', methods=['GET', 'POST'])
@@ -414,27 +415,27 @@ def booking():
         flash('Service booked successfully!', 'success')
         return redirect(url_for('thanks'))
 
-    return render_template('booking.html')
+    return render_template('routes/booking.html')
 
 @app.route('/fitness')
 def fitness():
-    return render_template('fitness.html')
+    return render_template('routes/fitness.html')
 
 @app.route('/health')
 def health():
-    return render_template('health.html')
+    return render_template('routes/health.html')
 
 @app.route('/services')
 def services():
-    return render_template('services.html')
+    return render_template('routes/services.html')
 
 @app.route('/testimonials')
 def testimonials():
-    return render_template('testimonials.html')
+    return render_template('routes/testimonials.html')
 
 @app.route('/user')
 def user():
-    return render_template('user.html')
+    return render_template('routes/user.html')
 
 @app.route('/reminder', methods=['GET', 'POST'])
 def medicinereminder():
@@ -472,7 +473,7 @@ def medicinereminder():
 
     # Fetch the medicine reminders for the current user
     medicine_reminders = MedicineReminder.query.filter_by(user_id=user.user_id).all()
-    return render_template('reminder.html', medicine_reminders=medicine_reminders)
+    return render_template('routes/reminder.html', medicine_reminders=medicine_reminders)
 
 
 @app.route('/appointreminder', methods=['GET', 'POST'])
@@ -508,32 +509,32 @@ def appointreminder():
 
     # Fetch the appointment reminders for the current user
     appointment_reminders = AppointmentReminder.query.filter_by(user_id=user.user_id).all()
-    return render_template('appointreminder.html', appointments=appointment_reminders)
+    return render_template('routes/appointreminder.html', appointments=appointment_reminders)
 
 
 @app.route('/newservice')
 def newservice():
-    return render_template('newservice.html')
+    return render_template('routes/newservice.html')
 
 @app.route('/thanks')
 def thanks():
-    return render_template('thanks.html')
+    return render_template('routes/thanks.html')
 
 @app.route('/caretakerprofile')
 def caretakerprofile():
-    return render_template('caretakerprofile.html')
+    return render_template('routes/caretakerprofile.html')
 
 @app.route('/dashservices')
 def dashservices():
-    return render_template('dashservices.html')
+    return render_template('routes/dashservices.html')
 
 @app.route('/sos')
 def sos():
-    return render_template('sos.html')
+    return render_template('routes/sos.html')
 
 @app.route('/yourhealth')
 def yourhealth():
-    return render_template('yourhealth.html')
+    return render_template('routes/yourhealth.html')
 
 # Route to create sample data
 app.route('/create_sample_data')
