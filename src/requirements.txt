@@ -6,5 +6,8 @@ Flask-Session
 Flask-Dance
 oauthlib
 requests
+matplotlib
+pandas
+mysql-connector-python
 SQLAlchemy
 Werkzeug
