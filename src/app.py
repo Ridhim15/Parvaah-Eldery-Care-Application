@@ -42,7 +42,17 @@ app.config['SESSION_SQLALCHEMY_TABLE'] = 'sessions'
 Session(app)
 
 # -------------------------------------------------------------------------------------------------
-# --------------------------------------------- Login -------------------------------------------
+# ---------------------------------------- Helper Fucntions ---------------------------------------
+# -------------------------------------------------------------------------------------------------
+def create_user_health_table(username):
+    """Dynamically create a table for each user to store their health records."""
+    table_name = f"health_{username}"
+    query = text(f"CREATE TABLE IF NOT EXISTS {table_name} (id INTEGER PRIMARY KEY, date DATE, sugar INTEGER, bp_sys INTEGER, bp_dia INTEGER)")
+    db.session.execute(query)
+    db.session.commit()
+
+# -------------------------------------------------------------------------------------------------
+# --------------------------------------------- Index ---------------------------------------------
 # -------------------------------------------------------------------------------------------------
 
 @app.route('/')
@@ -83,7 +93,60 @@ def register():
             return redirect(url_for('fill_form', user=new_user))
     return make_response('Invalid request method', 405)
 
-# ------------------------------------ Form Route ----------------------------
+
+@app.route('/register_guardian', methods=['GET', 'POST'])
+def register_guardian():
+    if request.method == 'POST':
+        full_name = request.form['full_name']
+        email = request.form['email']
+        password = request.form['password']
+        elderly_email = request.form['elderly_email']
+
+        # Check if elderly with provided email exists
+        elderly = User.query.filter_by(email=elderly_email, role=UserRole.elderly).first()
+        if not elderly:
+            print("Elderly email not found. Please verify.")
+            flash("Elderly email not found. Please verify.")
+            return redirect(url_for('login'))
+
+        # Check if guardian already exists
+        if User.query.filter_by(email=email).first():
+            print("Guardian Email already registered.")
+            flash("Guardian Email already registered.")
+            return redirect(url_for('register_guardian'))
+
+        # Create new guardian user
+        new_guardian = User(
+            full_name=full_name,
+            email=email,
+            password=generate_password_hash(password),
+            role=UserRole.guardian
+        )
+        db.session.add(new_guardian)
+        db.session.commit()
+        # add the guardian to the session
+        session['email'] = new_guardian.email
+        session['role'] = new_guardian.role.value
+        session['username'] = new_guardian.full_name
+        session['user_id'] = new_guardian.user_id
+        session['profile_image'] = new_guardian.profile_image
+        print(f"Session data: {session}")
+
+        # Link the new guardian to the existing elderly user
+        guardian_elderly_link = GuardianElderly(
+            guardian_email=email,
+            elderly_email=elderly_email
+        )
+        db.session.add(guardian_elderly_link)
+        db.session.commit()
+        print(f"Guardian {full_name} registered successfully and linked with elderly.")
+        flash("Registration successful. Redirecting to dashboard.")
+        return redirect(url_for('dashboard_guardian'))
+    return render_template('logins/login_guardian.html')
+
+# -------------------------------------------------------------------------------------------------
+# --------------------------------------------- Formss --------------------------------------------
+# -------------------------------------------------------------------------------------------------
 
 @app.route('/form', methods=['GET','POST'])
 @app.route('/fill_form', methods=['GET', 'POST'])
@@ -149,7 +212,7 @@ def login():
         else:
             return 'Invalid username or password'
     
-    return render_template('login.html')
+    return render_template('logins/login.html')
 
 @app.route('/login_guardian', methods=['GET', 'POST'])
 def login_guardian():
@@ -176,7 +239,7 @@ def login_guardian():
             flash('Invalid email or password')
             print('Invalid email or password for guardian')
     
-    return render_template('login_guardian.html')
+    return render_template('logins/login_guardian.html')
 
 # Caretaker Login
 @app.route('/login_caretaker', methods=['GET', 'POST'])
@@ -198,7 +261,7 @@ def login_caretaker():
         else:
             flash('Invalid email or password')
     
-    return render_template('login_caretaker.html')
+    return render_template('logins/login_caretaker.html')
 
 
 
@@ -250,17 +313,24 @@ def dashboard():
     upcoming_appointments = AppointmentReminder.query.filter_by(user_id=user.user_id).all()
     upcoming_reminders = MedicineReminder.query.filter_by(user_id=user.user_id).all()
 
-    return render_template('dashboard.html', user=user, 
-                           upcoming_appointments=upcoming_appointments, 
-                           upcoming_reminders=upcoming_reminders)
-# @app.route('/profile')
-# def profile():
-#     if 'username' not in session:
-#         return redirect(url_for('login'))
-#     user = User.query.filter_by(full_name=session['username']).first()
-#     # health = db.session.execute(text(f"SELECT * FROM health_{user.full_name}")).fetchall()
+    return render_template('dashboards/dashboard.html', user=user, upcoming_appointments=upcoming_appointments, upcoming_reminders=upcoming_reminders)
 
-#     return render_template('profile.html', user=user, health=health)
+@app.route('/dashboard_guardian')
+def dashboard_guardian():
+    return render_template('dashboards/dashboard_guardian.html')
+
+@app.route('/dashboard_caretaker')
+def dashboard_caretaker():
+    return render_template('dashboards/dashboard_caretaker.html')
+
+# -------------------------------------------------------------------------------------------------
+# --------------------------------------------- Routes and Views ----------------------------------
+# -------------------------------------------------------------------------------------------------
+
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 @app.route('/profile')
 def profile():
@@ -641,31 +711,26 @@ def create_sample_data():
     # Commit all changes
     db.session.commit()
 
-    return "Sample data created successfully!"
+    print("Sample data created successfully!")
+
+# -------------------------------------------------------------------------------------------------
+# --------------------------------------------- Running Python Script -----------------------------
+# -------------------------------------------------------------------------------------------------
 
 
-@app.route('/refresh-upcoming')
-def refresh_upcoming():
-    if 'username' not in session:
-        return jsonify({'error': 'User not logged in'}), 401
-
-    # Fetch user info
-    user = User.query.filter_by(full_name=session['username']).first()
-    if not user:
-        return jsonify({'error': 'User not found'}), 404
-
-    # Fetch upcoming appointments and medicine reminders
-    upcoming_appointments = AppointmentReminder.query.filter_by(user_id=user.user_id).all()
-    upcoming_reminders = MedicineReminder.query.filter_by(user_id=user.user_id).all()
-
-    # Render the partial template with updated data
-    return render_template('upcoming_section.html', 
-                           upcoming_appointments=upcoming_appointments, 
-                           upcoming_reminders=upcoming_reminders)
-
+# To autodelete the instance and __pychache__ folders when closing flask app 
+def prompt_and_delete_folders():
+    folders_to_delete = ['instance', '__pycache__']
+    response = input(f"\n\nDo you want to delete the folder instance and __pychace__ folder ( if they are present) ? (y/n): ")
+    for folder in folders_to_delete:
+        if os.path.exists(folder):
+            if response.lower() == 'y':
+                shutil.rmtree(folder, ignore_errors=True)
+                print(f"Deleted folder: {folder}")
 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    # create_sample_data()  # Uncomment to create sample data before running the app
+    atexit.register(prompt_and_delete_folders)
+    # app.run(host='192.168.29.235') # for hosting the local host will only run on ridhim's desktop (Comment this line and uncomment the one below)
     app.run(debug=True)
