@@ -226,7 +226,7 @@ def login():
             session['email'] = user.email
             session['role'] = user.role.value  # Set the role in the session
             # If the form has not been filled, redirect to the form page
-            if not user.disease or not user.blood_type:
+            if not user.diseases or not user.blood_type:
                 return redirect(url_for('fill_form'))
             print(f'{session["username"]} logged in successfully')
             return redirect(url_for('dashboard'))

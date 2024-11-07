@@ -37,16 +37,6 @@ class User(db.Model):
     def __repr__(self):
         return f"<User {self.full_name} ({self.role})>"
 
-# class GuardianElderly(db.Model):
-#     __tablename__ = 'guardian_elderly'
-
-#     id = db.Column(db.Integer, primary_key=True)
-#     guardian_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)  # Link to guardian user_id
-#     elderly_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)   # Link to elderly user_id
-
-#     def __repr__(self):
-#         return f"<GuardianElderly (Guardian: {self.guardian_id}, Elderly: {self.elderly_id})>"
-   
 class GuardianElderly(db.Model):
     __tablename__ = 'guardian_elderly'  # Corrected table name definition
 
