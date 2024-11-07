@@ -628,4 +628,5 @@ if __name__ == '__main__':
         db.create_all()
     atexit.register(prompt_and_delete_folders)
     # app.run(host='192.168.29.235') # for hosting the local host will only run on ridhim's desktop (Comment this line and uncomment the one below)
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
