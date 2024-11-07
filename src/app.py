@@ -10,8 +10,6 @@ from flask_session import Session
 from flask_dance.contrib.google import make_google_blueprint, google
 from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
 from requests.models import Response
-import matplotlib.pyplot as plt
-import pandas as pd
 import io
 import base64
 
@@ -19,7 +17,6 @@ from functools import partial
 from os import environ
 from datetime import datetime, timedelta
 import json
-import mysql.connector
 from sqlalchemy import text
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -616,10 +613,9 @@ def create_sample_data():
 # To autodelete the instance and __pychache__ folders when closing flask app 
 def prompt_and_delete_folders():
     folders_to_delete = ['instance', '__pycache__']
-    response = input(f"\n\nDo you want to delete the folder instance and __pychace__ folder ( if they are present) ? (y/n): ")
+    print('\n')
     for folder in folders_to_delete:
         if os.path.exists(folder):
-            if response.lower() == 'y':
                 shutil.rmtree(folder, ignore_errors=True)
                 print(f"Deleted folder: {folder}")
 
@@ -628,4 +624,4 @@ if __name__ == '__main__':
         db.create_all()
     atexit.register(prompt_and_delete_folders)
     # app.run(host='192.168.29.235') # for hosting the local host will only run on ridhim's desktop (Comment this line and uncomment the one below)
-    app.run(debug=True)
+    app.run()
