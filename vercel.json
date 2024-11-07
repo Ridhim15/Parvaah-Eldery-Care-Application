@@ -3,7 +3,8 @@
 	"builds": [
 		{
 			"src": "src/app.py",
-			"use": "@vercel/python"
+			"use": "@vercel/python",
+			"config": { "entrypoint": "src/app.py" }
 		}
 	],
 	"routes": [
@@ -13,4 +14,3 @@
 		}
 	]
 }
-
