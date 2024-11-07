@@ -147,3 +147,6 @@ class HealthInfo(db.Model):
 
     def __repr__(self):
         return f"<HealthInfo for User {self.user_id}>"
+
+
+print("\n\n\n THIS IS MODELS.py and it ran successfully \n\n\n")

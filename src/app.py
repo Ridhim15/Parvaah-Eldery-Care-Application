@@ -42,9 +42,6 @@ app.config['SESSION_SQLALCHEMY']       = db
 app.config['SESSION_SQLALCHEMY_TABLE'] = 'sessions'
 Session(app)
 
-@app.before_first_request
-def create_tables():
-    db.create_all()
 
 # -------------------------------------------------------------------------------------------------
 # ---------------------------------------- Helper Fucntions ---------------------------------------
