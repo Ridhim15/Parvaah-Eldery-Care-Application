@@ -5,7 +5,7 @@
 	--background-color: #ffffff;
 	--light-bg-color: #f9f9f9;
 	--hero-bg-color: #ffd4bc;
-    --highlight-color: #e63946;
+	--highlight-color: #e63946;
 }
 
 * {
@@ -34,7 +34,6 @@ body {
 	display: grid;
 	grid-template-rows: auto 1fr auto;
 	/* min-height: 100vh; */
-
 }
 
 .container {
@@ -85,7 +84,6 @@ body {
 	color: var(--text-color);
 	font-weight: 700;
 	font-size: 1.5rem;
-	
 }
 .profile img {
 	border-radius: 50%;
@@ -99,19 +97,19 @@ body {
 } */
 
 .logout-btn {
-    line-height: 1.6;
-    box-sizing: border-box;
-    padding: 0.6rem 1.2rem;
-    color: white;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-    background-color: var(--highlight-color);
+	line-height: 1.6;
+	box-sizing: border-box;
+	padding: 0.6rem 1.2rem;
+	color: white;
+	border-radius: 5px;
+	text-decoration: none;
+	font-weight: 600;
+	transition: background-color 0.3s ease;
+	background-color: var(--highlight-color);
 }
 
 .logout-btn {
-    background-color: var(--highlight-color);
+	background-color: var(--highlight-color);
 }
 
 .nav-links {
@@ -203,6 +201,7 @@ body {
 /* Section Styles */
 section {
 	padding: 4rem 0;
+	min-height: 80vh;
 }
 
 section h2 {
@@ -285,7 +284,6 @@ section h2 {
 .footer {
 	background-color: var(--light-bg-color);
 	padding: 3rem 0;
-	
 }
 
 .footer-content {

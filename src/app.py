@@ -317,6 +317,9 @@ class login_status(Resource):
 
 api.add_resource(login_status, '/api/login_status')
 
+
+
+
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Dashboards ----------------------------------------
 # -------------------------------------------------------------------------------------------------
@@ -611,6 +614,7 @@ def create_sample_data():
     db.session.commit()
 
     print("Sample data created successfully!")
+    
 
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Running Python Script -----------------------------
@@ -629,6 +633,6 @@ def prompt_and_delete_folders():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    atexit.register(prompt_and_delete_folders)
-    # app.run(host='192.168.29.235') # for hosting the local host will only run on ridhim's desktop (Comment this line and uncomment the one below)
-    app.run()
+    # atexit.register(prompt_and_delete_folders)
+    app.run(host='192.168.29.235',debug=True) # for hosting the local host will only run on ridhim's desktop (Comment this line and uncomment the one below)
+    # app.run()
