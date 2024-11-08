@@ -36,7 +36,12 @@
           }
           console.log( "Setting Profile Info" );
           document.getElementById( "username" ).innerText = data.username;
-          document.getElementById( "profile-pic" ).src = data.profile_image;
+          if ( data.profile_image ) {
+            document.getElementById( "profile-pic" ).src = data.profile_image;
+          }
+          else {
+            document.getElementById( "profile-pic" ).src = "{{url_for('static'),filename='assets/images/profile_def_m.png'}}";
+          }
           console.log( "Script End" );
         }
       } );
