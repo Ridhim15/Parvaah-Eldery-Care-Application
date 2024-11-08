@@ -40,7 +40,7 @@
             document.getElementById( "profile-pic" ).src = data.profile_image;
           }
           else {
-            document.getElementById( "profile-pic" ).src = "{{url_for('static'),filename='assets/images/profile_def_m.png'}}";
+            document.getElementById( "profile-pic" ).src = "{{url_for('static',filename='assets/images/profile_def_m.png')}}";
           }
           console.log( "Script End" );
         }
