@@ -49,15 +49,12 @@
   <!-- Guardian Information Section -->
   <div class="profile-container guardian-info">
     <h3>Guardian Information</h3>
-    {% for guardian in guardians %}
+    {% if guardian %}
     <p><strong>Name:</strong> {{ guardian.full_name }}</p>
     <p><strong>Email:</strong> {{ guardian.email }}</p>
     <p><strong>Phone:</strong> {{ guardian.phone_no }}</p>
     <p><strong>Address:</strong> {{ guardian.address }}</p>
     <hr />
-    {% endfor %}
-    {% if guardians %}
-    <p>Guardian id is linked</p>
     {% else %}
     <p>Guardian id not linked.</p>
     {% endif %}

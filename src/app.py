@@ -112,6 +112,8 @@ def register_guardian():
         email = request.form['email']
         password = request.form['password']
         elderly_email = request.form['elderly_email']
+        #Code for showing guardian data
+        
 
         # Check if elderly with provided email exists
         elderly = User.query.filter_by(email=elderly_email, role=UserRole.elderly).first()
@@ -178,6 +180,14 @@ def form():
         phone_no = request.form['phone_no']
         additional_health_details = request.form['additional_health_details']
         dob = request.form['dob']
+        #Guardian Details
+        guardian_name= request.form['guardian_name']
+        guardian_email = request.form['guardian_email']
+        guardian_address = request.form['guardian_address']
+        guardian_contact = request.form['guardian_contact']
+        
+        guardian_elderly = GuardianElderly.query.filter_by(elderly_email=email).first()
+
         print(f"ONBOARDING FORM DATA: {request.form}")
 
         # Update the user's information in the User table
@@ -191,6 +201,13 @@ def form():
         user.phone_no = phone_no
         user.address = address
 
+        # Update the guardian's information in the User table
+        guardian = User.query.filter_by(email=guardian_email).first()
+        if guardian:
+            guardian.full_name = guardian_name
+            guardian.address = guardian_address
+            guardian.phone_no = guardian_contact
+            print(f"Guardian {guardian_name} updated successfully.")
         db.session.commit()
         print("Session data: ", session)
 
@@ -201,7 +218,20 @@ def form():
         return redirect(url_for('dashboard'))
 
     user = User.query.filter_by(full_name=session['username']).first()
-    return render_template('forms/form.html', user=user)
+
+    guardian_relation = GuardianElderly.query.filter_by(elderly_email=user.email).first()
+    guardian = None
+    if guardian_relation:
+        guardian_email = guardian_relation.guardian_email
+        guardian = User.query.filter_by(email=guardian_email).first()
+    
+    guardian_name = guardian.full_name if guardian else ''
+    guardian_email = guardian.email if guardian else ''
+    guardian_address = guardian.address if guardian else ''
+    guardian_contact = guardian.phone_no if guardian else ''
+
+
+    return render_template('forms/form.html', user=user, guardian_name=guardian_name, guardian_email=guardian_email, guardian_address=guardian_address, guardian_contact=guardian_contact)
 
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Logins --------------------------------------------
@@ -365,10 +395,12 @@ def profile():
     user = User.query.filter_by(full_name=session['username']).first()
     print(f"User : {user}")
 
-    # Use outerjoin to handle missing relationships
-    guardian_elderly = db.session.query(GuardianElderly).outerjoin(User, GuardianElderly.elderly_email == User.email).filter(GuardianElderly.guardian_email == user.email).first()
-    print(f"Guardian_Elderly: {guardian_elderly}")
-    return render_template('routes/profile.html', user=user, guardian_elderly=guardian_elderly)
+    guardian_relationship = GuardianElderly.query.filter_by(elderly_email=user.email).first()
+    guardian = None
+    if guardian_relationship:
+        guardian = User.query.filter_by(email=guardian_relationship.guardian_email).first()
+    
+    return render_template('routes/profile.html', user=user, guardian=guardian)
 
 @app.route('/emergency')
 def emergency():
