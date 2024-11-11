@@ -35,7 +35,7 @@ class User(db.Model):
     elderly_user = db.relationship('GuardianElderly', backref='guardian_user', uselist=False, primaryjoin="User.email == GuardianElderly.guardian_email", lazy=True)
 
     def __repr__(self):
-        return f"<User {self.full_name} ({self.role})>"
+        return f"<User {self.full_name} \nEmail {self.email} \nRole: ({self.role})>"
 
 # class GuardianElderly(db.Model):
 #     __tablename__ = 'guardian_elderly'

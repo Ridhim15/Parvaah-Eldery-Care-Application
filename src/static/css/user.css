@@ -1,62 +1,69 @@
-    :root {
-      --primary-color: #264653;
-      --secondary-color: #2a9d8f;
-      --bg-color: #f4a261;
-      --text-color: #ffffff;
-    }
-    .header {
-        background-color: var(--bg-color);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        width: 100%;
-        z-index: 1000;
-    }
+:root {
+	--primary-color: #264653;
+	--secondary-color: #2a9d8f;
+	--bg-color: #f4a261;
+	--text-color: #ffffff;
+}
+.header {
+	background-color: var(--bg-color);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	width: 100%;
+	z-index: 1000;
+}
 
-    .parvah img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover; /* Ensures the image fills the circle */
-        border-radius: 20%; /* Ensures the image is circular */
-      }
+.parvah img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover; /* Ensures the image fills the circle */
+	border-radius: 20%; /* Ensures the image is circular */
+}
 
-    h1 {
-      color: var(--primary-color);
-      font-size: 2.5rem;
-      margin-bottom: 20px;
-    }
+h1 {
+	color: var(--primary-color);
+	font-size: 2.5rem;
+	margin-bottom: 20px;
+}
 
-    p {
-      font-size: 1.2rem;
-      color: var(--primary-color);
-      margin-bottom: 40px;
-    }
+p {
+	font-size: 1.2rem;
+	color: var(--primary-color);
+	margin-bottom: 40px;
+}
 
-    .button-container {
-      display: flex;
-      gap: 20px;
-    }
+.button-container {
+	display: flex;
+	gap: 20px;
+}
 
-    .button-container button {
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      padding: 15px 30px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background-color 0.3s ease;
-    }
+.button-container button {
+	background-color: var(--bg-color);
+	color: var(--text-color);
+	padding: 15px 30px;
+	border: none;
+	border-radius: 10px;
+	cursor: pointer;
+	font-size: 1rem;
+	transition: background-color 0.3s ease;
+}
 
-    .button-container button:hover {
-      background-color: var(--primary-color);
-    }
+.button-container button:hover {
+	background-color: var(--primary-color);
+}
 
-    .button-container button:focus {
-      outline: none;
-    }
-    .randi {
-        display: flex;
-        flex-direction: column; /* Stack the content vertically */
-        justify-content: center; /* Align content vertically */
-        align-items: center; /* Align content horizontally */
-        height: 80vh; /* Make sure the content fills the full height */
-      }
+.button-container button:focus {
+	outline: none;
+}
+.section-container {
+	display: flex;
+	flex-direction: column; /* Stack the content vertically */
+	justify-content: center; /* Align content vertically */
+	align-items: center; /* Align content horizontally */
+	height: 80vh; /* Make sure the content fills the full height */
+}
+
+@media (max-width: 768px) {
+	h1 {
+		font-size: 1.5rem;
+	}
+}
+
