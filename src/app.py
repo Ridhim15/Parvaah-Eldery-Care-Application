@@ -190,7 +190,7 @@ def fill_form():
         print(f"ONBOARDING FORM DATA: {request.form}")
 
         # Update the user's information in the User table
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter_by(full_name=username).first()
         user.diseases = ','.join([disease for disease in diseases if disease and disease.lower() != 'none'])
         user.blood_type = blood_type
         user.additional_health_details = additional_health_details
@@ -203,31 +203,14 @@ def fill_form():
         db.session.commit()
         print("Session data: ", session)
 
+        # Create the health data table for this user
+        create_user_health_table(username)
+
         # Redirect to the dashboard after form submission
         return redirect(url_for('dashboard'))
-<<<<<<< Updated upstream
 
     user = User.query.filter_by(full_name=session['username']).first()
     return render_template('form.html', user=user)
-=======
-    user = User.query.filter_by(email=session['email']).first()
-    print(f"\n\nUser : {user}\nUser address : {user.address}\n\n")
-
-    guardian_relation = GuardianElderly.query.filter_by(elderly_email=user.email).first()
-    guardian = None
-    if guardian_relation:
-        guardian_email = guardian_relation.guardian_email
-        guardian = User.query.filter_by(email=guardian_email).first()
-    
-    guardian_name = guardian.full_name if guardian else ''
-    guardian_email = guardian.email if guardian else ''
-    guardian_address = guardian.address if guardian else ''
-    guardian_contact = guardian.phone_no if guardian else ''
-    
-
-
-    return render_template('forms/form.html', user=user, guardian_name=guardian_name, guardian_email=guardian_email, guardian_address=guardian_address, guardian_contact=guardian_contact)
->>>>>>> Stashed changes
 
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Logins --------------------------------------------
@@ -642,12 +625,6 @@ def create_sample_data():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-<<<<<<< Updated upstream
     atexit.register(prompt_and_delete_folders)
     app.run(host='192.168.29.235') # for hosting the local host will only run on ridhim's desktop (Comment this line and uncomment the one below)
     # app.run(debug=True) 
-=======
-    # atexit.register(prompt_and_delete_folders)
-    # app.run(host='192.168.29.235',debug=True) # for hosting the local host will only run on ridhim's desktop (Comment this line and uncomment the one below)
-    app.run()
->>>>>>> Stashed changes
