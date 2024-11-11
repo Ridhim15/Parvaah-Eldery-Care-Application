@@ -70,8 +70,20 @@
         <div id="login-button">
           <a href="/user" class="btn btn-primary">Login / Sign Up</a>
         </div>
-      </nav>
+        <div class="burger-icon" onclick="toggleNav()">☰</div>
 
+      </nav>
+      <!-- Full-screen overlay for mobile navigation -->
+      <div id="overlayMenu" class="overlay">
+        <ul class="overlay-links">
+          <li><a href="/about" onclick="toggleNav()">About</a></li>
+          <li><a href="/services" onclick="toggleNav()">Services</a></li>
+          <li><a href="/community" onclick="toggleNav()">Community</a></li>
+          <li><a href="/testimonials" onclick="toggleNav()">Testimonials</a></li>
+          <li><a href="/contact" onclick="toggleNav()">Contact</a></li>
+          <li><a href="/user" class="btn btn-primary" onclick="toggleNav()">Login / Sign Up</a></li>
+        </ul>
+      </div>
       <!-------------------------------------------------------------------------------------------------
           --------------------------------------------- Elderly Nav ----------------------------------------
           ------------------------------------------------------------------------------------------------- -->
@@ -187,7 +199,7 @@
       </div>
     </footer>
   </div>
-
+  <script src="{{url_for('static',filename='js/script.js')}}"></script>
 </body>
 
 </html>
