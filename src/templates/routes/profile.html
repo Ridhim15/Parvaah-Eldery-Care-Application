@@ -13,16 +13,28 @@
       <img
         src="{{ user.profile_image if user.profile_image else url_for('static', filename='assets/images/profile_def_m.png') }}"
         alt="User Photo" />
+
     </div>
 
     <!-- Profile Information -->
     <div class="profile-info">
       <h2>{{ user.full_name if user.full_name else user.username }}</h2>
+      <p><strong>Age :</strong>{{user.age}}</p>
       <p><strong>Date of Birth:</strong> {{ user.dob }}</p>
       <p><strong>Email:</strong> {{ user.email }}</p>
       <p><strong>Address:</strong> {{ user.address or 'Not provided'}}</p>
     </div>
+
+    <div class="edit-profile">
+      <a href="{{ url_for('form') }}" style="display:flex;">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff">
+          <path
+            d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z" />
+        </svg>
+      </a>
+    </div>
   </div>
+
 
   <!-- Medical Information Section -->
   <div class="profile-container medical-info">
@@ -37,14 +49,14 @@
   <!-- Guardian Information Section -->
   <div class="profile-container guardian-info">
     <h3>Guardian Information</h3>
-    {% if guardians %} {% for guardian in guardians %}
+    {% if guardian %}
     <p><strong>Name:</strong> {{ guardian.full_name }}</p>
     <p><strong>Email:</strong> {{ guardian.email }}</p>
     <p><strong>Phone:</strong> {{ guardian.phone_no }}</p>
     <p><strong>Address:</strong> {{ guardian.address }}</p>
     <hr />
-    {% endfor %} {% else %}
-    <p>No guardians assigned.</p>
+    {% else %}
+    <p>Guardian id not linked.</p>
     {% endif %}
   </div>
 </main>

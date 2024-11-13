@@ -10,7 +10,7 @@
 /* Profile Section */
 .profile-section {
 	display: grid;
-	grid-template-columns: 1fr 2fr;
+	grid-template-columns: 1fr 2fr 0.3fr;
 	gap: 2rem;
 	margin-top: 2rem;
 	background-color: var(--light-bg-color);
@@ -22,7 +22,26 @@
 .profile-photo {
 	text-align: center;
 }
+.edit-profile {
+	max-height: fit-content;
+	max-width: fit-content;
+	margin-top: 1rem;
+	padding: 0.5rem 1rem;
+	font-size: 1rem;
+	background-color: var(--primary-color);
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+	transition: background-color 0.3s;
+}
 
+.edit-profile:hover {
+	background-color: rgb(255, 223, 61);
+}
+.edit-profile:hover svg {
+	fill: black;
+}
 .profile-photo img {
 	width: 150px;
 	height: 150px;

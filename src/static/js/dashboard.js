@@ -1,7 +1,3 @@
-document.querySelector(".menu-btn").addEventListener("click", function () {
-	alert("Menu clicked!")
-})
-
 console.log("Dashboard script loaded")
 
 let holdTimeout

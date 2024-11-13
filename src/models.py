@@ -25,28 +25,14 @@ class User(db.Model):
     diseases = db.Column(db.String(200))
     blood_type = db.Column(db.String(5))
     additional_health_details = db.Column(db.String(500))
-    # # Guardian-Elderly Relationship (Multiple Guardians/Elderly connected)
-    # guardians = db.relationship('GuardianElderly', backref='elderly_user', primaryjoin="User.user_id == GuardianElderly.elderly_id", lazy=True)
-    # elderly_users = db.relationship('GuardianElderly', backref='guardian_user', primaryjoin="User.user_id == GuardianElderly.guardian_id", lazy=True)
-    
     
     # Guardian-Elderly Relationship (One Guardian per Elderly)
     guardian = db.relationship('GuardianElderly', backref='elderly_user', uselist=False, primaryjoin="User.email == GuardianElderly.elderly_email", lazy=True)
     elderly_user = db.relationship('GuardianElderly', backref='guardian_user', uselist=False, primaryjoin="User.email == GuardianElderly.guardian_email", lazy=True)
 
     def __repr__(self):
-        return f"<User {self.full_name} ({self.role})>"
+        return f"<User {self.full_name} \nEmail {self.email} \nRole: ({self.role})>"
 
-# class GuardianElderly(db.Model):
-#     __tablename__ = 'guardian_elderly'
-
-#     id = db.Column(db.Integer, primary_key=True)
-#     guardian_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)  # Link to guardian user_id
-#     elderly_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)   # Link to elderly user_id
-
-#     def __repr__(self):
-#         return f"<GuardianElderly (Guardian: {self.guardian_id}, Elderly: {self.elderly_id})>"
-   
 class GuardianElderly(db.Model):
     __tablename__ = 'guardian_elderly'  # Corrected table name definition
 
@@ -147,3 +133,6 @@ class HealthInfo(db.Model):
 
     def __repr__(self):
         return f"<HealthInfo for User {self.user_id}>"
+
+
+print("\nTHIS IS MODELS.py and it ran successfully \n")

@@ -5,7 +5,7 @@
 	--background-color: #ffffff;
 	--light-bg-color: #f9f9f9;
 	--hero-bg-color: #ffd4bc;
-    --highlight-color: #e63946;
+	--highlight-color: #e63946;
 }
 
 * {
@@ -34,7 +34,6 @@ body {
 	display: grid;
 	grid-template-rows: auto 1fr auto;
 	/* min-height: 100vh; */
-
 }
 
 .container {
@@ -60,7 +59,7 @@ body {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 1rem 0;
+	padding: 1rem;
 }
 
 .logo {
@@ -85,7 +84,6 @@ body {
 	color: var(--text-color);
 	font-weight: 700;
 	font-size: 1.5rem;
-	
 }
 .profile img {
 	border-radius: 50%;
@@ -99,19 +97,19 @@ body {
 } */
 
 .logout-btn {
-    line-height: 1.6;
-    box-sizing: border-box;
-    padding: 0.6rem 1.2rem;
-    color: white;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-    background-color: var(--highlight-color);
+	line-height: 1.6;
+	box-sizing: border-box;
+	padding: 0.6rem 1.2rem;
+	color: white;
+	border-radius: 5px;
+	text-decoration: none;
+	font-weight: 600;
+	transition: background-color 0.3s ease;
+	background-color: var(--highlight-color);
 }
 
 .logout-btn {
-    background-color: var(--highlight-color);
+	background-color: var(--highlight-color);
 }
 
 .nav-links {
@@ -203,6 +201,7 @@ body {
 /* Section Styles */
 section {
 	padding: 4rem 0;
+	min-height: 80vh;
 }
 
 section h2 {
@@ -285,7 +284,6 @@ section h2 {
 .footer {
 	background-color: var(--light-bg-color);
 	padding: 3rem 0;
-	
 }
 
 .footer-content {
@@ -321,42 +319,118 @@ section h2 {
 	color: #666;
 }
 
+/* Burger Icon */
+.burger-icon {
+	display: none;
+	font-size: 1.5rem;
+	cursor: pointer;
+	color: white;
+}
+
+/* Full-Screen Overlay */
+.overlay {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.9);
+	z-index: 999;
+	text-align: center;
+	padding-top: 15%;
+	transition: 0.5s;
+}
+
+.overlay-links {
+	list-style: none;
+	padding: 0;
+}
+
+.overlay-links li {
+	margin: 1.5rem 0;
+}
+
+.overlay-links a {
+	font-size: 2rem;
+	color: white;
+	text-decoration: none;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
-	.navbar {
-		flex-direction: column;
-		align-items: flex-start;
+	.nav-links,
+	#login-button {
+		display: none; /* Hide regular nav links and login button on mobile */
 	}
 
-	.nav-links {
-		margin-top: 1rem;
+	.burger-icon {
+		display: block; /* Show burger icon */
 	}
 
-	.nav-links li {
-		margin-left: 0;
-		margin-right: 1rem;
+	/* Show overlay when active */
+	.overlay.active {
+		display: block;
+	}
+	.hero h1 {
+		font-size: 2rem; /* Reduce font size for mobile */
 	}
 
-	.hero {
-		text-align: center;
+	.hero p {
+		font-size: 1rem; /* Slightly smaller text */
 	}
 
-	.hero-content {
-		margin: 0 auto;
+	/* Section Headings */
+	section h2 {
+		font-size: 2rem; /* Reduce section heading size */
 	}
 
-	.cta-buttons {
+	/* Navbar Logo */
+	.logo span {
+		font-size: 1.2rem; /* Adjust logo font size */
+	}
+
+	/* Service Card Title */
+	.service-card h3 {
+		font-size: 1.2rem; /* Slightly smaller service card titles */
+	}
+
+	/* Testimonial Text */
+	.testimonial-card {
+		font-size: 1rem; /* Smaller text for testimonials */
+	}
+
+	/* Contact Form */
+	.contact-form input,
+	.contact-form textarea {
+		font-size: 0.9rem; /* Adjust form input text size */
+	}
+
+	/* Footer Logo */
+	.footer-logo span {
+		font-size: 1rem; /* Adjust footer logo text */
+	}
+	.footer-links {
+		display: grid;
 		justify-content: center;
+		grid-template-columns: 1fr 1fr 1fr;
+		padding: 1rem;
+	}
+	/* Footer Links */
+	.footer-links a {
+		font-size: 0.5rem; /* Smaller footer link text */
 	}
 
-	.footer-content {
-		flex-direction: column;
-		text-align: center;
+	/* Overlay Menu Links */
+	.overlay-links a {
+		font-size: 1.5rem; /* Adjust overlay link text for better readability on mobile */
 	}
 
-	.footer-links,
-	.social-links {
-		margin-top: 1rem;
+	.hero-image {
+		display: none;
+	}
+	.btn-large {
+		font-size: 0.8rem;
 	}
 }
 
