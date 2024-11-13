@@ -13,13 +13,12 @@
       <img
         src="{{ user.profile_image if user.profile_image else url_for('static', filename='assets/images/profile_def_m.png') }}"
         alt="User Photo" />
-
     </div>
 
     <!-- Profile Information -->
     <div class="profile-info">
       <h2>{{ user.full_name if user.full_name else user.username }}</h2>
-      <p><strong>Age :</strong>{{user.age}}</p>
+      <p><strong>Age : </strong>{{user.age}}</p>
       <p><strong>Date of Birth:</strong> {{ user.dob }}</p>
       <p><strong>Email:</strong> {{ user.email }}</p>
       <p><strong>Address:</strong> {{ user.address or 'Not provided'}}</p>
@@ -34,7 +33,6 @@
       </a>
     </div>
   </div>
-
 
   <!-- Medical Information Section -->
   <div class="profile-container medical-info">
@@ -54,9 +52,15 @@
     <p><strong>Email:</strong> {{ guardian.email }}</p>
     <p><strong>Phone:</strong> {{ guardian.phone_no }}</p>
     <p><strong>Address:</strong> {{ guardian.address }}</p>
+    <p><strong>Status:</strong> Guardian is linked with the elderly.</p>
     <hr />
     {% else %}
-    <p>Guardian id not linked.</p>
+    <p><strong>Name:</strong> {{ user.guardian_name }}</p>
+    <p><strong>Email:</strong> {{ user.guardian_email }}</p>
+    <p><strong>Phone:</strong> {{ user.guardian_contact }}</p>
+    <p><strong>Address:</strong> {{ user.guardian_address }}</p>
+    <p><strong>Status:</strong> Guardian is not linked.</p>
+    <hr />
     {% endif %}
   </div>
 </main>

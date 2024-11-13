@@ -20,38 +20,31 @@ import json
 from sqlalchemy import text
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
 from models import AppointmentReminder, db, User, GuardianElderly, Booking, MedicineReminder, Caretaker, UserRole, BookingStatus
-
-
-# from dotenv import load_dotenv
-# load_dotenv()
 
 app = Flask(__name__)
 api = Api(app)
 
-# app.secret_key = environ['SECRET_KEY']
-# load_dotenv()
-
 # -------------------- Session and SQL config --------------------
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///databases.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
-app.config['SESSION_TYPE']             = 'sqlalchemy'
-app.config['SESSION_SQLALCHEMY']       = db
+app.config['SESSION_TYPE'] = 'sqlalchemy'
+app.config['SESSION_SQLALCHEMY'] = db
 app.config['SESSION_SQLALCHEMY_TABLE'] = 'sessions'
 Session(app)
 
 
+
 # -------------------------------------------------------------------------------------------------
-# ---------------------------------------- Helper Fucntions ---------------------------------------
+# ---------------------------------------- Helper Functions ---------------------------------------
 # -------------------------------------------------------------------------------------------------
-def create_user_health_table(username):
-    """Dynamically create a table for each user to store their health records."""
-    table_name = f"health_{username}"
-    query = text(f"CREATE TABLE IF NOT EXISTS {table_name} (id INTEGER PRIMARY KEY, date DATE, sugar INTEGER, bp_sys INTEGER, bp_dia INTEGER)")
-    db.session.execute(query)
-    db.session.commit()
+
+@app.route('/suggest', methods=['POST'])
+def suggest():
+    query = request.form.get('query', '').lower()
+    suggestions = User.query.filter(User.email.like(f"%{query}%")).all()
+    return jsonify([{'email': s.email, 'address': s.address, 'phone': s.phone} for s in suggestions])
 
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Index ---------------------------------------------
@@ -76,10 +69,10 @@ def register():
     print("\n\n REGISTERING THE USER NOW \n\n\n")
 
     if request.method == 'POST':
-        #fetching form data from the user
+        # Fetching form data from the user
         full_name = request.form['full_name']
         password = request.form['password']
-        email    = request.form['email']
+        email = request.form['email']
         print(f'full_name: {full_name}, password: {password}, email: {email}')
         # Check if the username already exists
         existing_user = User.query.filter_by(email=email).first()
@@ -92,7 +85,7 @@ def register():
             # Create a new user and save it to the database
             hashed_password = generate_password_hash(password)
             new_user = User(full_name=full_name, password=hashed_password, email=email, role=UserRole.elderly)
-            print(f'new_user: {new_user}')
+            print(f'FROM REGISTER ROUTE \n new_user: {new_user}')
             db.session.add(new_user)
             db.session.commit()
             session['username'] = new_user.full_name
@@ -100,10 +93,11 @@ def register():
             session['role'] = new_user.role.value
             session['profile_image'] = new_user.profile_image if new_user.profile_image else url_for('static', filename='assets/images/profile_def_m.png')
             print("\n\n Session updated successfully\n\n")
-            print("Session data: ", session,"\n\n")
-            return redirect(url_for('form', user=new_user))
-    return make_response('Invalid request method', 405)
+            print("Session data: ", session, "\n\n")
 
+            print("-" * 30, "\n\n")
+            return redirect(url_for('form'))
+    return make_response('Invalid request method', 405)
 
 @app.route('/register_guardian', methods=['GET', 'POST'])
 def register_guardian():
@@ -112,8 +106,6 @@ def register_guardian():
         email = request.form['email']
         password = request.form['password']
         elderly_email = request.form['elderly_email']
-        #Code for showing guardian data
-        
 
         # Check if elderly with provided email exists
         elderly = User.query.filter_by(email=elderly_email, role=UserRole.elderly).first()
@@ -137,11 +129,10 @@ def register_guardian():
         )
         db.session.add(new_guardian)
         db.session.commit()
-        # add the guardian to the session
+        # Add the guardian to the session
         session['email'] = new_guardian.email
         session['role'] = new_guardian.role.value
         session['username'] = new_guardian.full_name
-        session['user_id'] = new_guardian.user_id
         session['profile_image'] = new_guardian.profile_image
         print(f"Session data: {session}")
 
@@ -158,76 +149,55 @@ def register_guardian():
     return render_template('logins/login_guardian.html')
 
 # -------------------------------------------------------------------------------------------------
-# --------------------------------------------- Formss --------------------------------------------
+# --------------------------------------------- Forms ---------------------------------------------
 # -------------------------------------------------------------------------------------------------
 
-@app.route('/form', methods=['GET','POST'])
+@app.route('/form', methods=['GET', 'POST'])
 @app.route('/fill_form', methods=['GET', 'POST'])
 def form():
     if 'email' not in session:
         return redirect(url_for('login'))
 
     if request.method == 'POST':
-        print("Form submitted")
-        # Get the form data from the user
-        username = session['username']
+        # Fetch form data
         email = session['email']
-        profile_image = request.form['profile_image']
-        diseases = request.form.getlist('diseases[]')  # Example for multiple selected diseases
-        blood_type = request.form['blood_type']
-        address = request.form['address']
+        full_name = request.form['full_name']
         gender = request.form['gender']
-        phone_no = request.form['phone_no']
-        additional_health_details = request.form['additional_health_details']
+        address = request.form['address']
         dob = request.form['dob']
-        #Guardian Details
-        guardian_name= request.form['guardian_name']
+        phone_no = request.form['phone_no']
+        blood_type = request.form['blood_type']
+        diseases_list = request.form.getlist('diseases[]')
+        diseases = ','.join(disease for disease in diseases_list[1:] if disease)
+        additional_health_details = request.form['additional_health_details']
         guardian_email = request.form['guardian_email']
+        guardian_name = request.form['guardian_name']
         guardian_address = request.form['guardian_address']
         guardian_contact = request.form['guardian_contact']
-        
-        guardian_elderly = GuardianElderly.query.filter_by(elderly_email=email).first()
 
-        print(f"ONBOARDING FORM DATA: {request.form}")
-
-        # Update the user's information in the User table
+        # Check if the user already exists
         user = User.query.filter_by(email=email).first()
-        user.diseases = ','.join([disease for disease in diseases if disease and disease.lower() != 'none'])
-        user.blood_type = blood_type
-        user.additional_health_details = additional_health_details
-        user.dob = datetime.strptime(dob, "%Y-%m-%d").date()
-        user.profile_image=profile_image
-        user.gender = gender
-        user.phone_no = phone_no
-        user.address = address
-
-        # Update the guardian's information in the User table
-        guardian = User.query.filter_by(email=guardian_email).first()
-        if guardian:
-            guardian.full_name = guardian_name
-            guardian.address = guardian_address
-            guardian.phone_no = guardian_contact
-            print(f"Guardian {guardian_name} updated successfully.")
+        if user:
+            # Update existing user
+            user.full_name = full_name
+            user.gender = gender
+            user.address = address
+            user.dob = datetime.strptime(dob, "%Y-%m-%d").date()
+            user.phone_no = phone_no
+            user.blood_type = blood_type
+            user.diseases = diseases
+            user.additional_health_details = additional_health_details
+            user.guardian_email = guardian_email
+            user.guardian_name = guardian_name
+            user.guardian_address = guardian_address
+            user.guardian_contact = guardian_contact
+        
+        db.session.add(user)
         db.session.commit()
-        print("Session data: ", session)
-
-        # Redirect to the dashboard after form submission
         return redirect(url_for('dashboard'))
     user = User.query.filter_by(email=session['email']).first()
-    print(f"\n\nUser : {user}\nUser address : {user.address}\n\n")
-
-    guardian_relation = GuardianElderly.query.filter_by(elderly_email=user.email).first()
-    guardian = None
-    if guardian_relation:
-        guardian_email = guardian_relation.guardian_email
-        guardian = User.query.filter_by(email=guardian_email).first()
     
-    guardian_name = guardian.full_name if guardian else ''
-    guardian_email = guardian.email if guardian else ''
-    guardian_address = guardian.address if guardian else ''
-    guardian_contact = guardian.phone_no if guardian else ''
-
-    return render_template('forms/form.html', user=user, guardian_name=guardian_name, guardian_email=guardian_email, guardian_address=guardian_address, guardian_contact=guardian_contact)
+    return render_template('forms/form.html', user=user)
 
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Logins --------------------------------------------
@@ -247,7 +217,6 @@ def login():
         if user and check_password_hash(user.password, password):
             print('Username, pw is correct')
             session['username'] = user.full_name
-            session['user_id'] = user.user_id
             session['profile_image'] = user.profile_image
             session['email'] = user.email
             session['role'] = user.role.value  # Set the role in the session
@@ -259,7 +228,7 @@ def login():
         elif user:
             return 'Invalid username or password'
         else:
-            return 'You are not registers yet. Please register first'
+            return 'You are not registered yet. Please register first'
     
     return render_template('logins/login.html')
 
@@ -267,7 +236,6 @@ def login():
 def login_guardian():
     print("Guardian LOGIN attempted")
     if request.method == 'POST':
-        print("")
         email = request.form['email']
         password = request.form['password']
         
@@ -278,7 +246,6 @@ def login_guardian():
             session['email'] = user.email
             session['role'] = user.role.value  # Set the role in the session
             session['username'] = user.full_name
-            session['user_id'] = user.user_id
             session['profile_image'] = user.profile_image
             
             # Redirect to guardian-specific dashboard
@@ -301,17 +268,15 @@ def login_caretaker():
         
         if caretaker and check_password_hash(caretaker.password, password):
             session['username'] = caretaker.full_name
-            session['caretaker_id'] = caretaker.caretaker_id
             session['email'] = caretaker.email
             session['role'] = 'caretaker'
             
             # Redirect to caretaker-specific dashboard
-            return redirect(url_for('caretaker_dashboard'))
+            return redirect(url_for('dashboard_caretaker'))
         else:
             flash('Invalid email or password')
     
     return render_template('logins/login_caretaker.html')
-
 
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Logout --------------------------------------------
@@ -343,9 +308,6 @@ class login_status(Resource):
 
 api.add_resource(login_status, '/api/login_status')
 
-
-
-
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Dashboards ----------------------------------------
 # -------------------------------------------------------------------------------------------------
@@ -356,12 +318,12 @@ def dashboard():
         print('Username not in session')
         return redirect(url_for('login'))
 
-    username = session['username']
-    user = User.query.filter_by(full_name=username).first()
+    email = session['email']
+    user = User.query.filter_by(email=email).first()
 
     # Fetch upcoming appointments and medicine reminders for the logged-in user
-    upcoming_appointments = AppointmentReminder.query.filter_by(user_id=user.user_id).all()
-    upcoming_reminders = MedicineReminder.query.filter_by(user_id=user.user_id).all()
+    upcoming_appointments = AppointmentReminder.query.filter_by(user_email=user.email).all()
+    upcoming_reminders = MedicineReminder.query.filter_by(user_email=user.email).all()
 
     return render_template('dashboards/dashboard.html', user=user, upcoming_appointments=upcoming_appointments, upcoming_reminders=upcoming_reminders)
 
@@ -377,26 +339,24 @@ def dashboard_caretaker():
 # --------------------------------------------- Routes and Views ----------------------------------
 # -------------------------------------------------------------------------------------------------
 
-
 @app.route('/about')
 def about():
     return render_template('routes/about.html')
 
 @app.route('/profile')
 def profile():
-    print("\n\nThis is the profile page\n\n")
-    if 'username' not in session:
-        return redirect(url_for('login'))
-
-    user = User.query.filter_by(full_name=session['username']).first()
-    print(f"User : {user}")
-
-    guardian_relationship = GuardianElderly.query.filter_by(elderly_email=user.email).first()
-    guardian = None
-    if guardian_relationship:
-        guardian = User.query.filter_by(email=guardian_relationship.guardian_email).first()
-    
-    return render_template('routes/profile.html', user=user, guardian=guardian)
+    if "email" in session:
+        email = session['email']
+        user = User.query.filter_by(email=email).first_or_404()
+        guardian_relation = GuardianElderly.query.filter_by(elderly_email=user.email).first()
+        guardian_linked = False
+        guardian = None
+        if guardian_relation:
+            guardian_email = guardian_relation.guardian_email
+            guardian = User.query.filter_by(email=guardian_email).first()
+            guardian_linked = True if guardian else False
+        
+        return render_template('routes/profile.html', user=user, guardian=guardian, guardian_linked=guardian_linked)
 
 @app.route('/emergency')
 def emergency():
@@ -418,14 +378,13 @@ def contact():
 def community():
     return render_template('routes/community.html')
 
-
 @app.route('/booking', methods=['GET', 'POST'])
 def booking():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    username = session['username']
-    user = User.query.filter_by(full_name=username).first()
+    email = session['email']
+    user = User.query.filter_by(email=email).first()
 
     if request.method == 'POST':
         service = request.form['service']
@@ -440,9 +399,12 @@ def booking():
 
         # Create a new booking instance
         new_booking = Booking(
-            user_id=user.user_id,
+            users_email=user.email,
             service=service,
-            date=start_datetime,  # Start date and time
+            start_date=start_datetime.date(),
+            start_time=start_datetime.time(),
+            end_date=end_datetime.date(),
+            end_time=end_datetime.time(),
             status=BookingStatus.pending  # Default status
         )
 
@@ -479,8 +441,8 @@ def medicinereminder():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    username = session['username']
-    user = User.query.filter_by(full_name=username).first()
+    email = session['email']
+    user = User.query.filter_by(email=email).first()
 
     if request.method == 'POST':
         medicine_name = request.form['medicine_name']
@@ -499,7 +461,7 @@ def medicinereminder():
             times=times_str,
             start_date=datetime.strptime(start_date, "%Y-%m-%d").date(),
             end_date=datetime.strptime(end_date, "%Y-%m-%d").date(),
-            user_id=user.user_id
+            user_email=user.email
         )
 
         db.session.add(new_medicine_reminder)
@@ -509,9 +471,8 @@ def medicinereminder():
         return redirect(url_for('medicinereminder'))
 
     # Fetch the medicine reminders for the current user
-    medicine_reminders = MedicineReminder.query.filter_by(user_id=user.user_id).all()
+    medicine_reminders = MedicineReminder.query.filter_by(user_email=user.email).all()
     return render_template('routes/reminder.html', medicine_reminders=medicine_reminders)
-
 
 @app.route('/appointreminder', methods=['GET', 'POST'])
 def appointreminder():
@@ -535,7 +496,7 @@ def appointreminder():
             location=location,
             time=datetime.strptime(time, "%H:%M").time(),
             date=datetime.strptime(date, "%Y-%m-%d").date(),
-            user_id=user.user_id
+            user_email=user.email
         )
 
         db.session.add(new_appointment_reminder)
@@ -545,9 +506,8 @@ def appointreminder():
         return redirect(url_for('appointreminder'))
 
     # Fetch the appointment reminders for the current user
-    appointment_reminders = AppointmentReminder.query.filter_by(user_id=user.user_id).all()
+    appointment_reminders = AppointmentReminder.query.filter_by(user_email=user.email).all()
     return render_template('routes/appointreminder.html', appointments=appointment_reminders)
-
 
 @app.route('/newservice')
 def newservice():
@@ -662,5 +622,11 @@ def prompt_and_delete_folders():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+    
+    # #For disabling the flask logs
+    # import logging
+    # log = logging.getLogger('werkzeug')
+    # log.setLevel(logging.ERROR)
+
     # atexit.register(prompt_and_delete_folders)
-    app.run(host='192.168.29.235', port=5000, debug=True)
+    app.run(host='192.168.29.235', port=5000,debug=True)

@@ -2,6 +2,10 @@
 
 Parvaah One-Stop Application for Elderly Care
 
+## Deployment
+
+The application is hosted at [https://ridhim.pythonanywhere.com](https://ridhim.pythonanywhere.com).
+
 ## Requirements
 
 Make sure you have the following installed:
@@ -69,6 +73,5 @@ Make sure you have the following installed:
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](http://_vscodecontentref_/4) file
-for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
