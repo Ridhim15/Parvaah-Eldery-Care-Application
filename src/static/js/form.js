@@ -1,3 +1,5 @@
+console.log("Form JS loaded")
+
 // Initialize the form validation
 
 function previewImage(event) {
@@ -53,15 +55,15 @@ document.getElementById("diseases").addEventListener("change", function () {
 })
 
 // Ensure hidden inputs are included in the form submission
-document.getElementById("form").addEventListener("submit", function () {
-	const selectedDiseases = document.getElementById("selectedDiseases").children
-	for (let i = 0; i < selectedDiseases.length; i++) {
-		const input = selectedDiseases[i].querySelector("input")
-		if (input) {
-			this.appendChild(input)
-		}
-	}
-})
+// document.getElementById("form").addEventListener("submit", function () {
+// 	const selectedDiseases = document.getElementById("selectedDiseases").children
+// 	for (let i = 0; i < selectedDiseases.length; i++) {
+// 		const input = selectedDiseases[i].querySelector("input")
+// 		if (input) {
+// 			this.appendChild(input)
+// 		}
+// 	}
+// })
 
 // Fetching suggestions for guardian details
 function fetchSuggestions() {
