@@ -201,3 +201,30 @@ button:hover {
 	margin-bottom: 15px;
 }
 
+#suggestions {
+	display: flex;
+	gap: 1rem;
+}
+
+.suggestion-box {
+	border-radius: 8px;
+	padding: 10px;
+	margin: 5px 0;
+	width: max-content;
+	border: 1px solid green;
+}
+
+.suggestion-box:hover {
+	background-color: lightgreen;
+	cursor: pointer;
+}
+
+.suggestion-box:active {
+	background-color: green;
+	color: white;
+}
+
+.selected {
+	background-color: lightgreen !important;
+}
+

@@ -17,17 +17,6 @@
           <div class="edit-overlay">Click to upload</div>
         </div>
 
-        <script>
-          function previewImage ( event ) {
-            const reader = new FileReader();
-            reader.onload = function () {
-              const output = document.getElementById( 'profilePic' );
-              output.src = reader.result;
-            };
-            reader.readAsDataURL( event.target.files[ 0 ] );
-          }
-        </script>
-
         <!-- Personal Information Section -->
         <div class="form-section">
           <label for="full_name">Full Name:</label>
@@ -65,22 +54,6 @@
           <span class="age" id="age">
           </span>
         </div>
-
-        <script>
-          document.getElementById( 'dob' ).addEventListener( 'change', function () {
-            const dob = new Date( this.value );
-            const age_section = document.getElementById( 'age_section' );
-            const ageSpan = document.getElementById( 'age' );
-            const today = new Date();
-            let age = today.getFullYear() - dob.getFullYear();
-            const monthDiff = today.getMonth() - dob.getMonth();
-            if ( monthDiff < 0 || ( monthDiff === 0 && today.getDate() < dob.getDate() ) ) {
-              age--;
-            }
-            age_section.style.display = 'block';
-            ageSpan.textContent = age + ' Years old';
-          } );
-        </script>
 
         <div class="form-section">
           <label for="phone_no">Phone Number:</label>
@@ -145,15 +118,15 @@
 
         <!-- Emergency Contact Information -->
         <div class="form-section">
-          <label for="guardianName">Guardian's Name:</label>
-          <input type="text" id="guardianName" name="guardian_name" value="{{guardian_name}}" {% if guardian_name %}
-            style="background-color: #dcdcdc; cursor: not-allowed;" readonly {% endif %} required />
-        </div>
-
-        <div class="form-section">
           <label for="guardianEmail">Guardian's Email:</label>
           <input type="email" id="guardianEmail" name="guardian_email" value="{{guardian_email}}" {% if guardian_email
             %} style="background-color: #dcdcdc; cursor: not-allowed;" readonly {% endif %} required />
+        </div>
+
+        <div class="form-section">
+          <label for="guardianName">Guardian's Name:</label>
+          <input type="text" id="guardianName" name="guardian_name" value="{{guardian_name}}" {% if guardian_name %}
+            style="background-color: #dcdcdc; cursor: not-allowed;" readonly {% endif %} required />
         </div>
 
         <div class="form-section">
@@ -181,4 +154,5 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="{{url_for('static',filename='js/form.js')}}"></script>
 {% endblock script %}
+
 {% endblock content %}
