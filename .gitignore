@@ -3,3 +3,4 @@ instance
 flask
 src/__pycache__
 .DS_Store
+make_data.py
