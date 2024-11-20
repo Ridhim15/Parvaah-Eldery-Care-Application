@@ -179,47 +179,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<<<<<<< Updated upstream
-
-<script>
-  document.getElementById( "diseases" ).addEventListener( "change", function () {
-    const selectedOption = this.options[ this.selectedIndex ];
-    if ( selectedOption.value === "none" ) return;
-
-    const li = document.createElement( "li" );
-    li.textContent = selectedOption.text;
-    li.dataset.value = selectedOption.value;
-
-    document.getElementById( "selectedDiseases" ).appendChild( li );
-    this.remove( this.selectedIndex );
-
-    li.addEventListener( "click", function () {
-      const option = new Option( li.textContent, li.dataset.value );
-      document.getElementById( "diseases" ).add( option );
-      li.remove();
-    } );
-
-    // Create hidden input field for the selected disease
-    const input = document.createElement( "input" );
-    input.type = "hidden";
-    input.name = "diseases[]";
-    input.value = selectedOption.value;
-    li.appendChild( input );
-  } );
-
-  // Ensure hidden inputs are included in the form submission
-  document.getElementById( "form" ).addEventListener( "submit", function () {
-    const selectedDiseases = document.getElementById( "selectedDiseases" ).children;
-    for ( let i = 0; i < selectedDiseases.length; i++ ) {
-      const input = selectedDiseases[ i ].querySelector( "input" );
-      if ( input ) {
-        this.appendChild( input );
-      }
-    }
-  } );
-</script>
-=======
 <script src="{{url_for('static',filename='js/form.js')}}"></script>
 {% endblock script %}
->>>>>>> Stashed changes
 {% endblock content %}
