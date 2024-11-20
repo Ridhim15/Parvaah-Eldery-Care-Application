@@ -118,11 +118,20 @@ function toggleGuardianDetails(data, element) {
 	}
 }
 
-
 // Initialize the phone input field
-const phoneInputField = document.querySelector("#phone")
-const phoneInput = window.intlTelInput(phoneInputField, {
-	utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-})
+// Initialize the phone input fields
+const phoneInputFields = document.querySelectorAll(".phone_no")
+phoneInputFields.forEach((phoneInputField, index) => {
+	const initialValue = phoneInputField.value
+	const uniqueId = `phone_no_${index}`
+	phoneInputField.id = uniqueId
 
+	const phoneInput = window.intlTelInput(document.getElementById(uniqueId), {
+		initialCountry: "in",
+		strictMode: true,
+		utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+	})
+
+	phoneInputField.value = initialValue
+})
 

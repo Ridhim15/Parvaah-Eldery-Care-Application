@@ -22,9 +22,10 @@
       <p><strong>Date of Birth:</strong> {{ user.dob }}</p>
       <p><strong>Email:</strong> {{ user.email }}</p>
       <p><strong>Address:</strong> {{ user.address or 'Not provided'}}</p>
+      <p><strong>Phone : </strong>{{user.phone_no or 'Not provided'}}</p>
     </div>
 
-    <div class="edit-profile">
+    <div class="edit-profile" onclick="window.location.href='/form'">
       <a href="{{ url_for('form') }}" style="display:flex;">
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff">
           <path
