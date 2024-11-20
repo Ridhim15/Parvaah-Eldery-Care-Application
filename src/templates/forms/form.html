@@ -1,6 +1,9 @@
 {% extends 'base.html' %} {% block style %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/form.css') }}" />
-{% endblock %} {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+{% endblock %}
+
+{% block content %}
 <div class="content">
   <div class="container">
     <div class="form-container">
@@ -33,7 +36,6 @@
             <option value="" disabled selected>Select your gender</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
-            <option value="other">Other</option>
           </select>
         </div>
 
@@ -55,7 +57,7 @@
 
         <div class="form-section">
           <label for="phone_no">Phone Number:</label>
-          <input type="text" id="phone_no" name="phone_no" value="{{ user.phone_no if user.phone_no else '' }}"
+          <input type="tel" id="phone_no" name="phone_no" value="{{ user.phone_no if user.phone_no else '' }}"
             required />
         </div>
 
@@ -91,6 +93,7 @@
         </div>
 
         <!-- Display Selected Diseases Here -->
+
         <div id="selectedDiseasesContainer" class="form-section">
           <label>Selected Diseases:</label>
           <ul id="selectedDiseases">
@@ -145,8 +148,11 @@
   </div>
 </div>
 
+{% block script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
 <script src="{{url_for('static',filename='js/form.js')}}"></script>
+{% endblock script %}
+
 {% endblock content %}
