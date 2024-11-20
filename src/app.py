@@ -662,5 +662,17 @@ def prompt_and_delete_folders():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+<<<<<<< Updated upstream
     # atexit.register(prompt_and_delete_folders)
     app.run(host='192.168.29.235', port=5000, debug=True)
+=======
+    
+    # #For disabling the flask logs
+    # import logging
+    # log = logging.getLogger('werkzeug')
+    # log.setLevel(logging.ERROR)
+
+    atexit.register(prompt_and_delete_folders)
+    # app.run(host='192.168.29.235', port=5000,debug=True)
+    app.run(debug=True)
+>>>>>>> Stashed changes
