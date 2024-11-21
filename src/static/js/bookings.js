@@ -36,6 +36,8 @@ function updateServices(selectedService = "") {
 	}
 }
 
+// FIX THIS TO TAKE INTO CONSIDERATION DATE AS WELL ITS ONLY COMPARING THE TIME
+
 function calculateFare() {
 	const startDate = document.getElementById("start-date").value
 	const startTime = document.getElementById("start-time").value
@@ -63,3 +65,36 @@ function cancelBooking() {
 	window.history.back()
 }
 
+//  BOOKINGS FROM CARETAKER SIDE
+
+function changeBookingStatus(bookingId, currentStatus) {
+	// Determine the new status
+	const newStatus = currentStatus === "pending" ? "accepted" : "pending"
+
+	// Fetch the caretaker ID (this could be dynamic based on your application logic)
+	const caretakerId = 1 // Example caretaker ID
+
+	// Send the request to the server
+	fetch(`/api/bookings/${bookingId}/accept`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ caretaker_id: caretakerId }),
+	})
+		.then(response => response.json())
+		.then(data => {
+			if (data.error) {
+				alert(`Error: ${data.error}`)
+			} else {
+				alert(`Success: ${data.message}`)
+				// Update the booking status in the UI
+				document.querySelector(
+					`.booking-item[data-booking-id="${bookingId}"] .booking-status`
+				).textContent = newStatus
+			}
+		})
+		.catch(error => {
+			console.error("Error:", error)
+		})
+}

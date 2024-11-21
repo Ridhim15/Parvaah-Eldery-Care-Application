@@ -46,6 +46,32 @@ def suggest():
     suggestions = User.query.filter(User.email.like(f"%{query}%")).all()
     return jsonify([{'email': s.email, 'address': s.address, 'phone': s.phone} for s in suggestions])
 
+
+@app.route('/create_sample_user')
+def create_sample_user():
+    try:
+        # Define sample user details
+        full_name = "Ridhim"
+        password = "1234"
+        email = "ridhim@gmail.com"
+        
+        # Check if the user already exists
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            print("\n\n THE SAMPLE USER ALREADY EXISTS\n\n")
+            return jsonify({'message': 'Sample user already exists'}), 200
+        
+        # Create a new user and save it to the database
+        hashed_password = generate_password_hash(password)
+        new_user = User(full_name=full_name, password=hashed_password, email=email, role=UserRole.elderly)
+        db.session.add(new_user)
+        db.session.commit()
+        
+        print(f'Sample user created: {new_user}')
+        return jsonify({'message': 'Sample user created successfully'}), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Index ---------------------------------------------
 # -------------------------------------------------------------------------------------------------
@@ -66,6 +92,7 @@ def index():
 
 @app.route('/register', methods=['POST'])
 def register():
+
     print("\n\n REGISTERING THE USER NOW \n\n\n")
 
     if request.method == 'POST':
@@ -148,6 +175,40 @@ def register_guardian():
         return redirect(url_for('dashboard_guardian'))
     return render_template('logins/login_guardian.html')
 
+
+@app.route('/register_caretaker', methods=['GET', 'POST'])
+def register_caretaker():
+    print('Huh, this is /register_caretaker')
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        password = request.form['password']
+
+        print(f"\n\nName: {name}, Email: {email}, Password: {password}\n\n")
+        # Check if caretaker already exists
+        if Caretaker.query.filter_by(email=email).first():
+            print("Caretaker Email already registered.")
+            flash("Caretaker Email already registered.")
+            return redirect(url_for('login_caretaker'))
+
+        # Create new caretaker user
+        new_caretaker = Caretaker(
+            full_name=name,
+            email=email,
+            password=generate_password_hash(password)
+        )
+        db.session.add(new_caretaker)
+        db.session.commit()
+        # Add the caretaker to the session
+        session['email'] = new_caretaker.email
+        session['role'] = 'caretaker'
+        session['username'] = new_caretaker.full_name
+        print(f"Session data: {session}")
+
+        print(f"\n\nCaretaker {name} registered successfully.")
+        flash("Registration successful. Redirecting to dashboard.")
+        return redirect(url_for('dashboard_caretaker'))
+    return render_template('logins/login_caretaker.html')
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Forms ---------------------------------------------
 # -------------------------------------------------------------------------------------------------
@@ -236,10 +297,11 @@ def login():
 def login_guardian():
     print("Guardian LOGIN attempted")
     if request.method == 'POST':
+        username = request.form['username']
         email = request.form['email']
         password = request.form['password']
         
-        user = User.query.filter_by(email=email, role=UserRole.guardian).first()
+        user = User.query.filter_by(full_name=username).first() or User.query.filter_by(email=email).first()
         
         if user and check_password_hash(user.password, password):
             print('Guardian email and password are correct')
@@ -261,10 +323,11 @@ def login_guardian():
 @app.route('/login_caretaker', methods=['GET', 'POST'])
 def login_caretaker():
     if request.method == 'POST':
+        username = request.form['username']
         email = request.form['email']
         password = request.form['password']
         
-        caretaker = Caretaker.query.filter_by(email=email).first()
+        caretaker = Caretaker.query.filter_by(full_name=username).first() or Caretaker.query.filter_by(email=email)
         
         if caretaker and check_password_hash(caretaker.password, password):
             session['username'] = caretaker.full_name
@@ -308,6 +371,88 @@ class login_status(Resource):
 
 api.add_resource(login_status, '/api/login_status')
 
+@app.route('/api/bookings', methods=['GET', 'POST'])
+def handle_bookings():
+    if request.method == 'GET':
+        return fetch_bookings()
+    elif request.method == 'POST':
+        return update_booking_status()
+
+def fetch_bookings():
+    try:
+        # Fetch all bookings from the Booking table
+        bookings = Booking.query.all()
+        
+        # Convert the bookings to a list of dictionaries
+        bookings_list = []
+        for booking in bookings:
+            bookings_list.append({
+                'id': booking.booking_id,
+                'user_email': booking.user_email,
+                'caretaker_email': booking.caretaker_email,
+                'service': booking.service,
+                'booking_date': booking.booking_date,
+                'status': booking.status.name,  # Convert enum to string
+                # Add other fields as needed
+            })
+        
+        return jsonify(bookings_list)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+def update_booking_status():
+    try:
+        booking_id = request.json.get('booking_id')
+        new_status = request.json.get('status')
+        caretaker_email = request.json.get('caretaker_email')
+
+        booking = Booking.query.get(booking_id)
+        if not booking:
+            return jsonify({'error': 'Booking not found'}), 404
+
+        if new_status not in BookingStatus.__members__:
+            return jsonify({'error': 'Invalid status'}), 400
+
+        if new_status == 'accepted':
+            caretaker = Caretaker.query.filter_by(email=caretaker_email).first()
+            if not caretaker:
+                return jsonify({'error': 'Caretaker not found'}), 404
+            booking.caretaker_email = caretaker_email
+
+        booking.status = BookingStatus[new_status]
+        db.session.commit()
+
+        return jsonify({'message': f'Booking {new_status} successfully'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/update_booking_status', methods=['POST'])
+def update_booking_status_form():
+    try:
+        booking_id = request.form.get('booking_id')
+        new_status = request.form.get('new_status')
+        caretaker_email = request.form.get('caretaker_email')
+
+        booking = Booking.query.get(booking_id)
+        if not booking:
+            return jsonify({'error': 'AHHHH BOOKING not found'}), 404
+
+        if new_status not in BookingStatus.__members__:
+            return jsonify({'error': 'IDK WHAT HAPPENED Invalid status'}), 400
+
+        if new_status == 'accepted':
+            caretaker = Caretaker.query.filter_by(email=caretaker_email).first()
+            if not caretaker:
+                return jsonify({'error': 'Caretaker not found'}), 404
+            booking.caretaker_email = caretaker_email
+
+        booking.status = BookingStatus[new_status]
+        db.session.commit()
+
+        return redirect(url_for('dashboard_caretaker'))
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Dashboards ----------------------------------------
 # -------------------------------------------------------------------------------------------------
@@ -327,14 +472,29 @@ def dashboard():
 
     return render_template('dashboards/dashboard.html', user=user, upcoming_appointments=upcoming_appointments, upcoming_reminders=upcoming_reminders)
 
-@app.route('/dashboard_guardian')
-def dashboard_guardian():
-    return render_template('dashboards/dashboard_guardian.html')
 
 @app.route('/dashboard_caretaker')
 def dashboard_caretaker():
-    return render_template('dashboards/dashboard_caretaker.html')
-
+    try:
+        # Fetch all bookings from the Booking table
+        bookings = Booking.query.all()
+        
+        # Convert the bookings to a list of dictionaries
+        bookings_list = []
+        for booking in bookings:
+            bookings_list.append({
+                'id': booking.booking_id,
+                'user_email': booking.user_email,
+                'caretaker_email': booking.caretaker_email,
+                'service': booking.service,
+                'booking_date': booking.booking_date,
+                'status': booking.status.name,
+            })
+            print(f"Bookings : {bookings_list}")
+        
+        return render_template('dashboards/dashboard_caretaker.html', bookings=bookings_list)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Routes and Views ----------------------------------
 # -------------------------------------------------------------------------------------------------
@@ -399,13 +559,13 @@ def booking():
 
         # Create a new booking instance
         new_booking = Booking(
-            users_email=user.email,
+            user_email=user.email,
             service=service,
-            start_date=start_datetime.date(),
-            start_time=start_datetime.time(),
-            end_date=end_datetime.date(),
-            end_time=end_datetime.time(),
-            status=BookingStatus.pending  # Default status
+            # start_date=start_datetime.date(),
+            # start_time=start_datetime.time(),
+            # end_date=end_datetime.date(),
+            # end_time=end_datetime.time(),
+            status=BookingStatus.pending 
         )
 
         db.session.add(new_booking)
@@ -534,74 +694,6 @@ def yourhealth():
     return render_template('routes/yourhealth.html')
 
 # Route to create sample data
-app.route('/create_sample_data')
-def create_sample_data():
-    print("Creating sample data...\n\n")
-
-    # Create elderly user
-    elderly_user = User(
-        full_name="Ridhim",
-        email="ridhim@gmail.com",
-        password=generate_password_hash("1234"),
-        role=UserRole.elderly,
-        gender="male",
-        dob=datetime.strptime("1950-01-01", "%Y-%m-%d").date(),
-        phone_no="1234567890",
-        address="123 Elderly St",
-        disease="Artherites",
-        blood_type="O+",
-        additional_health_details="Needs regular checkups"
-    )
-
-    # Create guardian user
-    guardian_user = User(
-        full_name="Yash",
-        email="yash@gmail.com",
-        password=generate_password_hash("password"),
-        role=UserRole.guardian,
-        gender="female",
-        dob=datetime.strptime("1980-01-01", "%Y-%m-%d").date(),
-        phone_no="9876543211",
-        address="456 Guardian St"
-    )
-
-    # Add users to the session
-    db.session.add(elderly_user)
-    db.session.add(guardian_user)
-    db.session.commit()
-
-    # Create guardian-elderly relationship
-    guardian_elderly = GuardianElderly(
-        guardian_email=guardian_user.email,
-        elderly_email=elderly_user.email
-    )
-    db.session.add(guardian_elderly)
-    db.session.commit()
-
-    # Create sample medicine reminder
-    medicine_reminder = MedicineReminder(
-        medicine_name="Aspirin",
-        dosage=2,
-        times="08:00,20:00",
-        start_date=datetime.now().date(),
-        end_date=(datetime.now() + timedelta(days=30)).date(),
-        user_id=elderly_user.user_id
-    )
-    db.session.add(medicine_reminder)
-
-    # Create sample booking
-    booking = Booking(
-        user_id=elderly_user.user_id,
-        service="Doctor Appointment",
-        date=datetime.now() + timedelta(days=7),
-        status=BookingStatus.pending
-    )
-    db.session.add(booking)
-
-    # Commit all changes
-    db.session.commit()
-
-    print("Sample data created successfully!")
     
 
 # -------------------------------------------------------------------------------------------------
@@ -621,12 +713,14 @@ def prompt_and_delete_folders():
 
 if __name__ == '__main__':
     with app.app_context():
+        create_sample_user()
         db.create_all()
 
     # #For disabling the flask logs
     # import logging
     # log = logging.getLogger('werkzeug')
     # log.setLevel(logging.ERROR)
-    atexit.register(prompt_and_delete_folders)
+
+    # atexit.register(prompt_and_delete_folders)
     app.run(debug=True)
 #     app.run(host='192.168.29.235', port=5000,debug=True)

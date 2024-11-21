@@ -13,7 +13,7 @@
     <div class="box">
       <div class="inner-box">
         <div class="forms-wrap">
-          <form action="index.html" autocomplete="off" class="sign-in-form">
+          <form action="/login_caretaker" method="POST" autocomplete="off" class="sign-in-form">
             <a href="/" class="home-link">
               <div class="logo" style="text-align: center; margin-bottom: 20px">
                 <img src="{{url_for('static',filename='assets/images/Parvaah-logo.png')}}" alt="parvaah-logo"
@@ -34,15 +34,19 @@
 
             <div class="actual-form">
               <div class="input-wrap">
-                <input type="text" minlength="4" class="input-field" autocomplete="off" required />
-                <label>UserName</label>
+                <input type="text" name="username" minlength="4" class="input-field" autocomplete="off" />
+                <label>Your Username </label>
+              </div>
+              <p>or</p>
+              <div class="input-wrap">
+                <input type="text" name="email" minlength="4" class="input-field" autocomplete="off" />
+                <label>Your Email ID</label>
               </div>
 
               <div class="input-wrap">
-                <input type="password" minlength="4" class="input-field" autocomplete="off" required />
+                <input type="password" name="password" minlength="4" class="input-field" autocomplete="off" required />
                 <label>Password</label>
               </div>
-
               <button type="submit" value="Sign In" class="btn">Login</button>
 
               <button type="button" class="btn google-login">
@@ -61,7 +65,7 @@
           <!-------------------------------------------------------------------------------------------------
                     --------------------------------------------- Sign Up Form ----------------------------------------
                     ------------------------------------------------------------------------------------------------- -->
-          <form action="/" autocomplete="on" class="sign-up-form">
+          <form action="/register_caretaker" method="POST" autocomplete=" on" class="sign-up-form">
             <a href="/" class="home-link">
               <div class="logo" style="text-align: center; margin-bottom: 20px">
                 <img src="{{url_for('static',filename='assets/images/Parvaah-logo.png')}}" alt="parvaah-logo"
@@ -82,17 +86,17 @@
 
             <div class="actual-form">
               <div class="input-wrap">
-                <input type="text" minlength="4" class="input-field" autocomplete="off" required />
+                <input type="text" name="name" minlength="4" class="input-field" autocomplete="off" required />
                 <label>Name</label>
               </div>
 
               <div class="input-wrap">
-                <input type="email" class="input-field" autocomplete="off" required />
+                <input type="email" name="email" class="input-field" autocomplete="off" required />
                 <label>Email</label>
               </div>
 
               <div class="input-wrap">
-                <input type="password" minlength="4" class="input-field" autocomplete="off" required />
+                <input type="password" name="password" minlength="4" class="input-field" autocomplete="off" required />
                 <label>Password</label>
               </div>
 

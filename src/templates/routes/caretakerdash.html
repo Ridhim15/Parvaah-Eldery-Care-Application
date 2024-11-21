@@ -1,12 +1,16 @@
-{% extends 'base.html' %} {% block style %}
+{% extends 'base.html' %}
+
+{% block style %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="{{url_for('static',filename='css/caretakerdash.css')}}" />
-{% endblock %} {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/caretakerdash.css') }}" />
+{% endblock %}
+
+{% block content %}
 <div style="padding: 120px 0 0 0"></div>
 <div>
   <h3 style="padding-left: 10rem">
-    Thankyou For Making The World A Better And Safe Place
+    Thank you For Making The World A Better And Safe Place
   </h3>
 </div>
 
@@ -33,7 +37,39 @@
     <!-- My Work Tab Content -->
     <div id="mywork" class="tabcontent">
       <h3>My Work</h3>
-      <p>This is the My Work tab. Add your tasks here.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>User Email</th>
+            <th>Service</th>
+            <th>Booking Date</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for booking in bookings %}
+          <tr>
+            <td>{{ booking.user_email }}</td>
+            <td>{{ booking.service }}</td>
+            <td>{{ booking.booking_date }}</td>
+            <td>{{ booking.status }}</td>
+            <td>
+              <form method="POST" action="{{ url_for('update_booking_status_form') }}" class="inline-form">
+                <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                <input type="hidden" name="caretaker_email" value="{{ booking.caretaker_email }}">
+                <select name="new_status" class="status-select">
+                  <option value="pending" {% if booking.status=='pending' %}selected{% endif %}>Pending</option>
+                  <option value="accepted" {% if booking.status=='accepted' %}selected{% endif %}>Accepted</option>
+                  <option value="completed" {% if booking.status=='completed' %}selected{% endif %}>Completed</option>
+                </select>
+                <button type="submit" class="update-button">Update</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </div>
 </section>
@@ -66,4 +102,4 @@
 </script>
 <div style="padding: 200px 0 0 0"></div>
 
-{% endblock content %}
+{% endblock %}

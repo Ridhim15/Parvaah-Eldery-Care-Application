@@ -1,5 +1,7 @@
 # To do
 
+- TO MAKE FLASH MESSAGES WORK
+
 - Google Auth login
 - All logins properly working
 - Elerdy - guardian linking and showing on website
