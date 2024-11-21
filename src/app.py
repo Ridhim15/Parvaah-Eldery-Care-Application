@@ -175,6 +175,40 @@ def register_guardian():
         return redirect(url_for('dashboard_guardian'))
     return render_template('logins/login_guardian.html')
 
+
+@app.route('/register_caretaker', methods=['GET', 'POST'])
+def register_caretaker():
+    print('Huh, this is /register_caretaker')
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        password = request.form['password']
+
+        print(f"\n\nName: {name}, Email: {email}, Password: {password}\n\n")
+        # Check if caretaker already exists
+        if Caretaker.query.filter_by(email=email).first():
+            print("Caretaker Email already registered.")
+            flash("Caretaker Email already registered.")
+            return redirect(url_for('login_caretaker'))
+
+        # Create new caretaker user
+        new_caretaker = Caretaker(
+            full_name=name,
+            email=email,
+            password=generate_password_hash(password)
+        )
+        db.session.add(new_caretaker)
+        db.session.commit()
+        # Add the caretaker to the session
+        session['email'] = new_caretaker.email
+        session['role'] = 'caretaker'
+        session['username'] = new_caretaker.full_name
+        print(f"Session data: {session}")
+
+        print(f"\n\nCaretaker {name} registered successfully.")
+        flash("Registration successful. Redirecting to dashboard.")
+        return redirect(url_for('dashboard_caretaker'))
+    return render_template('logins/login_caretaker.html')
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Forms ---------------------------------------------
 # -------------------------------------------------------------------------------------------------
@@ -263,10 +297,11 @@ def login():
 def login_guardian():
     print("Guardian LOGIN attempted")
     if request.method == 'POST':
+        username = request.form['username']
         email = request.form['email']
         password = request.form['password']
         
-        user = User.query.filter_by(email=email, role=UserRole.guardian).first()
+        user = User.query.filter_by(full_name=username).first() or User.query.filter_by(email=email).first()
         
         if user and check_password_hash(user.password, password):
             print('Guardian email and password are correct')
@@ -288,10 +323,11 @@ def login_guardian():
 @app.route('/login_caretaker', methods=['GET', 'POST'])
 def login_caretaker():
     if request.method == 'POST':
+        username = request.form['username']
         email = request.form['email']
         password = request.form['password']
         
-        caretaker = Caretaker.query.filter_by(email=email).first()
+        caretaker = Caretaker.query.filter_by(full_name=username).first() or Caretaker.query.filter_by(email=email)
         
         if caretaker and check_password_hash(caretaker.password, password):
             session['username'] = caretaker.full_name
@@ -351,7 +387,7 @@ def fetch_bookings():
         bookings_list = []
         for booking in bookings:
             bookings_list.append({
-                'id': booking.id,
+                'id': booking.booking_id,
                 'user_email': booking.user_email,
                 'caretaker_email': booking.caretaker_email,
                 'service': booking.service,
@@ -390,28 +426,6 @@ def update_booking_status():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/caretaker_dashboard')
-def caretaker_dashboard():
-    try:
-        # Fetch all bookings from the Booking table
-        bookings = Booking.query.all()
-        
-        # Convert the bookings to a list of dictionaries
-        bookings_list = []
-        for booking in bookings:
-            bookings_list.append({
-                'id': booking.booking_id,
-                'user_email': booking.user_email,
-                'caretaker_email': booking.caretaker_email,
-                'service': booking.service,
-                'booking_date': booking.booking_date,
-                'status': booking.status.name,  # Convert enum to string
-                # Add other fields as needed
-            })
-        
-        return render_template('caretaker_dash.html', bookings=bookings_list)
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
 
 @app.route('/update_booking_status', methods=['POST'])
 def update_booking_status_form():
@@ -422,10 +436,10 @@ def update_booking_status_form():
 
         booking = Booking.query.get(booking_id)
         if not booking:
-            return jsonify({'error': 'Booking not found'}), 404
+            return jsonify({'error': 'AHHHH BOOKING not found'}), 404
 
         if new_status not in BookingStatus.__members__:
-            return jsonify({'error': 'Invalid status'}), 400
+            return jsonify({'error': 'IDK WHAT HAPPENED Invalid status'}), 400
 
         if new_status == 'accepted':
             caretaker = Caretaker.query.filter_by(email=caretaker_email).first()
@@ -436,7 +450,7 @@ def update_booking_status_form():
         booking.status = BookingStatus[new_status]
         db.session.commit()
 
-        return redirect(url_for('caretaker_dashboard'))
+        return redirect(url_for('dashboard_caretaker'))
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 # -------------------------------------------------------------------------------------------------
@@ -458,28 +472,29 @@ def dashboard():
 
     return render_template('dashboards/dashboard.html', user=user, upcoming_appointments=upcoming_appointments, upcoming_reminders=upcoming_reminders)
 
-@app.route('/dashboard_guardian')
-def dashboard_guardian():
-    return render_template('dashboards/dashboard_guardian.html')
 
 @app.route('/dashboard_caretaker')
 def dashboard_caretaker():
-    if 'username' not in session:
-        print('Username not in session')
-        return redirect(url_for('login_caretaker'))
-
-    email = session['email']
-    user = User.query.filter_by(email=email).first() # Caretaker user
-
-    # Fetch bookings from booking table
-    bookings = Booking.all()
-    if bookings:
-        return render_template('dashboards/dashboard_caretaker.html', user=user, bookings=bookings)
-    return render_template('dashboards/dashboard_caretaker.html', user=user, bookings=bookings)
-
-
-    return render_template('dashboards/dashboard_caretaker.html')
-
+    try:
+        # Fetch all bookings from the Booking table
+        bookings = Booking.query.all()
+        
+        # Convert the bookings to a list of dictionaries
+        bookings_list = []
+        for booking in bookings:
+            bookings_list.append({
+                'id': booking.booking_id,
+                'user_email': booking.user_email,
+                'caretaker_email': booking.caretaker_email,
+                'service': booking.service,
+                'booking_date': booking.booking_date,
+                'status': booking.status.name,
+            })
+            print(f"Bookings : {bookings_list}")
+        
+        return render_template('dashboards/dashboard_caretaker.html', bookings=bookings_list)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Routes and Views ----------------------------------
 # -------------------------------------------------------------------------------------------------
@@ -544,13 +559,13 @@ def booking():
 
         # Create a new booking instance
         new_booking = Booking(
-            users_email=user.email,
+            user_email=user.email,
             service=service,
-            start_date=start_datetime.date(),
-            start_time=start_datetime.time(),
-            end_date=end_datetime.date(),
-            end_time=end_datetime.time(),
-            status=BookingStatus.pending  # Default status
+            # start_date=start_datetime.date(),
+            # start_time=start_datetime.time(),
+            # end_date=end_datetime.date(),
+            # end_time=end_datetime.time(),
+            status=BookingStatus.pending 
         )
 
         db.session.add(new_booking)
@@ -706,6 +721,6 @@ if __name__ == '__main__':
     # log = logging.getLogger('werkzeug')
     # log.setLevel(logging.ERROR)
 
-    atexit.register(prompt_and_delete_folders)
+    # atexit.register(prompt_and_delete_folders)
     app.run(debug=True)
 #     app.run(host='192.168.29.235', port=5000,debug=True)

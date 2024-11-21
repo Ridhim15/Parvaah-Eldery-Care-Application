@@ -55,8 +55,8 @@ class BookingStatus(enum.Enum):
 class Booking(db.Model):
     __tablename__ = 'bookings'
     booking_id = db.Column(db.Integer, primary_key=True)
-    user_email = db.Column(db.String(50), db.ForeignKey('users.email'), nullable=False)  # Who made the booking
-    caretaker_email = db.Column(db.String(50), db.ForeignKey('caretakers.email'), nullable=True)  # Assigned caretaker
+    user_email = db.Column(db.String(50), db.ForeignKey('users.email'), nullable=False) 
+    caretaker_email = db.Column(db.String(50), db.ForeignKey('caretakers.email'), nullable=True)
     service = db.Column(db.String(100), nullable=False)
     booking_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     status = db.Column(db.Enum(BookingStatus), default=BookingStatus.pending, nullable=False)
@@ -87,6 +87,7 @@ class Caretaker(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     full_name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)
     phone_no = db.Column(db.String(15))
     address = db.Column(db.String(200))
 
