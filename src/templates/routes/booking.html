@@ -42,6 +42,10 @@
     <label for="end-time">End Time</label>
     <input type="time" id="end-time" name="end_time" required />
 
+    <!-- Hidden fields for latitude and longitude -->
+    <input type="hidden" id="latitude" name="latitude">
+    <input type="hidden" id="longitude" name="longitude">
+
     <!-- Fare Display -->
     <div class="fare-display" id="fare-display">
       Estimated Fare: ₹<span id="fare">0</span>
@@ -60,4 +64,19 @@
   </form>
 </div>
 <script src="{{ url_for('static', filename='js/bookings.js') }}"></script>
+<script>
+  document.addEventListener( 'DOMContentLoaded', function () {
+    if ( "geolocation" in navigator ) {
+      navigator.geolocation.getCurrentPosition( function ( position ) {
+        document.getElementById( 'latitude' ).value = position.coords.latitude;
+        document.getElementById( 'longitude' ).value = position.coords.longitude;
+      }, function ( error ) {
+        console.error( "Error getting location:", error );
+        alert( 'Unable to get your location. Please try again.' );
+      } );
+    } else {
+      alert( 'Geolocation is not supported by your browser' );
+    }
+  } );
+</script>
 {% endblock content %}

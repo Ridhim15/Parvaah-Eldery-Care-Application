@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caretaker Dashboard</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f0f0f0;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1,
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .request-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .request-item {
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .request-item h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .request-item p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #007bff;
+            color: #007bff;
+        }
+
+        .btn-outline:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        #map {
+            height: 300px;
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        form {
+            display: grid;
+            gap: 10px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Caretaker Dashboard</h1>
+        <div class="dashboard">
+            <div class="card">
+                <h2>Submit New Request</h2>
+                <form id="request-form">
+                    <label for="patientName">Patient Name:</label>
+                    <input type="text" id="patientName" required>
+
+                    <label for="service">Service:</label>
+                    <select id="service" required>
+                        <option value="">Select a service</option>
+                        <option value="Medication Assistance">Medication Assistance</option>
+                        <option value="Physical Therapy">Physical Therapy</option>
+                        <option value="Meal Preparation">Meal Preparation</option>
+                    </select>
+
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" required>
+
+                    <label for="time">Time:</label>
+                    <input type="time" id="time" required>
+
+                    <button type="submit" class="btn">Submit Request</button>
+                </form>
+            </div>
+            <div class="card">
+                <h2>Notifications</h2>
+                <div id="notifications" class="request-list"></div>
+            </div>
+            <div class="card">
+                <h2>My Work</h2>
+                <div id="my-work" class="request-list"></div>
+            </div>
+        </div>
+        <div id="request-details" class="card hidden">
+            <h2>Request Details</h2>
+            <div id="request-info"></div>
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <script>
+        let requests = [
+            {
+                id: '1',
+                patientName: 'Alice Johnson',
+                service: 'Medication Assistance',
+                date: '2024-03-15',
+                time: '09:00',
+                location: '123 Elm St, Springfield',
+                status: 'pending',
+                coordinates: [ 40.7128, -74.0060 ]
+            },
+            {
+                id: '2',
+                patientName: 'Bob Smith',
+                service: 'Physical Therapy',
+                date: '2024-03-15',
+                time: '11:00',
+                location: '456 Oak Ave, Springfield',
+                status: 'pending',
+                coordinates: [ 40.7282, -73.7949 ]
+            },
+            {
+                id: '3',
+                patientName: 'Carol White',
+                service: 'Meal Preparation',
+                date: '2024-03-15',
+                time: '14:00',
+                location: '789 Pine Rd, Springfield',
+                status: 'accepted',
+                coordinates: [ 40.7489, -73.9680 ]
+            }
+        ];
+
+        let map = null;
+
+        function renderRequests () {
+            const notifications = document.getElementById( 'notifications' );
+            const myWork = document.getElementById( 'my-work' );
+
+            notifications.innerHTML = '';
+            myWork.innerHTML = '';
+
+            requests.forEach( request => {
+                const requestElement = createRequestElement( request );
+                if ( request.status === 'pending' ) {
+                    notifications.appendChild( requestElement );
+                } else if ( request.status === 'accepted' ) {
+                    myWork.appendChild( requestElement );
+                }
+            } );
+        }
+
+        function createRequestElement ( request ) {
+            const element = document.createElement( 'div' );
+            element.className = 'request-item';
+            element.innerHTML = `
+                <h3>${ request.patientName }</h3>
+                <p>${ request.service }</p>
+                <p>${ request.date } at ${ request.time }</p>
+                <p>${ request.location }</p>
+            `;
+
+            if ( request.status === 'pending' ) {
+                const acceptButton = document.createElement( 'button' );
+                acceptButton.className = 'btn';
+                acceptButton.textContent = 'Accept Request';
+                acceptButton.onclick = () => acceptRequest( request.id );
+                element.appendChild( acceptButton );
+            } else if ( request.status === 'accepted' ) {
+                const viewDetailsButton = document.createElement( 'button' );
+                viewDetailsButton.className = 'btn btn-outline';
+                viewDetailsButton.textContent = 'View Details';
+                viewDetailsButton.onclick = () => showRequestDetails( request );
+                element.appendChild( viewDetailsButton );
+
+                const completeButton = document.createElement( 'button' );
+                completeButton.className = 'btn';
+                completeButton.textContent = 'Mark Complete';
+                completeButton.onclick = () => completeRequest( request.id );
+                element.appendChild( completeButton );
+            }
+
+            return element;
+        }
+
+        function acceptRequest ( id ) {
+            requests = requests.map( req =>
+                req.id === id ? { ...req, status: 'accepted' } : req
+            );
+            renderRequests();
+        }
+
+        function completeRequest ( id ) {
+            requests = requests.map( req =>
+                req.id === id ? { ...req, status: 'completed' } : req
+            );
+            renderRequests();
+        }
+
+        function showRequestDetails ( request ) {
+            const detailsCard = document.getElementById( 'request-details' );
+            const requestInfo = document.getElementById( 'request-info' );
+            detailsCard.classList.remove( 'hidden' );
+
+            requestInfo.innerHTML = `
+                <h3>${ request.patientName }</h3>
+                <p><strong>Service:</strong> ${ request.service }</p>
+                <p><strong>Date:</strong> ${ request.date }</p>
+                <p><strong>Time:</strong> ${ request.time }</p>
+                <p><strong>Location:</strong> ${ request.location }</p>
+                <p><strong>Status:</strong> ${ request.status }</p>
+            `;
+
+            if ( !map ) {
+                map = L.map( 'map' ).setView( request.coordinates, 13 );
+                L.tileLayer( 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                } ).addTo( map );
+            } else {
+                map.setView( request.coordinates, 13 );
+            }
+
+            L.marker( request.coordinates ).addTo( map )
+                .bindPopup( request.location )
+                .openPopup();
+        }
+
+        document.getElementById( 'request-form' ).addEventListener( 'submit', function ( e ) {
+            e.preventDefault();
+
+            if ( "geolocation" in navigator ) {
+                navigator.geolocation.getCurrentPosition( function ( position ) {
+                    const newRequest = {
+                        id: Date.now().toString(),
+                        patientName: document.getElementById( 'patientName' ).value,
+                        service: document.getElementById( 'service' ).value,
+                        date: document.getElementById( 'date' ).value,
+                        time: document.getElementById( 'time' ).value,
+                        location: 'Current Location',
+                        status: 'pending',
+                        coordinates: [ position.coords.latitude, position.coords.longitude ]
+                    };
+
+                    requests.push( newRequest );
+                    renderRequests();
+
+                    // Clear the form
+                    e.target.reset();
+
+                    alert( 'New request submitted successfully!' );
+                }, function ( error ) {
+                    console.error( "Error getting location:", error );
+                    alert( 'Unable to get your location. Please try again.' );
+                } );
+            } else {
+                alert( 'Geolocation is not supported by your browser' );
+            }
+        } );
+
+        // Initial render
+        renderRequests();
+    </script>
+</body>
+
+</html>
