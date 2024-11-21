@@ -54,8 +54,6 @@ class BookingStatus(enum.Enum):
 
 class Booking(db.Model):
     __tablename__ = 'bookings'
-<<<<<<< Updated upstream
-=======
     booking_id = db.Column(db.Integer, primary_key=True)
     user_email = db.Column(db.String(50), db.ForeignKey('users.email'), nullable=False)
     caretaker_email = db.Column(db.String(50), db.ForeignKey('caretakers.email'), nullable=True)
@@ -64,7 +62,6 @@ class Booking(db.Model):
     status = db.Column(db.Enum(BookingStatus), default=BookingStatus.pending, nullable=False)
     latitude = db.Column(db.Float, nullable=True)
     longitude = db.Column(db.Float, nullable=True)
->>>>>>> Stashed changes
 
     booking_id = db.Column(db.Integer, primary_key=True)
     users_email = db.Column(db.Integer, db.ForeignKey('users.email'), nullable=False)  # Who made the booking
@@ -81,12 +78,8 @@ class Booking(db.Model):
     status = db.Column(db.Enum(BookingStatus), default=BookingStatus.pending)  # Booking status
 
     def __repr__(self):
-<<<<<<< Updated upstream
-        return f"<Booking {self.booking_id} (Status: {self.status})>"
-=======
         return f"<Booking booking_id={self.booking_id} user_email={self.user_email} caretaker_email={self.caretaker_email} service={self.service} status={self.status} latitude={self.latitude} longitude={self.longitude}>"
 
->>>>>>> Stashed changes
 class MedicineReminder(db.Model):
     __tablename__ = 'medicine_reminders'
 
@@ -119,17 +112,6 @@ class Caretaker(db.Model):
 class AppointmentReminder(db.Model):
     __tablename__ = 'appointment_reminders'
     id = db.Column(db.Integer, primary_key=True)
-<<<<<<< Updated upstream
-    appointment_name = db.Column(db.String(200), nullable=False)
-    location = db.Column(db.String(300), nullable=False)
-    time = db.Column(db.Time, nullable=False)
-    date = db.Column(db.Date, nullable=False)
-    user_email = db.Column(db.Integer, db.ForeignKey('users.email'), nullable=False)
-    def __repr__(self):
-        return f"<AppointmentReminder {self.appointment_name} for User {self.user_email}>"
-
-
-=======
     appointment_name = db.Column(db.String(100), nullable=False)
     location = db.Column(db.String(200), nullable=False)
     time = db.Column(db.String(10), nullable=False)  # Store time as a string
@@ -140,7 +122,6 @@ class AppointmentReminder(db.Model):
 
     def __repr__(self):
         return f"<AppointmentReminder id={self.id} appointment_name={self.appointment_name} location={self.location} time={self.time} date={self.date} user_email={self.user_email}>"
->>>>>>> Stashed changes
 
 class HealthInfo(db.Model):
     __tablename__ = 'health_info'

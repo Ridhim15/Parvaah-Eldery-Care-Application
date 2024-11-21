@@ -46,8 +46,6 @@ def suggest():
     suggestions = User.query.filter(User.email.like(f"%{query}%")).all()
     return jsonify([{'email': s.email, 'address': s.address, 'phone': s.phone} for s in suggestions])
 
-<<<<<<< Updated upstream
-=======
 
 @app.route('/create_sample_user')
 def create_sample_user():
@@ -114,7 +112,6 @@ def create_sample_booking():
         return jsonify({'message': 'Sample bookings created successfully'}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500
->>>>>>> Stashed changes
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Index ---------------------------------------------
 # -------------------------------------------------------------------------------------------------
@@ -377,8 +374,6 @@ class login_status(Resource):
 
 api.add_resource(login_status, '/api/login_status')
 
-<<<<<<< Updated upstream
-=======
 @app.route('/api/bookings', methods=['GET', 'POST'])
 def handle_bookings():
     if request.method == 'GET':
@@ -464,7 +459,6 @@ def update_booking_status():
         return jsonify({'error': str(e)}), 500
 
 #make api for above update_booking_status
->>>>>>> Stashed changes
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Dashboards ----------------------------------------
 # -------------------------------------------------------------------------------------------------
@@ -487,13 +481,6 @@ def dashboard():
 @app.route('/dashboard_guardian')
 def dashboard_guardian():
     return render_template('dashboards/dashboard_guardian.html')
-<<<<<<< Updated upstream
-
-@app.route('/dashboard_caretaker')
-def dashboard_caretaker():
-    return render_template('dashboards/dashboard_caretaker.html')
-
-=======
 
 
 @app.route('/dashboard_caretaker')
@@ -519,7 +506,6 @@ def dashboard_caretaker():
         return render_template('dashboards/dashboard_caretaker.html', bookings=bookings_list)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
->>>>>>> Stashed changes
 # -------------------------------------------------------------------------------------------------
 # --------------------------------------------- Routes and Views ----------------------------------
 # -------------------------------------------------------------------------------------------------
@@ -591,17 +577,9 @@ def booking():
         new_booking = Booking(
             users_email=user.email,
             service=service,
-<<<<<<< Updated upstream
-            start_date=start_datetime.date(),
-            start_time=start_datetime.time(),
-            end_date=end_datetime.date(),
-            end_time=end_datetime.time(),
-            status=BookingStatus.pending  # Default status
-=======
             status=BookingStatus.pending,
             latitude=latitude,
             longitude=longitude
->>>>>>> Stashed changes
         )
 
         db.session.add(new_booking)
@@ -817,21 +795,14 @@ def prompt_and_delete_folders():
 
 if __name__ == '__main__':
     with app.app_context():
-<<<<<<< Updated upstream
-=======
         create_sample_user()
         create_sample_booking()
->>>>>>> Stashed changes
         db.create_all()
 
     # #For disabling the flask logs
     # import logging
     # log = logging.getLogger('werkzeug')
     # log.setLevel(logging.ERROR)
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
     atexit.register(prompt_and_delete_folders)
     app.run(debug=True)
 #     app.run(host='192.168.29.235', port=5000,debug=True)
