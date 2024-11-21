@@ -100,20 +100,34 @@
 
 /* Input, select, and textarea styling */
 .form-section select,
-.form-section input[type="text"],
-.form-section input[type="number"],
-.form-section input[type="email"],
-.form-section input[type="file"],
-.form-section input[type="tel"],
-.form-section textarea,
-.form-section input[type="date"] {
-	/* Added styling for date input */
+.form-section .input-box[type="text"],
+.form-section .input-number[type="number"],
+.form-section .input-email[type="email"],
+.form-section .input-file[type="file"],
+.form-section .input-textarea,
+.form-section .input-date[type="date"] {
 	width: calc(100% - 220px);
 	padding: 10px;
 	border: 1px solid #ccc;
 	border-radius: 4px;
 	font-size: 14px;
 	background-color: #f9f9f9;
+}
+
+.form-section .phone_no {
+	border: 1px solid #ccc;
+	padding: 20px;
+	font-size: 14px;
+	border-radius: 4px;
+	width: 45rem;
+	background-color: #f9f9f9;
+}
+
+.verify-phone {
+	margin-left: 2.5rem;
+}
+.div-phone {
+	display: flex;
 }
 
 /* Textarea-specific styling */
@@ -146,30 +160,6 @@
 	}
 }
 
-/* Button styling */
-button {
-	background-color: #4caf50;
-	color: white;
-	border: none;
-	border-radius: 4px;
-	padding: 10px 20px;
-	cursor: pointer;
-	margin-left: 210px;
-	font-size: 16px;
-	transition: background-color 0.3s ease;
-}
-
-button:hover {
-	background-color: #45a049;
-}
-
-/* Responsive button adjustment */
-@media screen and (max-width: 600px) {
-	button {
-		margin-left: 0;
-		width: 100%;
-	}
-}
 #selectedDiseasesContainer {
 	padding: 15px;
 	border-radius: 5px;
@@ -226,5 +216,30 @@ button:hover {
 
 .selected {
 	background-color: lightgreen !important;
+}
+
+/* Button styling */
+button {
+	background-color: #4caf50;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	padding: 10px 20px;
+	cursor: pointer;
+	margin-left: 210px;
+	font-size: 16px;
+	transition: background-color 0.3s ease;
+}
+
+button:hover {
+	background-color: #45a049;
+}
+
+/* Responsive button adjustment */
+@media screen and (max-width: 600px) {
+	button {
+		margin-left: 0;
+		width: 100%;
+	}
 }
 
