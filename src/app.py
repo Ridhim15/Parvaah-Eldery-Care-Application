@@ -22,6 +22,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from models import AppointmentReminder, db, User, GuardianElderly, Booking, MedicineReminder, Caretaker, UserRole, BookingStatus
 
+
+from twilio.rest import Client
+
+
 app = Flask(__name__)
 api = Api(app)
 
@@ -72,7 +76,6 @@ def create_sample_user():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/create_sample_booking')
 def create_sample_booking():
     try:
         # Define sample booking details
@@ -221,10 +224,12 @@ def register_caretaker():
         full_name = request.form['full_name']
         email = request.form['email']
         password = request.form['password']
+        care_type = 'Freelance'
         
         # Check if the caretaker already exists
         caretaker = Caretaker.query.filter_by(email=email).first()
         if caretaker:
+            print("\nCaretaker already existns\n")
             flash('Caretaker already exists. Please login.')
             return redirect(url_for('login_caretaker'))
         
@@ -405,6 +410,103 @@ class login_status(Resource):
 
 api.add_resource(login_status, '/api/login_status')
 
+
+# -------------------------------------------------------------------------------------------------
+# --------------------------------------------- TWILIO --------------------------------------------
+# -------------------------------------------------------------------------------------------------
+
+
+# client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+
+# @app.route('/trigger_emergency', methods=['POST'])
+# def trigger_emergency():
+#     if 'username' not in session:
+#         return jsonify({'status': 'error', 'message': 'User not logged in'}), 403
+
+#     data = request.json
+#     lat = data.get('latitude')
+#     lon = data.get('longitude')
+
+#     # # Fetch the user's medical info from the database
+#     username = session['username']
+#     user = Elderly.query.filter_by(username=username).first()
+
+#     if not user:
+#         return jsonify({'status': 'error', 'message': 'User not found'}), 404
+
+#     # # Fetch the user's address using geopy
+#     geolocator = Nominatim(user_agent="parvaah_emergency")
+#     location = geolocator.reverse(f"{lat}, {lon}")
+#     address = location.address if location else "Unknown location"
+
+#     # # Prepare the medical information
+#     medical_info = f"Disease: {user.disease}, Allergy: {user.allergy}, Blood Group: {user.bloodgroup}"
+
+#     # # Prepare the message with Google Maps link for location
+#     google_maps_link = f"https://www.google.com/maps/search/?api=1&query={lat},{lon}"
+#     message = f"EMERGENCY! Location: {address} (lat: {lat}, lon: {lon}).\nLink: {google_maps_link}\nMedical Info: {medical_info}"
+
+#     # Send SMS to the emergency and guardian numbers
+#     # send_sms(EMERGENCY_NUMBER, message)
+#     # send_sms(user.emergency_contact, message)
+#     send_sms(EMERGENCY_NUMBER, "Test message from Parvaah")
+#     return jsonify({'status': 'success', 'message': 'Emergency triggered'}), 200
+    
+# def send_sms(phone_number, message):
+#     client.messages.create(
+#         body=message,
+#         from_=TWILIO_PHONE_NUMBER,
+#         to=phone_number,
+#     )
+
+# # -------------------------------------------------------------------------------------------------
+# # ------------------------------------------- Sugar and BP Graph ----------------------------------
+# # -------------------------------------------------------------------------------------------------
+
+# @app.route('/insights')
+# def insights():
+#     if 'username' not in session:
+#         return redirect(url_for('login'))
+
+#     username = session['username']
+#     table_name = f"health_{username}"
+    
+#     # Fetch the health data for the last month
+#     query = f"SELECT * FROM {table_name} WHERE date >= datetime('now', '-30 days')"
+#     results = db.session.execute(query).fetchall()
+
+#     dates = [row['date'] for row in results]
+#     sugar_levels = [row['sugar'] for row in results]
+#     bp_sys = [row['bp_sys'] for row in results]
+#     bp_dia = [row['bp_dia'] for row in results]
+
+#     # Create the graphs
+#     sugar_graph = create_line_graph(dates, sugar_levels, "Sugar Levels")
+#     bp_graph = create_line_graph(dates, bp_sys, "BP Systolic", bp_dia, "BP Diastolic")
+
+#     return render_template('insights.html', sugar_graph=sugar_graph, bp_graph=bp_graph)
+
+# def create_line_graph(dates, data1, label1, data2=None, label2=None):
+#     """Helper function to create a base64-encoded image for a line graph."""
+#     plt.figure()
+#     plt.plot(dates, data1, label=label1, color='blue')
+#     if data2:
+#         plt.plot(dates, data2, label=label2, color='red')
+#     plt.xticks(rotation=45)
+#     plt.legend()
+#     plt.tight_layout()
+
+#     img = io.BytesIO()
+#     plt.savefig(img, format='png')
+#     img.seek(0)
+#     graph_url = base64.b64encode(img.getvalue()).decode('utf8')
+#     plt.close()  # Close the figure after saving it
+
+#     return 'data:image/png;base64,{}'.format(graph_url)
+
+# -------------------------------------------------------------------------------------------------
+
+
 @app.route('/api/bookings', methods=['GET', 'POST'])
 def handle_bookings():
     if request.method == 'GET':
@@ -461,7 +563,7 @@ def update_booking_status():
 
 
 @app.route('/update_booking_status', methods=['POST'])
-def update_booking_status():
+def update_booking_status_form():
     try:
         user_email = request.json.get('user_email')
         new_status = request.json.get('new_status')
@@ -606,7 +708,7 @@ def booking():
 
         # Create a new booking instance
         new_booking = Booking(
-            users_email=user.email,
+            user_email=user.email,
             service=service,
             status=BookingStatus.pending,
             latitude=latitude,
@@ -700,8 +802,8 @@ def appointreminder():
         new_appointment_reminder = AppointmentReminder(
             appointment_name=appointment_name,
             location=location,
-            time=time,  # Store time as a string
-            date=datetime.strptime(date, "%Y-%m-%d").date(),
+            time=time,
+            appointment_date=datetime.strptime(date, "%Y-%m-%d").date(),
             user_email=user.email
         )
 
@@ -834,6 +936,8 @@ if __name__ == '__main__':
     # import logging
     # log = logging.getLogger('werkzeug')
     # log.setLevel(logging.ERROR)
-    # atexit.register(prompt_and_delete_folders)
+
+    
+    atexit.register(prompt_and_delete_folders)
     app.run(debug=True)
 #     app.run(host='192.168.29.235', port=5000,debug=True)
