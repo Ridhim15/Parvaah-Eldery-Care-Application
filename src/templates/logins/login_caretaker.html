@@ -6,12 +6,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login - Parvaah</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/caretakerlogin.css') }}" />
+  <link rel="apple-touch-icon" sizes="180x180" href="../static/assets/favcions/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../static/assets/favcions/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="../static/assets/favcions/favicon-16x16.png" />
+  <link rel="manifest" href="../static/assets/favcions/site.webmanifest" />
 </head>
 
 <body>
   <main>
     <div class="box">
       <div class="inner-box">
+        <!-------------------------------------------------------------------------------------------------
+        --------------------------------------------- LOGIN ---------------------------------------------------
+        ------------------------------------------------------------------------------------------------- -->
+
         <div class="forms-wrap">
           <form action="/login_caretaker" method="POST" autocomplete="off" class="sign-in-form">
             <a href="/" class="home-link">
@@ -22,7 +30,6 @@
                   <h1>Parvaah</h1>
                   <h5>Care at Your Fingertips</h5>
                 </div>
-                <!-- style="font-size: 2.5em; margin-top: 10px; -->
               </div>
             </a>
 
@@ -49,12 +56,12 @@
               </div>
               <button type="submit" value="Sign In" class="btn">Login</button>
 
-              <button type="button" class="btn google-login">
+              <!-- <button type="button" class="btn google-login">
                 Login with Google
               </button>
               <button type="button" class="btn google-login">
                 Login With OTP
-              </button>
+              </button> -->
 
               <p class="text">
                 Forgotten your password or you login datails?
@@ -86,7 +93,7 @@
 
             <div class="actual-form">
               <div class="input-wrap">
-                <input type="text" name="name" minlength="4" class="input-field" autocomplete="off" required />
+                <input type="text" name="full_name" minlength="4" class="input-field" autocomplete="off" required />
                 <label>Name</label>
               </div>
 
