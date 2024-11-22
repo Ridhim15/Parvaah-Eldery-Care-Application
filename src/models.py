@@ -55,11 +55,13 @@ class BookingStatus(enum.Enum):
 class Booking(db.Model):
     __tablename__ = 'bookings'
     booking_id = db.Column(db.Integer, primary_key=True)
-    user_email = db.Column(db.String(50), db.ForeignKey('users.email'), nullable=False) 
+    user_email = db.Column(db.String(50), db.ForeignKey('users.email'), nullable=False)
     caretaker_email = db.Column(db.String(50), db.ForeignKey('caretakers.email'), nullable=True)
     service = db.Column(db.String(100), nullable=False)
     booking_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     status = db.Column(db.Enum(BookingStatus), default=BookingStatus.pending, nullable=False)
+    latitude = db.Column(db.Float, nullable=True)
+    longitude = db.Column(db.Float, nullable=True)
 
     user = db.relationship('User', backref=db.backref('bookings', lazy=True))
     caretaker = db.relationship('Caretaker', backref=db.backref('accepted_bookings', lazy=True))
@@ -90,6 +92,9 @@ class Caretaker(db.Model):
     password = db.Column(db.String(200), nullable=False)
     phone_no = db.Column(db.String(15))
     address = db.Column(db.String(200))
+    dob = db.Column(db.Date)
+    care_type = db.Column(db.String(50))
+    org_id = db.Column(db.Integer)
 
     def __repr__(self):
         return f"<Caretaker id={self.id} full_name={self.full_name} email={self.email}>"
@@ -97,8 +102,11 @@ class Caretaker(db.Model):
 class AppointmentReminder(db.Model):
     __tablename__ = 'appointment_reminders'
     id = db.Column(db.Integer, primary_key=True)
+    appointment_name = db.Column(db.String(100), nullable=False)
     appointment_date = db.Column(db.DateTime, nullable=False)
-    description = db.Column(db.String(200), nullable=False)
+    time= db.Column(db.String(50), nullable=False)
+    location = db.Column(db.String(200))
+    description = db.Column(db.String(200))
     user_email = db.Column(db.String(50), db.ForeignKey('users.email'), nullable=False)
 
     user = db.relationship('User', backref=db.backref('appointment_reminders', lazy=True))

@@ -2,10 +2,11 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="{{url_for('static',filename='css/appointreminder.css')}}" />
-{% endblock %} {% block content %}
-<img src="../static/assets/images/PARVAH (6).png" class="bg-left" alt="Background Left" />
-<img src="../static/assets/images/PARVAH (5).png" class="bg-right" alt="Background Right" />
-<main>
+{% endblock %}
+{% block content %}
+<div class="container">
+  <img src="../static/assets/images/PARVAH (6).png" class="bg-left" alt="Background Left" />
+  <img src="../static/assets/images/PARVAH (5).png" class="bg-right" alt="Background Right" />
   <div class="box">
     <div class="heading">
       <h2>Appointment Reminder</h2>
@@ -15,7 +16,7 @@
     <div class="actual-form">
       <form action="{{ url_for('appointreminder') }}" method="POST">
         <div class="input-wrap">
-          <input type="text" name="title" class="input-field" placeholder="Appointment Title" required />
+          <input type="text" name="appointment_name" class="input-field" placeholder="Appointment Title" required />
         </div>
 
         <div class="input-wrap">
@@ -38,14 +39,14 @@
       <p class="text">You will receive reminders for your appointments.</p>
 
       <!-- <ul>
-        {% for appointment in appointments %}
-        <li>
-          {{ appointment.title }} at {{ appointment.location }} on {{
-          appointment.date }} at {{ appointment.time }}
-        </li>
-        {% endfor %}
-      </ul> -->
+          {% for appointment in appointments %}
+          <li>
+            {{ appointment.title }} at {{ appointment.location }} on {{
+            appointment.date }} at {{ appointment.time }}
+          </li>
+          {% endfor %}
+        </ul> -->
     </div>
   </div>
-</main>
+</div>
 {% endblock content %}
