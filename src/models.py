@@ -93,7 +93,7 @@ class Caretaker(db.Model):
     phone_no = db.Column(db.String(15))
     address = db.Column(db.String(200))
     dob = db.Column(db.Date)
-    care_type = db.Column(db.String(50), nullable=False)
+    care_type = db.Column(db.String(50))
     org_id = db.Column(db.Integer)
 
     def __repr__(self):

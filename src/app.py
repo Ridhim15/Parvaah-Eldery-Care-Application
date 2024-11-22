@@ -51,13 +51,13 @@ def suggest():
     return jsonify([{'email': s.email, 'address': s.address, 'phone': s.phone} for s in suggestions])
 
 
-@app.route('/create_sample_user')
 def create_sample_user():
     try:
         # Define sample user details
         full_name = "Ridhim"
         password = "1234"
-        email = "ridhim@gmail.com"
+        email = "elderly@gmail.com"
+        
         
         # Check if the user already exists
         existing_user = User.query.filter_by(email=email).first()
@@ -73,6 +73,70 @@ def create_sample_user():
         
         print(f'Sample user created: {new_user}')
         return jsonify({'message': 'Sample user created successfully'}), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+def create_sample_caretaker():
+    try:
+        full_name = "Adnaan"
+        password = "1234"
+        email = "caretaker@gmail.com"
+        
+        existing_caretaker = Caretaker.query.filter_by(email=email).first()
+        if existing_caretaker:
+            print("\n\n THE SAMPLE CARETAKER ALREADY EXISTS\n\n")
+            return jsonify({'message': 'Sample caretaker already exists'}), 200
+        
+        # Create a new caretaker and save it to the database
+        hashed_password = generate_password_hash(password)
+        new_caretaker = Caretaker(
+            full_name=full_name,
+            password=hashed_password,
+            email=email,
+            care_type='Freelancer',
+        )
+        db.session.add(new_caretaker)
+        db.session.commit()
+        
+        print(f'Sample caretaker created: {new_caretaker}')
+        return jsonify({'message': 'Sample caretaker created successfully'}), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+def create_sample_guardian():
+    try:
+        full_name = "Yash"
+        password = "1234"
+        email = "guardian@gmail.com"
+        elderly_email = "elderly@gmail.com"  
+        
+        # Check if the guardian already exists
+        existing_guardian = User.query.filter_by(email=email).first()
+        if existing_guardian:
+            print("\n\n THE SAMPLE GUARDIAN ALREADY EXISTS\n\n")
+            return jsonify({'message': 'Sample guardian already exists'}), 200
+        
+        # Create a new guardian and save it to the database
+        hashed_password = generate_password_hash(password)
+        new_guardian = User(
+            full_name=full_name,
+            password=hashed_password,
+            email=email,
+            role=UserRole.guardian
+        )
+        db.session.add(new_guardian)
+        db.session.commit()
+        
+        # Link the guardian to the sample elderly user
+        guardian_elderly_link = GuardianElderly(
+            guardian_email=email,
+            elderly_email=elderly_email
+        )
+        db.session.add(guardian_elderly_link)
+        db.session.commit()
+        
+        print(f'Sample guardian created: {new_guardian}')
+        return jsonify({'message': 'Sample guardian created successfully'}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -138,20 +202,18 @@ def register():
     print("\n\n REGISTERING THE USER NOW \n\n\n")
 
     if request.method == 'POST':
-        # Fetching form data from the user
         full_name = request.form['full_name']
         password = request.form['password']
         email = request.form['email']
         print(f'full_name: {full_name}, password: {password}, email: {email}')
-        # Check if the username already exists
-        existing_user = User.query.filter_by(email=email).first()
+
+        existing_user = Caretaker.query.filter_by(email=email).first()
         if existing_user:
             print("\n\n THE USER ALREADY EXISTS\n\n")
             return redirect(url_for('login'))
         else:
             session['username'] = full_name
             session['email'] = email
-            # Create a new user and save it to the database
             hashed_password = generate_password_hash(password)
             new_user = User(full_name=full_name, password=hashed_password, email=email, role=UserRole.elderly)
             print(f'FROM REGISTER ROUTE \n new_user: {new_user}')
@@ -363,12 +425,15 @@ def login_guardian():
 @app.route('/login_caretaker', methods=['GET', 'POST'])
 def login_caretaker():
     if request.method == 'POST':
+        username = request.form['username']
         email = request.form['email']
         password = request.form['password']
         
-        caretaker = Caretaker.query.filter_by(email=email).first()
+        caretaker = Caretaker.query.filter_by(email=email).first() or Caretaker.query.filter_by(full_name=username).first()
+        
         
         if caretaker and check_password_hash(caretaker.password, password):
+            print("Caretaker found")
             session['username'] = caretaker.full_name
             session['email'] = caretaker.email
             session['role'] = 'caretaker'
@@ -376,6 +441,7 @@ def login_caretaker():
             # Redirect to caretaker-specific dashboard
             return redirect(url_for('dashboard_caretaker'))
         else:
+            print("\n Invalid email or password\n")
             flash('Invalid email or password')
     
     return render_template('logins/login_caretaker.html')
@@ -622,6 +688,7 @@ def dashboard_caretaker():
         # Fetch all bookings from the Booking table
         bookings = Booking.query.all()
         
+        
         # Convert the bookings to a list of dictionaries
         bookings_list = []
         for booking in bookings:
@@ -635,6 +702,7 @@ def dashboard_caretaker():
                 'latitude': booking.latitude,
                 'longitude': booking.longitude
             })
+        
         
         return render_template('dashboards/dashboard_caretaker.html', bookings=bookings_list)
     except Exception as e:
@@ -929,7 +997,8 @@ def prompt_and_delete_folders():
 if __name__ == '__main__':
     with app.app_context():
         create_sample_user()
-        # create_sample_booking()
+        create_sample_guardian()
+        create_sample_caretaker()
         db.create_all()
 
     # #For disabling the flask logs
