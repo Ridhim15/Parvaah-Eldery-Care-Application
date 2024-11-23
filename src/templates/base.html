@@ -22,9 +22,10 @@
       .then( data => {
         console.log( "USER DATA:", data );
         if ( data.status == "logged_in" ) {
-          // Hide the landing nav
           console.log( "Logged In" );
           document.getElementById( "landing_nav" ).style.display = 'none';
+
+
           // Show the appropriate navbar based on the user role
           if ( data.role == "elderly" ) {
             console.log( "Elderly Nav" );
