@@ -11,3 +11,4 @@ pandas
 mysql-connector-python
 SQLAlchemy
 Werkzeug
+twilio

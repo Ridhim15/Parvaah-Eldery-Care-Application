@@ -73,8 +73,6 @@ function changeBookingStatus(bookingId, currentStatus) {
 
 	// Fetch the caretaker ID (this could be dynamic based on your application logic)
 	const caretakerId = 1 // Example caretaker ID
-
-	// Send the request to the server
 	fetch(`/api/bookings/${bookingId}/accept`, {
 		method: "POST",
 		headers: {
@@ -98,3 +96,4 @@ function changeBookingStatus(bookingId, currentStatus) {
 			console.error("Error:", error)
 		})
 }
+
