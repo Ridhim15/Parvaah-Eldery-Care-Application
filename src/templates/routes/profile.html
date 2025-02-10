@@ -47,20 +47,20 @@
 
   <!-- Guardian Information Section -->
   <div class="profile-container guardian-info">
-    <h3>Guardian Information</h3>
+    <h3>Elderly Information</h3>
     {% if guardian %}
     <p><strong>Name:</strong> {{ guardian.full_name }}</p>
     <p><strong>Email:</strong> {{ guardian.email }}</p>
     <p><strong>Phone:</strong> {{ guardian.phone_no }}</p>
     <p><strong>Address:</strong> {{ guardian.address }}</p>
-    <p><strong>Status:</strong> Guardian is linked with the elderly.</p>
+    <p><strong>Status:</strong> Elderly is linked with the elderly.</p>
     <hr />
     {% else %}
     <p><strong>Name:</strong> {{ user.guardian_name }}</p>
     <p><strong>Email:</strong> {{ user.guardian_email }}</p>
     <p><strong>Phone:</strong> {{ user.guardian_contact }}</p>
     <p><strong>Address:</strong> {{ user.guardian_address }}</p>
-    <p><strong>Status:</strong> Guardian is not linked.</p>
+    <p><strong>Status:</strong> Elderly is not linked.</p>
     <hr />
     {% endif %}
   </div>
